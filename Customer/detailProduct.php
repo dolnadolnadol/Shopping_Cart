@@ -1,0 +1,258 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['status']) || $_SESSION['status'] !== 'true') {
+        // Redirect to the login page
+        header("Location: login.php");
+        session_destroy();
+        exit();
+    }
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            /* เปลี่ยนแบบอักษรเป็น Arial หรือแบบที่คุณต้องการ */
+            background-color: #f4f4f4;
+        }
+
+
+        .container-body {
+            display: flex;
+            justify-content: space-between;
+            /* กระจายทั้งสองส่วนไปทางด้านข้าง */
+            max-width: 1200px;
+            /* จำกัดความกว้างของ container */
+            margin: 0 auto;
+            /* ตรงกลางหน้าจอ */
+            padding: 20px;
+        }
+
+        .container-1 {
+            width: 60%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .product-image {
+            flex: 0 1 calc(50% - 20px);
+            margin: 10px;
+            box-sizing: border-box;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .container-2 {
+            width: 40%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+
+        .buy-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .buy-button:hover {
+            background-color: #2980b9;
+        }
+
+        .button-increase {
+            border: 1px solid #f5f6f6;
+            padding: 4px;
+            display: inline-block;
+            border-radius: 3px;
+        }
+
+        #amount {
+            border: none;
+            outline: none;
+            background: none;
+            text-align: center;
+            width: 50px;
+            height: 25px;
+        }
+
+        #change-amount {
+            background-color: #f3f6f9;
+            border: 1px solid #f5f6f6;
+            width: 1.4em;
+            border-radius: .25rem;
+            font-weight: 300;
+            height: 100%;
+            font-size: 1.4em;
+            color: #878a99;
+        }
+
+        #change-amount:hover {
+            background-color: #f3f0f0;
+        }
+
+        #change-amount.clicked {
+            background-color: #030000;
+        }
+
+        p {
+            margin: 0;
+            padding-bottom: 8%;
+            font-size: 50px;
+        }
+
+        a {
+            text-decoration: none;
+            display: inline-block;
+            color: #ef476f;
+            /* เปลี่ยนสีข้อความลิงค์ */
+        }
+
+        a.aBack {
+            margin-top: 3%;
+            margin-left: 3%;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ef476f;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        a.aBack:hover {
+            background-color: #e0476f;
+        }
+
+        /*
+        ===================
+            Overlay Zone
+        ===================
+          */
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .close-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .close-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<script>
+        function incrementAmount() {
+            var amountInput = document.getElementById('amount');
+            amountInput.value = parseInt(amountInput.value) + 1;
+        }
+
+        function decrementAmount() {
+            var amountInput = document.getElementById('amount');
+            if (parseInt(amountInput.value) > 1) {
+                amountInput.value = parseInt(amountInput.value) - 1;
+            }
+        }
+</script>
+
+<body class="detail-page">
+    <?php include('navbar.php'); ?>
+    <a class="aBack" href='index.php'> <- กลับไปหน้าหลัก </a>
+            <script>
+                function openOverlay() {
+                    document.getElementById('overlay').style.display = 'flex';
+                    // Prevent the form from submitting immediately
+                    return false;
+                }
+
+                function closeOverlay() {
+                    // Perform the redirection after closing the overlay
+                    document.getElementById('overlay').style.display = 'none';
+                }
+            </script>
+
+
+</body>
+
+</html>
+<?php
+    $cx =  mysqli_connect("localhost", "root", "", "shopping");
+    $code = $_POST['id_product'];
+    $cur = "SELECT * FROM product WHERE $code ";
+    $msresults = mysqli_query($cx, $cur);
+    $row = mysqli_fetch_array($msresults);
+    echo " <div class='container-body'>
+            <div class='container-1'>
+                <div class='product-image'>
+                    <img src='cart.png' alt='Product Image'>
+                </div>
+                <div class='product-image'>
+                    <img src='cart.png' alt='Product Image'>
+                </div>
+                <div class='product-image'>
+                    <img src='cart.png' alt='Product Image'>
+                </div>
+                <div class='product-image'>
+                    <img src='cart.png' alt='Product Image'>
+                </div>
+            </div>
+            <div class='container-2'>
+                <p><strong>{$row['ProName']}</strong></p>
+                <p style='font-size:20px;'>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut 
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris .
+                </p>
+                <p style='font-size:30px;'>ราคา: {$row['PricePerUnit']} บาท</p>
+                <p style='font-size:20px; color:red;'>จำนวนในสต็อก: {$row['StockQty']}</p>
+                <form method='post' action='accessCart.php' classname='buy-button'>
+                    <input type='hidden' name='id_product' value='{$row['ProID']}'>  
+                    <div class='button-increase'>
+                        <button type='button' id='change-amount' onclick='decrementAmount()'>-</button>    
+                        <input type='text' name='amount' id='amount' value='1' readonly>
+                        <button type='button'  id='change-amount' onclick='incrementAmount()'>+</button>
+                    </div>
+                    <br><br>
+                    <input class='buy-button' type='submit' value='เพิ่มลงตะกร้า'>           
+                </form>
+            </div>
+        </div>";
+?>
+<!-- <div id="overlay" class="overlay" style="display: none;">
+    <div class="modal">
+        <p>เพิ่มลงตะกร้าเรียบร้อย!</p>
+        <button class="close-button" onclick="closeOverlay()">ปิด</button>
+    </div>
+</div> -->
