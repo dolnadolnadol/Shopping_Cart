@@ -88,7 +88,7 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] !== 'true') {
                 $cur = "SELECT * FROM product";
                 $msresults = mysqli_query($cx, $cur);
                 while ($row = mysqli_fetch_array($msresults)) {
-                    echo "<div class='product-card'>
+                echo "<div class='product-card'>
                             <img class='product-image' src='cart.png'>
                             <p class='product-name'>{$row['ProName']}</p>
                             <p class='product-price'>ราคา {$row['PricePerUnit']}</p>
@@ -96,7 +96,7 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] !== 'true') {
                                 <input type='hidden' name='id_product' value='{$row['ProID']}'>
                                 <input class='buy-button' type='submit' value='ซื้อสินค้า'>
                             </form>
-                        </div>";
+                    </div>";
                 }
             ?>
         </div>

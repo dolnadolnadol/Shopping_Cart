@@ -203,15 +203,13 @@
                     document.getElementById('overlay').style.display = 'none';
                 }
             </script>
-
-
 </body>
 
 </html>
 <?php
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
     $code = $_POST['id_product'];
-    $cur = "SELECT * FROM product WHERE $code ";
+    $cur = "SELECT * FROM product WHERE ProID = $code ";
     $msresults = mysqli_query($cx, $cur);
     $row = mysqli_fetch_array($msresults);
     echo " <div class='container-body'>
@@ -232,8 +230,8 @@
             <div class='container-2'>
                 <p><strong>{$row['ProName']}</strong></p>
                 <p style='font-size:20px;'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut 
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris .
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut 
+                    enim ad minim veniam, quis nostrud exercitation ullamco laboris .
                 </p>
                 <p style='font-size:30px;'>ราคา: {$row['PricePerUnit']} บาท</p>
                 <p style='font-size:20px; color:red;'>จำนวนในสต็อก: {$row['StockQty']}</p>
@@ -250,9 +248,9 @@
             </div>
         </div>";
 ?>
-<!-- <div id="overlay" class="overlay" style="display: none;">
+<div id="overlay" class="overlay" style="display: none;">
     <div class="modal">
         <p>เพิ่มลงตะกร้าเรียบร้อย!</p>
         <button class="close-button" onclick="closeOverlay()">ปิด</button>
     </div>
-</div> -->
+</div>

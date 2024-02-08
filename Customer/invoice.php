@@ -42,31 +42,91 @@
         .customer-details {
             margin-top: 20px;
             text-align: right;
+            border-bottom: 1px solid #ddd;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Invoice</h1>
-        <div class="customer-details">
-            <p>Customer Name: John Doe</p>
-            <p>Email: john@example.com</p>
-            <p>Address: 123 Main Street, City</p>
-        </div>
-        <div class="product">
-            <span>Product 1</span>
-            <span>$10.00</span>
-        </div>
+<?php 
+    session_start();
+    $cx =  mysqli_connect("localhost", "root", "", "shopping");
+    $user = $_SESSION['username'];
+    $uid_query = mysqli_query($cx, "SELECT * FROM customer WHERE Username = '$user'");  
+    $row = mysqli_fetch_array($uid_query);
+    echo "<div class='container'>
+            <h1>Invoice</h1>
+            <div class='customer-details'>
+                <p>Customer Name: {$row['CusName']}</p>
+                <p>Tel: {$row['Tel']}</p>
+                <p>Address: {$row['Address']}</p>
+            </div>";
 
-        <div class="product">
-            <span>Product 2</span>
-            <span>$20.00</span>
-        </div>
+    $uid_results = $row['CusID'];
+    echo $_POST['id_invoice'];
+    if(isset($_POST['id_invoice'])){
+        $InvID = $_POST['id_invoice'];
+        $msresults = mysqli_query($cx, "SELECT invoice.*, invoice_detail.* , product.*
+                                        FROM invoice
+                                        INNER JOIN invoice_detail ON invoice.InvID = invoice_detail.InvID
+                                        INNER JOIN Product ON invoice_detail.ProID = Product.ProID
+                                        WHERE invoice.CusID = '$uid_results' AND invoice_detail.InvID = '$InvID'");
+        
+        $totalPriceAllItems = 0; 
 
-        <div class="total">
-            Total: $30.00
-        </div>
+        while ($row = mysqli_fetch_array($msresults)) {
+            $totalPrice = $row['PricePerUnit'] * $row['Qty'];
+            $totalPriceAllItems += $totalPrice;
+            
+            echo "<div class='product'>
+                    <span>{$row['ProName']}</span>
+                    <span>{$row['PricePerUnit']} ฿</span>
+                    <span>Quantity: {$row['Qty']}</span>
+                    <span>Total: $totalPrice ฿</span>
+                </div>";
+        }
+        $Tax = $totalPriceAllItems * 0.07;
+        $Total = $Tax + $totalPriceAllItems;
 
-    </div>
+        echo "<div class='total'>
+                <p>SubTotal : $totalPriceAllItems ฿</p>
+                <p>Tax : $Tax ฿</p>
+                <p>Discount : 0.00 ฿</p>
+                <p>Total : $Total ฿</p>
+            </div>
+        </div>";
+    }
+    
+    // else 
+    // {
+      
+    //     $msresults = mysqli_query($cx, "SELECT cart.*, product.*
+    //                                     FROM cart
+    //                                     INNER JOIN product ON cart.ProID = product.ProID
+    //                                     WHERE cart.CusID = '$uid_results'");
+        
+    //     $totalPriceAllItems = 0; 
+
+    //     while ($row = mysqli_fetch_array($msresults)) {
+    //         $totalPrice = $row['PricePerUnit'] * $row['Qty'];
+    //         $totalPriceAllItems += $totalPrice;
+            
+    //         echo "<div class='product'>
+    //                 <span>{$row['ProName']}</span>
+    //                 <span>{$row['PricePerUnit']} ฿</span>
+    //                 <span>Quantity: {$row['Qty']}</span>
+    //                 <span>Total: $totalPrice ฿</span>
+    //             </div>";
+    //     }
+    //     $Tax = $totalPriceAllItems * 0.07;
+    //     $Total = $Tax + $totalPriceAllItems;
+    //     echo "<div class='total'>
+    //             <p>SubTotal : $totalPriceAllItems ฿</p>
+    //             <p>Tax : $Tax ฿</p>
+    //             <p>Discount : 0.00 ฿</p>
+    //             <p>Total : $Total ฿</p>
+    //         </div>
+    //     </div>";
+    // }
+?>
 </body>
 </html>

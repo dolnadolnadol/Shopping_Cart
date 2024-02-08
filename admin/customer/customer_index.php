@@ -141,7 +141,7 @@
                     <td>{$row['Sex']}</td>
                     <td>{$row['Address']}</td>
                     <td>{$row['Tel']}</td>
-                    <td>{$row['UserName']}</td>
+                    <td>{$row['Username']}</td>
                     <td class='action-buttons'>
                         <form class='action-button' action='customer_update.php' method='post'>  
                             <input type='hidden' name='id_customer' value={$row['CusID']}>

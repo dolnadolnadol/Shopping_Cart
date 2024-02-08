@@ -77,8 +77,75 @@
         .buy-button:hover {
             background-color: #2980b9;
         }
+        .button-increase {
+            border: 1px solid #f5f6f6;
+            padding: 4px;
+            display: inline-block;
+            border-radius: 3px;
+        }
+
+        #amount {
+            border: none;
+            outline: none;
+            background: none;
+            text-align: center;
+            width: 50px;
+            height: 25px;
+        }
+
+        #change-amount {
+            background-color: #f3f6f9;
+            border: 1px solid #f5f6f6;
+            width: 1.4em;
+            border-radius: .25rem;
+            font-weight: 300;
+            height: 100%;
+            font-size: 1.4em;
+            color: #878a99;
+        }
+
+        #change-amount:hover {
+            background-color: #f3f0f0;
+        }
+
+        #change-amount.clicked {
+            background-color: #030000;
+        }
 
     </style>
+    <script>
+        function updateTotalPrice() {
+            var total = 0;
+            var products = document.querySelectorAll('.product');
+            products.forEach(function (product, index) {
+                var pricePerUnit = parseFloat(product.querySelector('.product-details p:nth-child(2)').textContent.split(' ')[1]);
+                var quantity = parseInt(product.querySelector('.amount').value);
+                var totalPrice = pricePerUnit * quantity;
+
+                var totalPriceElement = product.querySelector('.total-price p');
+                totalPriceElement.textContent = 'Price: ' + totalPrice;
+                totalPriceElement.parentElement.id = 'total-price-' + index;
+
+                total += totalPrice;
+            });
+
+            document.querySelector('.total p').textContent = 'Total Price for All Items: ' + total;
+        }
+
+        function incrementAmount(index) {
+            var amountInput = document.querySelector('.amount[data-index="' + index + '"]');
+            amountInput.value = parseInt(amountInput.value) + 1;
+            updateTotalPrice();
+        }
+
+        function decrementAmount(index) {
+            var amountInput = document.querySelector('.amount[data-index="' + index + '"]');
+            if (parseInt(amountInput.value) > 1) {
+                amountInput.value = parseInt(amountInput.value) - 1;
+                updateTotalPrice();
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -90,48 +157,65 @@
             $totalPriceAllItems = 0;
             $cx =  mysqli_connect("localhost", "root", "", "shopping");
 
-            foreach ($_SESSION['cart'] as $productId => $amount) {
-                $cur = "SELECT * FROM Product";
-                $msresults = mysqli_query($cx, $cur);
-                if (mysqli_num_rows($msresults) > 0) {
-                    while ($row = mysqli_fetch_array($msresults)) {
-                      
-                        $totalPrice = $row['PricePerUnit'] * $amount;
-                        $totalPriceAllItems += $totalPrice;
 
-                        echo '<div class="product">';
-                        echo '<img src="cart.png" alt="Product">';
-                        echo '<div class="product-details">';
-                        echo '<p>' . $row['ProName'] . '</p>';
-                        echo '<p>Price: ' . $row['PricePerUnit'] . '</p>';
-                        echo '<p>Quantity: ' . $amount . '</p>';
-                        echo '</div>';
-                        
-                        // Display total price to the right
-                        echo '<div class="total-price">';
-                        echo '<p>Price: ' . $totalPrice . '</p>';
-                        echo '</div>';
 
-                        // Form to remove item from cart
-                        echo '<form method="post" action="accessCart.php">';
-                        echo '<input type="hidden" name="deleteID" value="' . $row['ProID'] . '">';
-                        echo '<input type="submit" class="remove-btn" value="Remove">';
-                        echo '</form>';
-                        echo '</div>';
-                    }
+            //Find User ID
+            $user = $_SESSION['username'];
+            $uid_query = mysqli_query($cx, "SELECT CusID FROM customer WHERE Username = '$user'");
+            $uid_row = mysqli_fetch_assoc($uid_query);
+            $uid_results = $uid_row['CusID'];
+
+
+            //Find product.ProID , product.ProName  ,product.PricePerUnit , Qty
+            $cur = "SELECT product.ProID , product.ProName  ,product.PricePerUnit , Qty  FROM cart
+            INNER JOIN product ON cart.ProID = product.ProID";
+            $msresults = mysqli_query($cx, $cur);
+
+            if (mysqli_num_rows($msresults) > 0) {
+                $index = 0;
+                while ($row = mysqli_fetch_array($msresults)) {
+                    $totalPrice = $row['PricePerUnit'] * $row['Qty'];
+                    $totalPriceAllItems += $totalPrice;
+
+
+                    echo '<div class="product">';
+                    echo '<img src="cart.png" alt="Product">';
+                    echo '<div class="product-details">';
+                    echo '<p>' . $row['ProName'] . '</p>';
+                    echo '<p>Price: ' . $row['PricePerUnit'] . '</p>';
+                    echo "<div class='button-increase'>
+                        <button type='button' id='change-amount' class='change-amount' onclick='decrementAmount($index)'>-</button>    
+                        <input type='text' name='amount' id='amount' class='amount' data-index='$index' value='" . $row['Qty'] . "' readonly>
+                        <button type='button' id='change-amount' class='change-amount' onclick='incrementAmount($index)'>+</button>
+                    </div>";
+                    echo '</div>';
+
+                    echo '<div class="total-price" id="total-price-' . $index . '">';
+                    echo '<p>Price: ' . $totalPrice . '</p>';
+                    echo '</div>';
+
+                    echo '<form method="post" action="accessCart.php">';
+                    echo '<input type="hidden" name="CusID" value="' . $uid_results . '">';
+                    echo '<input type="hidden" name="deleteID" value="' . $row['ProID'] . '">';
+                    echo '<input type="submit" class="remove-btn" value="Remove">';
+                    echo '</form>';
+                    echo '</div>';
+
+                    $index++;
                 }
             }
+
             echo '<div class="total">';
             echo '<p>Total Price for All Items: ' . $totalPriceAllItems . '</p>';
             echo '</div>';
 
+            echo '<div classname="buy-button">
+                <form method="post" action="accessInvoice.php" >
+                    <input type="hidden" name="id_customer" value="'.$uid_results.'">
+                    <input class="buy-button" type="submit" value="Buy Products">
+                </form>
+            </div>';        
         ?>
-        <div classname='buy-button'>
-            <form method='post' action='invoice.php' >
-                <input type='hidden' name='id_product' value='{$row['ProID']}'>
-                <input class='buy-button' type='submit' value='ซื้อสินค้า'>
-            </form>
-        </div>    
     </div>
 </body>
 </html>
