@@ -44,6 +44,18 @@
             text-align: right;
             border-bottom: 1px solid #ddd;
         }
+
+        .buy-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .buy-button:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
@@ -63,7 +75,9 @@
 
     $uid_results = $row['CusID'];
     echo $_POST['id_invoice'];
+
     if(isset($_POST['id_invoice'])){
+        $uid = $uid_results;
         $InvID = $_POST['id_invoice'];
         $msresults = mysqli_query($cx, "SELECT invoice.*, invoice_detail.* , product.*
                                         FROM invoice
@@ -72,6 +86,7 @@
                                         WHERE invoice.CusID = '$uid_results' AND invoice_detail.InvID = '$InvID'");
         
         $totalPriceAllItems = 0; 
+        
 
         while ($row = mysqli_fetch_array($msresults)) {
             $totalPrice = $row['PricePerUnit'] * $row['Qty'];
@@ -93,40 +108,15 @@
                 <p>Discount : 0.00 ฿</p>
                 <p>Total : $Total ฿</p>
             </div>
+            <form method='post' action='accessOrder.php' classname='buy-button'>
+                <input type='hidden' name='id_invoice' value='".$InvID."'>  
+                <input type='hidden' name='id_customer' value='". $uid ."'> 
+                <input class='buy-button' type='submit' value='ชำระเงิน'>           
+            </form>
         </div>";
-    }
-    
-    // else 
-    // {
-      
-    //     $msresults = mysqli_query($cx, "SELECT cart.*, product.*
-    //                                     FROM cart
-    //                                     INNER JOIN product ON cart.ProID = product.ProID
-    //                                     WHERE cart.CusID = '$uid_results'");
-        
-    //     $totalPriceAllItems = 0; 
 
-    //     while ($row = mysqli_fetch_array($msresults)) {
-    //         $totalPrice = $row['PricePerUnit'] * $row['Qty'];
-    //         $totalPriceAllItems += $totalPrice;
-            
-    //         echo "<div class='product'>
-    //                 <span>{$row['ProName']}</span>
-    //                 <span>{$row['PricePerUnit']} ฿</span>
-    //                 <span>Quantity: {$row['Qty']}</span>
-    //                 <span>Total: $totalPrice ฿</span>
-    //             </div>";
-    //     }
-    //     $Tax = $totalPriceAllItems * 0.07;
-    //     $Total = $Tax + $totalPriceAllItems;
-    //     echo "<div class='total'>
-    //             <p>SubTotal : $totalPriceAllItems ฿</p>
-    //             <p>Tax : $Tax ฿</p>
-    //             <p>Discount : 0.00 ฿</p>
-    //             <p>Total : $Total ฿</p>
-    //         </div>
-    //     </div>";
-    // }
+        
+    }
 ?>
 </body>
 </html>

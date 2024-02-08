@@ -2,7 +2,7 @@
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    /* Add product in cart */
+
     /* Manage Invoice to send */
     if(isset($_POST['id_customer'])){
         $cusID = $_POST['id_customer'];
@@ -47,10 +47,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Insert invoice_detail record
             $stmt = mysqli_query($cx, "INSERT INTO invoice_detail (NumID, InvID, ProID, Qty, Status)
-                VALUES ('$NumID', '$InvID', '$proID', '$Qty', 'Pending');");        
+                VALUES ('$NumID', '$InvID', '$proID', '$Qty', 'Unpaid');");        
         }
 
-            /*------------จิงๆไม่ควรอยู่ตรงนี้------------*/
+            /*-------------------------------------*/
             $stmt = mysqli_query($cx, "UPDATE invoice SET TotalPrice ='$Total'
             WHERE InvID ='$InvID'");
             /*-------------------------------------*/
