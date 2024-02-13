@@ -65,7 +65,7 @@
         <h1>Order History</h1>
         <?php
             $cx =  mysqli_connect("localhost", "root", "", "shopping");
-            $cur = "SELECT invoice.* , invoice_detail.Status FROM invoice 
+            $cur = "SELECT invoice.*  FROM invoice 
             INNER JOIN invoice_detail ON invoice_detail.InvID = invoice.InvID";
             $msresults = mysqli_query($cx, $cur);
 

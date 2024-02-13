@@ -1,4 +1,5 @@
 <?php include('./component/session.php'); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,7 +85,7 @@
 
 <?php include('./component/backButton.php')?>
 <?php    
-    $cx =  mysqli_connect("localhost", "root", "", "shopping");
+    $cx = mysqli_connect("localhost", "root", "", "shopping");
     $user = $_SESSION['username'];
 
     echo "<div class='invoice-container'>";
@@ -98,54 +99,62 @@
     if(isset($_POST['id_invoice'])){
         $customerId = $customerDetails['CusID'];
         $invoiceId = $_POST['id_invoice'];
-        $invoiceQuery = mysqli_query($cx, "SELECT invoice.*, invoice_detail.*, product.*
-                                           FROM invoice
-                                           INNER JOIN invoice_detail ON invoice.InvID = invoice_detail.InvID
-                                           INNER JOIN Product ON invoice_detail.ProID = Product.ProID
-                                           WHERE invoice.CusID = '$customerId' AND invoice_detail.InvID = '$invoiceId'");
-        
-        $totalPriceAllItems = 0; 
 
-        while ($row = mysqli_fetch_array($invoiceQuery)) {
-            $totalPrice = $row['PricePerUnit'] * $row['Qty'];
-            $totalPriceAllItems += $totalPrice;
-
-            echo "<div class='invoice-details'>
-                    <p>Invoice #: {$row['InvID']}</p>
-                    <p>Date: {$row['Period']}</p>
-                </div>";
-
-            echo "<div class='customer-details'>
+        echo "<div class='customer-details'>
                     <h2>Customer Details</h2>
                     <p>Name: {$customerDetails['CusName']}</p>
                     <p>Email: {$customerDetails['Tel']}</p>
                     <p>Address: {$customerDetails['Address']}</p>
                   </div>";
+        
+        $invoiceQuery = mysqli_query($cx, "SELECT invoice.* , invoice_detail.*, product.*
+                                           FROM invoice
+                                           INNER JOIN invoice_detail ON invoice.InvID = invoice_detail.InvID
+                                           INNER JOIN Product ON invoice_detail.ProID = Product.ProID
+                                           WHERE invoice.CusID = '$customerId' AND invoice_detail.InvID = '$invoiceId'");
+    
+        $totalPriceAllItems = 0; 
+        $stt = '';
+        $detailsDisplayed = false;
 
-            echo "<table>
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Unit Price</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>";
+        while ($row = mysqli_fetch_array($invoiceQuery)) {
+            $totalPrice = $row['PricePerUnit'] * $row['Qty'];
+            $totalPriceAllItems += $totalPrice;
+
+            $stt = $row['Status'];
+
+            if (!$detailsDisplayed) {
+                echo "<div class='invoice-details'>
+                        <p>Invoice #: {$row['InvID']}</p>
+                        <p>Date: {$row['Period']}</p>
+                    </div>";
+                
+                echo "<table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>";
+
+                $detailsDisplayed = true; // ตั้งค่า flag เป็นจริง เพื่อไม่ให้แสดงซ้ำ
+            }
 
             echo "<tr>
                     <td>{$row['ProName']}</td>
                     <td>{$row['Qty']}</td>
                     <td>{$row['PricePerUnit']} ฿</td>
                     <td>$totalPrice</td>
-                  </tr>
-                </tbody>
-              </table>";
+                  </tr>";
         }
+
+        echo "</table>";
 
         $tax = $totalPriceAllItems * 0.07;
         $totalAmount = $tax + $totalPriceAllItems;
- 
+
         echo "<div class='invoice-total'>
                 <p>SubTotal: $totalPriceAllItems ฿</p>
                 <p>Tax: $tax ฿</p>
@@ -153,17 +162,17 @@
                 <p>Total: $totalAmount ฿</p>
               </div>";
 
-        echo "<div class='buy-button-container'>
-                <form method='post' action='accessOrder.php'>
-                    <input type='hidden' name='id_invoice' value='".$invoiceId."'>  
-                    <input type='hidden' name='id_customer' value='". $customerId ."'> 
-                    <input class='buy-button' type='submit' value='ชำระเงิน'>           
-                </form>
-              </div>";
-        
-        echo "</div>";
+        if($stt == 'Unpaid'){ 
+            echo "<div class='buy-button-container'>
+                    <form method='post' action='accessOrder.php'>
+                        <input type='hidden' name='id_invoice' value='".$invoiceId."'>  
+                        <input type='hidden' name='id_customer' value='". $customerId ."'> 
+                        <input class='buy-button' type='submit' value='ชำระเงิน'>           
+                    </form>
+                </div>";         
+            echo "</div>";
+        }
     }
 ?>
-
 </body>
 </html>

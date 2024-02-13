@@ -48,14 +48,14 @@
             margin-right: 5px;
         }
 
-        #addorderButton {
+        #addOrderButton {
             background-color: #4b93ff;
             color: #fff;
             padding: 5px 10px;
             border: none;
         }
 
-        #addorderButton:hover {
+        #addOrderButton:hover {
             background-color: #3a75c4;
         }
 
@@ -106,7 +106,7 @@
             </form>
         </div>
         <div>
-            <form class="add-order-form" action='order_insert_form.html' method='post'>
+            <form class="add-order-form" action='order_insert.php' method='post'>
                 <input type='submit' id="addOrderButton" value='Add Order'/>
             </form>
             <br>
@@ -146,11 +146,11 @@
                     <td>{$row['Status']}</td>
                     <td>
                         <form action='order_update.php' method='post' style='display: inline-block;'>  
-                            <input type='hidden' name='id_order' value={$row['ProID']}>
+                            <input type='hidden' name='id_order' value={$row['RecID']}>
                             <input type='image' alt='update' src='pen-solid.svg'/>
                         </form>
                         <form action='order_delete_confirm.php' method='post' style='display: inline-block;'>
-                            <input type='hidden' name='id_order' value={$row['ProID']}>
+                            <input type='hidden' name='id_order' value={$row['RecID']}>
                             <input type='image' alt='delete' src='trash-solid.svg'/>
                         </form>
                     </td>

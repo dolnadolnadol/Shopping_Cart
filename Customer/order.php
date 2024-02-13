@@ -1,10 +1,11 @@
 <?php include('./component/session.php'); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>order</title>
+    <title>Order</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -82,7 +83,6 @@
 </head>
 <body>
 
-
 <?php include('./component/navbar.php'); ?>
 <?php include('./component/backButton.php')?>
 
@@ -99,54 +99,57 @@
     $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE Username = '$user'");  
     $customerDetails = mysqli_fetch_array($customerDetailsQuery);
 
+    echo "<div class='customer-details'>
+        <h2>Customer Details</h2>
+        <p>Name: {$customerDetails['CusName']}</p>
+        <p>Email: {$customerDetails['Tel']}</p>
+        <p>Address: {$customerDetails['Address']}</p>
+    </div>";
+
     if(isset($_POST['id_order'])){
         $customerId = $customerDetails['CusID'];
         $RecId = $_POST['id_order'];
-        $orderQuery = mysqli_query($cx, "SELECT Product.*, receive_detail.*  , receive.Period
+        $orderQuery = mysqli_query($cx, "SELECT Product.*, receive_detail.*  , receive.OrderDate
                     FROM receive_detail
                     INNER JOIN receive ON receive.RecID = receive_detail.RecID
                     INNER JOIN Product ON Product.ProID = receive_detail.ProID
                     WHERE receive_detail.RecID = '$RecId '");
                     
         $totalPriceAllItems = 0; 
+        $detailsDisplayed = false; 
 
         while ($row = mysqli_fetch_array($orderQuery)) {
             $totalPrice = $row['PricePerUnit'] * $row['Qty'];
             $totalPriceAllItems += $totalPrice;
 
-            echo "<div class='order-details'>
-                    <p>order #: {$row['RecID']}</p>
-                    <p>Date: {$row['Period']}</p>
+            if (!$detailsDisplayed) {
+                echo "<div class='order-details'>
+                    <p>Order #: {$row['RecID']}</p>
+                    <p>Date: {$row['OrderDate']}</p>
                 </div>";
+                
+                echo "<table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>";
 
-            echo "<div class='customer-details'>
-                    <h2>Customer Details</h2>
-                    <p>Name: {$customerDetails['CusName']}</p>
-                    <p>Email: {$customerDetails['Tel']}</p>
-                    <p>Address: {$customerDetails['Address']}</p>
-                  </div>";
-
-            echo "<table>
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Unit Price</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>";
+                $detailsDisplayed = true; 
+            }
 
             echo "<tr>
                     <td>{$row['ProName']}</td>
                     <td>{$row['Qty']}</td>
                     <td>{$row['PricePerUnit']} ฿</td>
                     <td>$totalPrice</td>
-                  </tr>
-                </tbody>
-              </table>";
+                  </tr>";
         }
 
+        echo "</table>";
         $tax = $totalPriceAllItems * 0.07;
         $totalAmount = $tax + $totalPriceAllItems;
  

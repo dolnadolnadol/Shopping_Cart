@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $stmt = mysqli_query($cx, "INSERT INTO receive_detail (RecID, NumID, ProID, Qty) VALUES ('$RecID', '$NumID', '$proID', '$Qty')");
 
                     // Update Status
-                    $stmt = mysqli_query($cx, "UPDATE invoice_detail SET Status = 'Paid' WHERE invID ='$invID'");
+                    $stmt = mysqli_query($cx, "UPDATE invoice SET Status = 'Paid' WHERE invID ='$invID'");
 
                     // Update Stock and OnHands
                     $stmt = mysqli_query($cx, "UPDATE product SET StockQty = StockQty - '$Qty', OnHands = OnHands - '$Qty' WHERE ProID ='$proID'");

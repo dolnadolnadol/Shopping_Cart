@@ -100,7 +100,7 @@
 <body>
 
     <div class="invoice-form">
-        <form action="order_save_update.php" method="post">
+        <form action="order_save_insert.php" method="post">
             <h2 style="color: #007bff;">Create Order</h2>
     
             <!-- Invoice Information Section -->
@@ -109,27 +109,23 @@
                 <div class="form-group">
                     <label for="RecID">RecID:</label>
                 <?php     
-
+                    // Generate new RECEIVE ID
                     $cx =  mysqli_connect("localhost", "root", "", "shopping");
-                    $RecID = $_POST['id_order'];
+                    $result = mysqli_query($cx, "SELECT MAX(RecID) AS rec_id FROM receive");
+                    $row = mysqli_fetch_assoc($result);
+                    $lastID = $row['rec_id'];
+                    $numericPart = intval(substr($lastID, 6));
+                    $newNumericPart = $numericPart + 1;
+                    $RecID = 'rec_id'.str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
                     echo "<input type='text' id='RecID' name='RecID' value='$RecID' readonly>
                     </div>";
-                    $cur = "SELECT Status FROM receive WHERE RecID = '$RecID'";
-                    $msresults = mysqli_query($cx, $cur);
-                    $row = mysqli_fetch_array($msresults);
-                    $status = $row['Status'];
-
-
                 ?>
                 <div class="form-group">
                     <label for="status">Status:</label>
                     <select id="status" name="status" required>
-                        <?php
-                            $statusCompare = ['Pending', 'Inprogress', 'Delivered'];
-                            foreach ($statusCompare as $value) {
-                                echo "<option value='$value'".($value == $status ? ' selected' : '').">$value</option>";
-                            }
-                        ?>
+                        <option value="pending">Pending</option>
+                        <option value="Inprogress">Inprogress</option>
+                        <option value="Delivered">Delivered</option>
                     </select>
                 </div>
             </div>
@@ -157,22 +153,16 @@
 
             <!-- Add Products Section -->
             <div class="form-block">
-                <!-- <h3 style="color: #007bff;">Add Products</h3> -->
-                <!-- <div class="form-group">
-                <label for="productName">Product Name:</label>
-                <select id="productName" name="productName[]">
+                <h3 style="color: #007bff;">Add Products</h3>
+                <div class="form-group">
+                    <label for="productName">Product Name:</label>
+                    <select id="productName" name="productName[]" >
                         <?php
-                        // Your PHP code to fetch products from the database
-                        $result = mysqli_query($cx, "SELECT *
-                                                    FROM Product
-                                                    WHERE ProID NOT IN (SELECT DISTINCT ProID FROM receive_detail WHERE RecID = '$RecID')");
-                        if ($result) {
+                            // Your PHP code to fetch products from the database
+                            $result = mysqli_query($cx, "SELECT * FROM Product");
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<option data-product-id='{$row['ProID']}' data-price='{$row['PricePerUnit']}' value='{$row['ProID']}'>{$row['ProName']}</option>";
                             }
-                        } else {
-                            echo "Error: " . mysqli_error($cx);
-                        }
                         ?>
                     </select>
                 </div>
@@ -181,7 +171,7 @@
                     <input type="text" id="quantity" name="quantity[]" >
                 </div>
                 <button type="button" id="addProductBtn">Add Product</button>
-            </div> -->
+            </div>
     
 
             <!-- Product Table -->
@@ -195,24 +185,7 @@
                         <th>Total Price</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php
-                        $result = mysqli_query($cx, " SELECT receive_detail.* , Product.*,
-                            receive_detail.Qty * Product.PricePerUnit AS TotalPrice
-                            FROM receive_detail 
-                            INNER JOIN Product ON receive_detail.ProID = Product.ProID WHERE receive_detail.RecID = '$RecID'");
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            echo "<input type='hidden' name='ProID[]' value={$row['ProID']}";
-                            echo "<tr>
-                                    <td>{$row['ProName']}</td>
-                                    <td><input type='text' name='Qty[]' value='{$row['Qty']}' class='quantity-input'></td>
-                                    <td>{$row['PricePerUnit']}</td>
-                                    <td class='total-price'>{$row['TotalPrice']}</td>
-                                  </tr>
-                                  ";
-                        }          
-                    ?>
-                </tbody>
+                <tbody></tbody>
                 <tfoot>
                     <tr>
                         <td colspan="3" style="text-align: right;"><strong>Total Price:</strong></td>
@@ -230,42 +203,77 @@
 
     <script>
     // Initialize an array to store selected product names
+    var selectedProducts = [];   
 
-        $(document).ready(function() {
+    $(document).ready(function() {
 
-        // Event listener for quantity input changes
-        $('.quantity-input').on('input', function() {
-                updateTotalPrice($(this).closest('tr'));
-            });
+    // Add Product Button Click Event using the 'on' method
+    $(document).on('click', '#addProductBtn', function() {
+        addProduct();
+    });
 
-            // Function to update total price based on quantity
-            function updateTotalPrice(row) {
-                var quantity = parseInt(row.find('.quantity-input').val());
-                var pricePerUnit = parseFloat(row.find('td:eq(2)').text());
-                var totalPrice = quantity * pricePerUnit;
+    function addProduct() {
+        // Get values from inputs
+        var productId = $('#productName option:selected').data('product-id');
+        var productName = $('#productName option:selected').text();
+        var quantity = $('#quantity').val();
+        var pricePerUnit = $('#productName option:selected').data('price');
 
-                // Update the total price cell in the same row
-                row.find('.total-price').text(totalPrice.toFixed(2));
+        // Validate quantity
+        if (!quantity || isNaN(quantity) || quantity <= 0) {
+            alert("Please enter a valid quantity.");
+            return;
+        }
 
-                // Call a function to update the grand total if needed
-                updateGrandTotal();
-            }
+        // Calculate total price
+        var totalPrice = quantity * pricePerUnit;
 
-            // Function to update the grand total
-            function updateGrandTotal() {
-                var grandTotal = 0;
+        // Create table row
+        var row = '<tr>' +
+            '<td>' + productName + '</td>' +
+            '<td>' + quantity + '</td>' +
+            '<td>' + pricePerUnit + '</td>' +
+            '<td>' + totalPrice + '</td>' +
+            '</tr>';
 
-                // Iterate through each row and add up the total prices
-                $('.total-price').each(function() {
-                    grandTotal += parseFloat($(this).text());
-                });
+        // Append row to the table
+        $('#productTable tbody').append(row);
 
-         
-                $('#totalProductPrice').text(grandTotal.toFixed(2));
+        // Update total price
+        updateTotalPrice();
 
-                // Update hidden input value
-                $('#totalProductPriceInput').val(grandTotal.toFixed(2));
-            }
+        // Store selected product details in array
+        var selectedProduct = {
+            productId: productId,
+            productName: productName,
+            quantity: quantity
+        };
+
+        selectedProducts.push(selectedProduct);
+        $('#selectedProductsInput').val(JSON.stringify(selectedProducts));
+
+
+        // Clear input fields
+        $('#productName').val('');
+        $('#quantity').val('');
+
+        console.log(selectedProducts);
+    }
+
+    function updateTotalPrice() {
+        // Calculate total product price
+        var totalProductPrice = 0;
+        $('#productTable tbody tr').each(function() {
+            var totalPriceCell = $(this).find('td:last-child').text();
+            totalProductPrice += parseFloat(totalPriceCell);
+        });
+
+        // Update total price in the footer
+        $('#totalProductPrice').text(totalProductPrice.toFixed(2));
+
+        // Update hidden input value
+        $('#totalProductPriceInput').val(totalProductPrice.toFixed(2));
+    }
     });
        
     </script>

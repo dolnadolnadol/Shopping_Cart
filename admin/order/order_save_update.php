@@ -1,61 +1,60 @@
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // ตรวจสอบว่ามีข้อมูลที่เราต้องการจากฟอร์มหรือไม่
-    
-        // เชื่อมต่อกับฐานข้อมูล
-        $cx = mysqli_connect('localhost', 'root', '', 'shopping');
+<?php /* get connection */
+    // header( "location: ./stock_index.php");
+   
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        // ดึงข้อมูลจากฟอร์ม
+        $conn = mysqli_connect("localhost", "root", "", "shopping"); 
         $RecID = $_POST['RecID'];
+        $Qty = $_POST['Qty'];
+        $ProID = $_POST['ProID'];
+     
+        $totalPrice = $_POST['totalProductPrice'];
+        $cusID = $_POST['customerName'];
         $status = $_POST['status'];
-        $customerName = $_POST['customerName'];
-        $dueDate = $_POST['dueDate'];
-        $amountList = $_POST['amountList'];
-        $quantityList = $_POST['quantityList'];
-        $totalProductPrice = $_POST['totalProductPrice'];
 
-        echo $RecID;
+        // Now $selectedProducts contains the array, and you can use it as needed
+        echo $totalPrice;
+        echo $cusID;
         echo $status;
-        echo $customerName;
-        echo $dueDate;
-        echo $totalProductPrice;
+        print_r($ProID);
+        
 
-        $selectedProducts = $_POST['selectedProducts'];
-        $proIDs = explode(',', $selectedProducts);
+        // Insert RECEIVE record
+        if($status != 'Pending'){
+            $stmt = mysqli_query($conn, "UPDATE receive SET TotalPrice = '$totalPrice', Status ='$status'
+            WHERE RecID ='$RecID'");
 
-        foreach ($proIDs as $proID) {
-            // ทำอะไรก็ตามที่ต้องการกับ $proID
-            echo "Selected ProID: " . $proID . "<br>";
+        }
+        else{
+            $stmt = mysqli_query($conn, "UPDATE receive SET DeliveryDate = NOW() , TotalPrice = '$totalPrice'
+            WHERE RecID ='$RecID');");
         }
 
-        // ทำการ Insert ข้อมูลลงในตาราง receive
-        $insertReceiveQuery = "INSERT INTO receive (RecID, OrderDate , CusID , totalPrice ,Status) VALUES ('$RecID',  '$dueDate' ,'$totalProductPrice' ,'$status')";
-        mysqli_query($cx, $insertReceiveQuery);
+        if (count($ProID) == count($Qty)) {
+                $totalItems = count($ProID);
+            
+                for ($i = 0; $i < $totalItems; $i++) {
+                    $proID = $ProID[$i];
+                    $qty = $Qty[$i];
 
-        // ทำการ Insert ข้อมูลลงในตาราง order
-        $insertOrderQuery = "INSERT INTO orders (RecID, CusName, DueDate) VALUES ('$RecID', '$customerName', '$dueDate')";
-        mysqli_query($cx, $insertOrderQuery);
+                    $cur = "SELECT * FROM receive_detail WHERE RecID = '$RecID' AND ProID ='$proID'";
+                    $msresults = mysqli_query($conn, $cur);
+                    $row = mysqli_fetch_assoc($msresults);
+                    $oldQty = $row['Qty'];
+                    $stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty + '$oldQty', OnHands = OnHands + '$oldQty' WHERE ProID ='$proID'");
 
-        // ทำการ Insert ข้อมูลลงในตาราง order_details สำหรับแต่ละสินค้าในรายการ
-        for ($i = 0; $i < count($productList); $i++) {
-            $productName = $productList[$i];
-            $amount = $amountList[$i];
-            $quantity = $quantityList[$i];
+                    // Update Stock and OnHands
+                    $stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty - '$qty', OnHands = OnHands - '$qty' WHERE ProID ='$proID'");
 
-            $insertOrderDetailsQuery = "INSERT INTO receive_details (RecID, ProName, Amount, Quantity) 
-                                        VALUES ('$RecID', '$productName', '$amount', '$quantity')";
-            mysqli_query($cx, $insertOrderDetailsQuery);
+                    $stmt = mysqli_query($conn, "UPDATE receive_detail SET Qty = '$qty'
+                    WHERE ProID ='$proID' AND RecID ='$RecID'");
+
+
+                    echo "ProID: $proID, Qty: $qty<br>";
+                }
+        } else {
+            echo "ขนาดของอาร์เรย์ ProID และ Qty ไม่เท่ากัน";
+        }             
         }
-
-        // ปิดการเชื่อมต่อกับฐานข้อมูล
-        mysqli_close($cx);
-
-        // ส่งผลการทำงานกลับไปยังเว็บไซต์หลักหรือทำการ redirect
-        header('Location: success_page.php');
-        exit();
-    } 
-else {
-    // ถ้าไม่ใช่การ submit จากฟอร์ม
-    echo 'Invalid request.';
-}
+        header( "location: ./order_index.php");  
 ?>

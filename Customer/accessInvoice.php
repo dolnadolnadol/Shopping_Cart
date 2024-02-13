@@ -22,8 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $InvID = 'INV' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
 
         // Insert invoice record
-        $stmt = mysqli_query($cx, "INSERT INTO invoice (InvID, Period, CusID)
-            VALUES ('$InvID', NOW(), '$cusID');");
+        $stmt = mysqli_query($cx, "INSERT INTO invoice (InvID, Period, CusID , Status)
+            VALUES ('$InvID', NOW(), '$cusID' , 'Unpaid');");
 
         $totalPriceAllItems = 0; 
         $Total = 0;
@@ -46,8 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $Total = $Tax + $totalPriceAllItems;
 
             // Insert invoice_detail record
-            $stmt = mysqli_query($cx, "INSERT INTO invoice_detail (NumID, InvID, ProID, Qty, Status)
-                VALUES ('$NumID', '$InvID', '$proID', '$Qty', 'Unpaid');");        
+            $stmt = mysqli_query($cx, "INSERT INTO invoice_detail (NumID, InvID, ProID, Qty)
+                VALUES ('$NumID', '$InvID', '$proID', '$Qty');");        
         }
 
             /*-------------------------------------*/
