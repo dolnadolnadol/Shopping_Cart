@@ -3,46 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice</title>
+    <title>order</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f8f8;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
+        .order-container {
+            max-width: 800px;
+            margin: 50px auto;
+            border: 2px solid #4CAF50;
             background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
+        .order-header {
             text-align: center;
-            color: #ef476f;
+            color: #4CAF50;
         }
 
-        .product {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
+        .order-details,
+        .customer-details,
+        .order-table,
+        .order-total {
+            margin-top: 20px;
         }
 
-        .total {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        .order-total {
             text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
             font-weight: bold;
-            margin-top: 20px;
+            color: #4CAF50;
         }
 
-        .customer-details {
-            margin-top: 20px;
+        h1, h2 {
+            color: #333;
+        }
+
+        .buy-button-container {
             text-align: right;
-            border-bottom: 1px solid #ddd;
         }
 
         .buy-button {
@@ -59,58 +80,89 @@
     </style>
 </head>
 <body>
+
 <?php include('backButton.php')?>
-<?php 
+
+<?php    
     session_start();
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
     $user = $_SESSION['username'];
-    $uid_query = mysqli_query($cx, "SELECT * FROM customer WHERE Username = '$user'");  
-    $row = mysqli_fetch_array($uid_query);
-    echo "<div class='container'>
-            <h1>Order</h1>
-            <div class='customer-details'>
-                <p>Customer Name: {$row['CusName']}</p>
-                <p>Tel: {$row['Tel']}</p>
-                <p>Address: {$row['Address']}</p>
-            </div>";
 
-    $uid_results = $row['CusID'];
+    echo "<div class='order-container'>";
+    echo "<div class='order-header'>
+            <h1>Order</h1>
+          </div>";
+
+    $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE Username = '$user'");  
+    $customerDetails = mysqli_fetch_array($customerDetailsQuery);
 
     if(isset($_POST['id_order'])){
-        $uid = $uid_results;
-        $RecID = $_POST['id_order'];
-  
-        $msresults = mysqli_query($cx, "SELECT Product.*, receive_detail.* 
-        FROM receive_detail
-        INNER JOIN Product ON Product.ProID = receive_detail.ProID
-        WHERE receive_detail.RecID = RecID");
-
+        $customerId = $customerDetails['CusID'];
+        $RecId = $_POST['id_order'];
+        $orderQuery = mysqli_query($cx, "SELECT Product.*, receive_detail.*  , receive.Period
+                    FROM receive_detail
+                    INNER JOIN receive ON receive.RecID = receive_detail.RecID
+                    INNER JOIN Product ON Product.ProID = receive_detail.ProID
+                    WHERE receive_detail.RecID = '$RecId '");
+                    
         $totalPriceAllItems = 0; 
-        
-        while ($row = mysqli_fetch_array($msresults)) {
-            echo $row['ProName'];
-            echo $row['PricePerUnit'];
-            echo '123';
+
+        while ($row = mysqli_fetch_array($orderQuery)) {
             $totalPrice = $row['PricePerUnit'] * $row['Qty'];
             $totalPriceAllItems += $totalPrice;
-            
-            echo "<div class='product'>
-                    <span>{$row['ProName']}</span>
-                    <span>{$row['PricePerUnit']} ฿</span>
-                    <span>Quantity: {$row['Qty']}</span>
-                    <span>Total: $totalPrice ฿</span>
-                </div>";
-        }
-        $Tax = $totalPriceAllItems * 0.07;
-        $Total = $Tax + $totalPriceAllItems;
 
-        echo "<div class='total'>
-                <p>SubTotal : $totalPriceAllItems ฿</p>
-                <p>Tax : $Tax ฿</p>
-                <p>Discount : 0.00 ฿</p>
-                <p>Total : $Total ฿</p>
-            </div>
-        </div>";
+            echo "<div class='order-details'>
+                    <p>order #: {$row['RecID']}</p>
+                    <p>Date: {$row['Period']}</p>
+                </div>";
+
+            echo "<div class='customer-details'>
+                    <h2>Customer Details</h2>
+                    <p>Name: {$customerDetails['CusName']}</p>
+                    <p>Email: {$customerDetails['Tel']}</p>
+                    <p>Address: {$customerDetails['Address']}</p>
+                  </div>";
+
+            echo "<table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+
+            echo "<tr>
+                    <td>{$row['ProName']}</td>
+                    <td>{$row['Qty']}</td>
+                    <td>{$row['PricePerUnit']} ฿</td>
+                    <td>$totalPrice</td>
+                  </tr>
+                </tbody>
+              </table>";
+        }
+
+        $tax = $totalPriceAllItems * 0.07;
+        $totalAmount = $tax + $totalPriceAllItems;
+ 
+        echo "<div class='order-total'>
+                <p>SubTotal: $totalPriceAllItems ฿</p>
+                <p>Tax: $tax ฿</p>
+                <p>Discount: 0.00 ฿</p>
+                <p>Total: $totalAmount ฿</p>
+              </div>";
+
+        echo "<div class='buy-button-container'>
+                <form method='post' action='accessOrder.php'>
+                    <input type='hidden' name='id_order' value='".$RecId ."'>  
+                    <input type='hidden' name='id_customer' value='". $customerId ."'> 
+                    <input class='buy-button' type='submit' value='ชำระเงิน'>           
+                </form>
+              </div>";
+        
+        echo "</div>";
     }
 ?>
 </body>

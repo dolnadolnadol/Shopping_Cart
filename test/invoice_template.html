@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="invoice-container">
+    <div class="invoice-header">
+        <h1>Invoice</h1>
+    </div>
+    <div class="invoice-details">
+        <p>Invoice #: <?php echo $invoiceNumber; ?></p>
+        <p>Date: <?php echo $invoiceDate; ?></p>
+    </div>
+    <div class="customer-details">
+        <h2>Customer Details</h2>
+        <p>Name: <?php echo $customerName; ?></p>
+        <p>Email: <?php echo $customerEmail; ?></p>
+    </div>
+    <div class="invoice-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($invoiceItems as $item): ?>
+                    <tr>
+                        <td><?php echo $item['product']; ?></td>
+                        <td><?php echo $item['quantity']; ?></td>
+                        <td><?php echo '$' . number_format($item['unitPrice'], 2); ?></td>
+                        <td><?php echo '$' . number_format($item['total'], 2); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <div class="invoice-total">
+        <p>Total: <?php echo '$' . number_format($invoiceTotal, 2); ?></p>
+    </div>
+</div>
+
+</body>
+</html>
