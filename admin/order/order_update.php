@@ -197,6 +197,7 @@
                 </thead>
                 <tbody>
                     <?php
+                        $showTotal = 0.0;
                         $result = mysqli_query($cx, " SELECT receive_detail.* , Product.*,
                             receive_detail.Qty * Product.PricePerUnit AS TotalPrice
                             FROM receive_detail 
@@ -210,21 +211,24 @@
                                     <td class='total-price'>{$row['TotalPrice']}</td>
                                   </tr>
                                   ";
+                            $showTotal += $row['TotalPrice'];
                         }          
                     ?>
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="3" style="text-align: right;"><strong>Total Price:</strong></td>
-                        <td id="totalProductPrice">0</td>
+                        <td id="totalProductPrice"><?php echo $showTotal; ?></td>
                     </tr>
                 </tfoot>
             </table>
 
-            
-            <input type="hidden" id="selectedProductsInput" name="selectedProducts" value="">
-            <input type="hidden" id="totalProductPriceInput" name="totalProductPrice" value="0">
-            <input type="submit" value="Submit">
+            <?php
+                echo "<input type='hidden' id='selectedProductsInput' name='selectedProducts' value=''>
+                <input type='hidden' id='totalProductPriceInput' name='totalProductPrice' value='$showTotal'>
+                <input type='submit' value='Submit'>
+                ";
+            ?>
         </form>
     </div>
 

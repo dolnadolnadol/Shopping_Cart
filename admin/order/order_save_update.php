@@ -21,13 +21,13 @@
 
         // Insert RECEIVE record
         if($status != 'Pending'){
-            $stmt = mysqli_query($conn, "UPDATE receive SET TotalPrice = '$totalPrice', Status ='$status'
+            $stmt = mysqli_query($conn, "UPDATE receive SET DeliveryDate = NOW() , TotalPrice = '$totalPrice', Status ='$status'
             WHERE RecID ='$RecID'");
 
         }
         else{
-            $stmt = mysqli_query($conn, "UPDATE receive SET DeliveryDate = NOW() , TotalPrice = '$totalPrice'
-            WHERE RecID ='$RecID');");
+            $stmt = mysqli_query($conn, "UPDATE receive SET TotalPrice = '$totalPrice'
+            WHERE RecID ='$RecID'");
         }
 
         if (count($ProID) == count($Qty)) {
