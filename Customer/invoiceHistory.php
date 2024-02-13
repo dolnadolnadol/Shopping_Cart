@@ -1,13 +1,4 @@
-<?php
-    session_start();
-    if (!isset($_SESSION['status']) || $_SESSION['status'] !== 'true') {
-
-        // Redirect to the login page
-        header("Location: login.php");
-        session_destroy();
-        exit();
-    }
-?>
+<?php include('./component/session.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,6 +20,7 @@
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
         }
 
         h1 {
@@ -37,6 +29,7 @@
         }
 
         .order {
+            position: relative;
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 15px;
@@ -57,22 +50,39 @@
         .order p:last-child {
             color: #888;
         }
+
+        .icon-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <?php include('backButton.php')?>
+    <?php include('./component/backButton.php'); ?>
     <div class="container">
         <h1>Order History</h1>
         <?php
             $cx =  mysqli_connect("localhost", "root", "", "shopping");
-            $cur = "SELECT * FROM invoice";
+            $cur = "SELECT invoice.* , invoice_detail.Status FROM invoice 
+            INNER JOIN invoice_detail ON invoice_detail.InvID = invoice.InvID";
             $msresults = mysqli_query($cx, $cur);
 
             while ($row = mysqli_fetch_array($msresults)) {
                 echo '<div class="order">';
+                echo "<div class='icon-container'>
+                        <form method='post' action='invoice.php'>
+                            <input type='hidden' name='id_invoice' value='{$row['InvID']}'>
+                            <button type='submit'>
+                                <img src='./image/search-alt.png' alt='Invoice Icon' width='20'>
+                            </button>
+                        </form>
+                    </div>";
                 echo "<p>Invoice ID: {$row['InvID']}</p>";
                 echo "<p>Order Date: {$row['Period']}</p>";
-                echo "<p>Total Amount: {$row['TotalPrice']}฿</p>";
+                echo "<p>Total Amount: {$row['TotalPrice']} ฿</p>";
+                echo "<p>Status: {$row['Status']}</p>";
                 echo '</div>';
             }
         ?>

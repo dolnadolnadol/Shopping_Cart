@@ -1,137 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ใบแจ้งหนี้</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Form</title>
 
-    .invoice {
-      width: 80%;
-      margin: 20px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-    }
+    <!-- Include necessary libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    .invoice-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #cce0ff;
+            /* Ocean-sky blue background color */
+        }
 
-    .invoice-header h1 {
-      color: #333;
-    }
+        .invoice-form {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            /* White background for the form */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Box shadow for a subtle lift */
+        }
 
-    .invoice-details {
-      margin-bottom: 20px;
-    }
+        .form-block {
+            border: 1px solid #b3ccff;
+            /* Light ocean-sky blue border color */
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #edf5ff;
+            /* Light ocean-sky blue background color */
+        }
 
-    .invoice-details p {
-      margin: 5px 0;
-    }
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-    .invoice-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #3366cc;
+            /* Dark ocean-sky blue text color for labels */
+        }
 
-    .invoice-table th, .invoice-table td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: left;
-    }
+        input,
+        select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #99c2ff;
+            /* Light ocean-sky blue border color for inputs and selects */
+            border-radius: 4px;
+        }
 
-    .invoice-total {
-      text-align: right;
-    }
-    
-    #overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-    }
-    #overlay-content {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-    }
-  </style>
+        button {
+            background-color: #007bff;
+            /* Darker ocean-sky blue button color */
+            color: #fff;
+            /* White text color for the button */
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            /* Slightly darker color on hover */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
 </head>
+
 <body>
 
-  <div class="invoice">
-    <div class="invoice-header">
-      <h1>ใบแจ้งหนี้</h1>
-    </div>
+    <div class="invoice-form">
+        <h2 style="color: #007bff;">Create Invoice</h2>
 
-    <button onclick="toggleOverlay()">Click me</button>
-        <div id="overlay">
-        <div id="overlay-content">
-            <p>This is the overlay content.</p>
-            <button onclick="toggleOverlay()">Close</button>
+        <!-- Invoice Information Section -->
+        <div class="form-block">
+            <h3 style="color: #007bff;">Invoice Information</h3>
+            <div class="form-group">
+                <label for="numID">NumID:</label>
+                <input type="text" id="numID" name="numID" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="invID">InvID:</label>
+                <input type="text" id="invID" name="invID" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" name="status" required>
+                    <option value="pending">Pending</option>
+                    <option value="paid">Paid</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
         </div>
+
+        <!-- Add Products Section -->
+        <div class="form-block">
+            <h3 style="color: #007bff;">Add Products</h3>
+
+            <div class="form-group">
+                <label for="productName">Product Name:</label>
+                <input type="text" id="productName" name="productName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="text" id="quantity" name="quantity" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pricePerUnit">Price Per Unit:</label>
+                <input type="text" id="pricePerUnit" name="pricePerUnit" required>
+            </div>
+
+            <button type="button" id="addProductBtn">Add Product</button>
+        </div>
+
+        <!-- Product Table -->
+        <h3 style="color: #007bff;">Product Information</h3>
+        <table id="productTable">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price Per Unit</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right;"><strong>Total Price:</strong></td>
+                    <td id="totalProductPrice">0</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <h3 style="color: #007bff;">Customer Information</h3>
+        <div class="form-block">
+            <div class="form-group">
+                <label for="customerName">Customer Name:</label>
+                <input type="text" id="customerName" name="customerName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="text" id="amount" name="amount" required>
+            </div>
+
+            <div class="form-group">
+                <label for="dueDate">Due Date:</label>
+                <input type="date" id="dueDate" name="dueDate" required>
+            </div>
+        </div>
+        <button type="submit">Submit</button>
     </div>
 
-    <?php
-        $conn = mysqli_connect("localhost", "root", "", "shopping");
-        $code = $_POST['id_customer'];
-        $cur = "SELECT * FROM Customer WHERE CusID = '$code'";
-        $msresults = mysqli_query($conn,$cur);
-        if(mysqli_num_rows($msresults) > 0) {
-            $row = mysqli_fetch_array($msresults);
-            echo '<div class="invoice-details">
-                        <p><strong>ลูกค้า:</strong>'. $row['CusName'] .'</p>
-                        <p><strong>ที่อยู่:</strong>'. $row['Address'] .'</p>
-                        <p><strong>วันที่:</strong>123456</p>
-                </div>';
-        }
-    ?>
-    <table class="invoice-table">
-      <thead>
-        <tr>
-          <th>รายการ</th>
-          <th>จำนวน</th>
-          <th>ราคาต่อหน่วย</th>
-          <th>รวม</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>สินค้า A</td>
-          <td>2</td>
-          <td>100.00</td>
-          <td>200.00</td>
-        </tr>
-        <tr>
-          <td>สินค้า B</td>
-          <td>1</td>
-          <td>50.00</td>
-          <td>50.00</td>
-        </tr>
-      </tbody>
-    </table>
+    <script>
+        $(document).ready(function() {
+            // Add Product Button Click Event
+            $('#addProductBtn').click(function() {
+                addProduct();
+            });
 
-    <div class="invoice-total">
-      <p><strong>รวมทั้งสิ้น:</strong> 250.00</p>
-    </div>
-  </div>
+            function addProduct() {
+                // Get values from inputs
+                var productName = $('#productName').val();
+                var quantity = $('#quantity').val();
+                var pricePerUnit = $('#pricePerUnit').val();
 
-<script>
-  function toggleOverlay() {
-    var overlay = document.getElementById('overlay');
-    overlay.style.display = (overlay.style.display === 'none' || overlay.style.display === '') ? 'flex' : 'none';
-  }
-</script>
+                // Calculate total price
+                var totalPrice = quantity * pricePerUnit;
+
+                // Create table row
+                var row = '<tr>' +
+                    '<td>' + productName + '</td>' +
+                    '<td>' + quantity + '</td>' +
+                    '<td>' + pricePerUnit + '</td>' +
+                    '<td>' + totalPrice + '</td>' +
+                    '</tr>';
+
+                // Append row to the table
+                $('#productTable tbody').append(row);
+
+                // Update total price
+                updateTotalPrice();
+
+                // Clear input fields
+                $('#productName').val('');
+                $('#quantity').val('');
+                $('#pricePerUnit').val('');
+                $('#totalPrice').val('');
+            }
+
+            function updateTotalPrice() {
+                // Calculate total product price
+                var totalProductPrice = 0;
+                $('#productTable tbody tr').each(function() {
+                    var totalPriceCell = $(this).find('td:last-child').text();
+                    totalProductPrice += parseFloat(totalPriceCell);
+                });
+
+                // Update total price in the footer
+                $('#totalProductPrice').text(totalProductPrice.toFixed(2));
+            }
+        });
+    </script>
 
 </body>
+
 </html>

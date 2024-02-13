@@ -1,12 +1,4 @@
-<?php
-    session_start();
-    if (!isset($_SESSION['status']) || $_SESSION['status'] !== 'true') {
-        // Redirect to the login page
-        header("Location: login.php");
-        session_destroy();
-        exit();
-    }
-?>
+<?php include('./component/session.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -189,8 +181,6 @@
 </script>
 
 <body class="detail-page">
-    <?php include('navbar.php'); ?>
-    <?php include('backButton.php')?>
             <script>
                 function openOverlay() {
                     document.getElementById('overlay').style.display = 'flex';
@@ -206,7 +196,8 @@
 </body>
 
 </html>
-<?php include('backButton.php')?>
+<?php include('./component/navbar.php'); ?>
+<?php include('./component/backButton.php')?>
 <?php
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
     $code = $_POST['id_product'];

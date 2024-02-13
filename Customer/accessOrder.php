@@ -23,8 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $RecID = 'rec_id'.str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
 
             // Insert RECEIVE record
-            $stmt = mysqli_query($cx, "INSERT INTO receive(RecID, Period, CusID, TotalPrice)
-                VALUES ('$RecID', NOW(), '$cusID','$totalPrice');");
+            $stmt = mysqli_query($cx, "INSERT INTO receive(RecID, OrderDate ,CusID, TotalPrice , Status)
+                VALUES ('$RecID', NOW(),'$cusID','$totalPrice','Pickups');");
 
 
             

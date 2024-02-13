@@ -1,13 +1,4 @@
-<?php
-// Start session
-session_start();
-if (!isset($_SESSION['status']) || $_SESSION['status'] !== 'true') {
-    // Redirect to the login page
-    header("Location: login.php");
-    session_destroy();
-    exit();
-}
-?>
+<?php include('./component/session.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,7 +72,7 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] !== 'true') {
 </head>
 <body>
     <center>
-        <?php include('navbar.php')?>
+        <?php include('./component/navbar.php'); ?>
         <div class="product-container">
             <?php
                 $cx =  mysqli_connect("localhost", "root", "", "shopping");

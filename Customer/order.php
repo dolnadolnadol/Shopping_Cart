@@ -1,3 +1,4 @@
+<?php include('./component/session.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,13 +82,15 @@
 </head>
 <body>
 
-<?php include('backButton.php')?>
+
+<?php include('./component/navbar.php'); ?>
+<?php include('./component/backButton.php')?>
 
 <?php    
-    session_start();
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
     $user = $_SESSION['username'];
 
+    echo "<center><h1>ขอขอบคุณที่ใช้บริการ!</h1></center>";
     echo "<div class='order-container'>";
     echo "<div class='order-header'>
             <h1>Order</h1>
@@ -152,16 +155,7 @@
                 <p>Tax: $tax ฿</p>
                 <p>Discount: 0.00 ฿</p>
                 <p>Total: $totalAmount ฿</p>
-              </div>";
-
-        echo "<div class='buy-button-container'>
-                <form method='post' action='accessOrder.php'>
-                    <input type='hidden' name='id_order' value='".$RecId ."'>  
-                    <input type='hidden' name='id_customer' value='". $customerId ."'> 
-                    <input class='buy-button' type='submit' value='ชำระเงิน'>           
-                </form>
-              </div>";
-        
+              </div>";  
         echo "</div>";
     }
 ?>

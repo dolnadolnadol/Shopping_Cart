@@ -1,3 +1,4 @@
+<?php include('./component/session.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,10 +82,8 @@
 </head>
 <body>
 
-<?php include('backButton.php')?>
-
+<?php include('./component/backButton.php')?>
 <?php    
-    session_start();
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
     $user = $_SESSION['username'];
 
