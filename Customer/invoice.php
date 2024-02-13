@@ -59,7 +59,8 @@
     </style>
 </head>
 <body>
-<?php 
+<?php include('backButton.php')?>
+<?php    
     session_start();
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
     $user = $_SESSION['username'];
@@ -113,9 +114,7 @@
                 <input type='hidden' name='id_customer' value='". $uid ."'> 
                 <input class='buy-button' type='submit' value='ชำระเงิน'>           
             </form>
-        </div>";
-
-        
+        </div>";     
     }
 ?>
 </body>

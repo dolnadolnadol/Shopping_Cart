@@ -131,34 +131,57 @@
 
             document.querySelector('.total p').textContent = 'Total Price for All Items: ' + total;
         }
-
-        function incrementAmount(index) {
+        
+        function incrementAmount(index, productId) {
             var amountInput = document.querySelector('.amount[data-index="' + index + '"]');
-            amountInput.value = parseInt(amountInput.value) + 1;
+            var newQuantity = parseInt(amountInput.value) + 1;
+            amountInput.value = newQuantity;
             updateTotalPrice();
+            updateCart(productId, newQuantity);
         }
 
-        function decrementAmount(index) {
+        function decrementAmount(index, productId) {
             var amountInput = document.querySelector('.amount[data-index="' + index + '"]');
-            if (parseInt(amountInput.value) > 1) {
-                amountInput.value = parseInt(amountInput.value) - 1;
+            var newQuantity = parseInt(amountInput.value) - 1;
+            if (newQuantity > 0) {
+                amountInput.value = newQuantity;
                 updateTotalPrice();
+                updateCart(productId, newQuantity);
             }
         }
+
+        
+
+        function updateCart(productId, newQuantity) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'updateCart.php', true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Handle successful response
+                        console.log('Cart updated successfully');
+                    } else {
+                        // Handle error
+                        console.error('Error updating cart');
+                    }
+                }
+            };
+            xhr.send('productId=' + encodeURIComponent(productId) + '&newQuantity=' + encodeURIComponent(newQuantity));
+        }
+
     </script>
 </head>
 
 <body>
-    <a href='index.php'> <- กลับไปหน้าหลัก </a>
+    <?php include('backButton.php')?>
     <div class="container">
         <h1>Your Cart</h1>
         <?php
- 
             $totalPriceAllItems = 0;
             $cx =  mysqli_connect("localhost", "root", "", "shopping");
 
-
-
+            
             //Find User ID
             $user = $_SESSION['username'];
             $uid_query = mysqli_query($cx, "SELECT CusID FROM customer WHERE Username = '$user'");
@@ -184,9 +207,9 @@
                     echo '<p>' . $row['ProName'] . '</p>';
                     echo '<p>Price: ' . $row['PricePerUnit'] . '</p>';
                     echo "<div class='button-increase'>
-                        <button type='button' id='change-amount' class='change-amount' onclick='decrementAmount($index)'>-</button>    
+                        <button type='button' id='change-amount' class='change-amount' onclick='decrementAmount($index, {$row['ProID']})'>-</button>
                         <input type='text' name='amount' id='amount' class='amount' data-index='$index' value='" . $row['Qty'] . "' readonly>
-                        <button type='button' id='change-amount' class='change-amount' onclick='incrementAmount($index)'>+</button>
+                        <button type='button' id='change-amount' class='change-amount' onclick='incrementAmount($index, {$row['ProID']})'>+</button>
                     </div>";
                     echo '</div>';
 

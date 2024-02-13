@@ -59,6 +59,7 @@
     </style>
 </head>
 <body>
+<?php include('backButton.php')?>
 <?php 
     session_start();
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
@@ -74,25 +75,22 @@
             </div>";
 
     $uid_results = $row['CusID'];
-    echo $_POST['id_invoice'];
 
-    if(isset($_POST['id_invoice'])){
+    if(isset($_POST['id_order'])){
         $uid = $uid_results;
-        $InvID = $_POST['id_invoice'];
-       
-        $msresults = mysqli_query($cx, "SELECT Product.*, invoice.InvID, invoice.CusID, invoice_detail.Qty
-        FROM 
-            invoice
-        INNER JOIN 
-            invoice_detail ON invoice.InvID = invoice_detail.InvID
-        INNER JOIN 
-            Product ON invoice_detail.ProID = Product.ProID   
-        WHERE 
-            invoice.CusID = '$uid' AND invoice.InvID = '$InvID'");
+        $RecID = $_POST['id_order'];
+  
+        $msresults = mysqli_query($cx, "SELECT Product.*, receive_detail.* 
+        FROM receive_detail
+        INNER JOIN Product ON Product.ProID = receive_detail.ProID
+        WHERE receive_detail.RecID = RecID");
 
         $totalPriceAllItems = 0; 
         
         while ($row = mysqli_fetch_array($msresults)) {
+            echo $row['ProName'];
+            echo $row['PricePerUnit'];
+            echo '123';
             $totalPrice = $row['PricePerUnit'] * $row['Qty'];
             $totalPriceAllItems += $totalPrice;
             
@@ -112,14 +110,7 @@
                 <p>Discount : 0.00 ฿</p>
                 <p>Total : $Total ฿</p>
             </div>
-            <form method='post' action='accessOrder.php' classname='buy-button'>
-                <input type='hidden' name='id_invoice' value='".$InvID."'>  
-                <input type='hidden' name='id_customer' value='". $uid ."'> 
-                <input class='buy-button' type='submit' value='ชำระเงิน'>           
-            </form>
         </div>";
-
-        
     }
 ?>
 </body>

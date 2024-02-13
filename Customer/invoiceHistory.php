@@ -60,7 +60,7 @@
     </style>
 </head>
 <body>
-    <a href='index.php'> <- กลับไปหน้าหลัก </a>
+    <?php include('backButton.php')?>
     <div class="container">
         <h1>Order History</h1>
         <?php

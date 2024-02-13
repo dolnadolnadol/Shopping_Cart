@@ -190,7 +190,7 @@
 
 <body class="detail-page">
     <?php include('navbar.php'); ?>
-    <a class="aBack" href='index.php'> <- กลับไปหน้าหลัก </a>
+    <?php include('backButton.php')?>
             <script>
                 function openOverlay() {
                     document.getElementById('overlay').style.display = 'flex';
@@ -206,12 +206,14 @@
 </body>
 
 </html>
+<?php include('backButton.php')?>
 <?php
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
     $code = $_POST['id_product'];
     $cur = "SELECT * FROM product WHERE ProID = $code ";
     $msresults = mysqli_query($cx, $cur);
     $row = mysqli_fetch_array($msresults);
+    $onHandStock = $row['StockQty'] - $row['OnHands'];
     echo " <div class='container-body'>
             <div class='container-1'>
                 <div class='product-image'>
@@ -234,7 +236,7 @@
                     enim ad minim veniam, quis nostrud exercitation ullamco laboris .
                 </p>
                 <p style='font-size:30px;'>ราคา: {$row['PricePerUnit']} บาท</p>
-                <p style='font-size:20px; color:red;'>จำนวนในสต็อก: {$row['StockQty']}</p>
+                <p style='font-size:20px; color:red;'>จำนวนในสต็อก: {$onHandStock}</p>
                 <form method='post' action='accessCart.php' classname='buy-button'>
                     <input type='hidden' name='id_product' value='{$row['ProID']}'>  
                     <div class='button-increase'>
