@@ -21,6 +21,7 @@
             background-color: #fff;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 100px;
         }
 
         .invoice-header {
@@ -79,31 +80,49 @@
         .buy-button:hover {
             background-color: #2980b9;
         }
+
+        .container_order {
+            display: flex;
+            flex-direction: row;
+        }
+        .customer-details{
+            width: 400px;
+        }
+        .invoice-details {
+            width: 400px;
+            align-self: flex-end;
+            text-align: right;
+            margin-bottom: 60px;
+        }
+
+       
+
     </style>
 </head>
 <body>
-
-<?php include('./component/backButton.php')?>
+<?php include('./component/accessNavbar.php')?>
+<!-- <?php include('./component/backButton.php')?> -->
 <?php    
     $cx = mysqli_connect("localhost", "root", "", "shopping");
-    $user = $_SESSION['username'];
+    $uid = $_SESSION['id_username'];
 
     echo "<div class='invoice-container'>";
     echo "<div class='invoice-header'>
             <h1>Invoice</h1>
           </div>";
 
-    $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE Username = '$user'");  
+    $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE CusID = '$uid'");  
     $customerDetails = mysqli_fetch_array($customerDetailsQuery);
 
     if(isset($_POST['id_invoice'])){
         $customerId = $customerDetails['CusID'];
         $invoiceId = $_POST['id_invoice'];
 
+        echo "<div class='container_order'>";
         echo "<div class='customer-details'>
                     <h2>Customer Details</h2>
                     <p>Name: {$customerDetails['CusName']}</p>
-                    <p>Email: {$customerDetails['Tel']}</p>
+                    <p>Tel: {$customerDetails['Tel']}</p>
                     <p>Address: {$customerDetails['Address']}</p>
                   </div>";
         
@@ -128,6 +147,7 @@
                         <p>Invoice #: {$row['InvID']}</p>
                         <p>Date: {$row['Period']}</p>
                     </div>";
+                echo "</div>";
                 
                 echo "<table>
                         <thead>
@@ -172,6 +192,7 @@
                 </div>";         
             echo "</div>";
         }
+
     }
 ?>
 </body>

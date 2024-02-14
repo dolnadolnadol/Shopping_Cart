@@ -1,12 +1,4 @@
-<?php
-    session_start();
-    if (!isset($_SESSION['status']) || $_SESSION['status'] !== 'true') {
-        // Redirect to the login page
-        header("Location: login.php");
-        session_destroy();
-        exit();
-    }
-?>
+<?php include('./component/session.php');?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,8 +14,9 @@
         }
 
         .container {
-            max-width: 1200px;
+            width: 1200px;
             margin: 0 auto;
+            margin-top: 100px;
             padding: 20px;
             background-color: #fff;
             border-radius: 8px;
@@ -32,7 +25,6 @@
 
         h1 {
             text-align: center;
-            color: #ef476f;
         }
 
         .product {
@@ -55,7 +47,11 @@
         .remove-btn {
             color: #ef476f;
             cursor: pointer;
+            width: 25px;
+            height: 25px; 
+            margin-left: 15px;
         }
+        
 
         .total {
             text-align: right;
@@ -64,14 +60,17 @@
         }
 
 
+        .buy-button-container {
+            text-align: right;
+            margin-top: 20px;
+        }
+
         .buy-button {
             background-color: #3498db;
             color: #fff;
             padding: 8px 16px;
             border: none;
             cursor: pointer;
-            margin-right: 0;
-            margin-top: 20px; 
         }
 
         .buy-button:hover {
@@ -129,7 +128,7 @@
                 total += totalPrice;
             });
 
-            document.querySelector('.total p').textContent = 'Total Price for All Items: ' + total;
+            document.querySelector('.total p').textContent = 'Total Price : ' + total;
         }
         
         function incrementAmount(index, productId) {
@@ -172,22 +171,16 @@
 
     </script>
 </head>
-
+<!-- <?php include('./component/backButton.php')?> -->
 <body>
-    <?php include('./component/backButton.php')?>
+    <?php include('./component/accessNavbar.php')?>
     <div class="container">
         <h1>Your Cart</h1>
         <?php
             $totalPriceAllItems = 0;
             $cx =  mysqli_connect("localhost", "root", "", "shopping");
 
-
-            //Find User ID
-            $user = $_SESSION['username'];
-            $uid_query = mysqli_query($cx, "SELECT CusID FROM customer WHERE Username = '$user'");
-            $uid_row = mysqli_fetch_assoc($uid_query);
-            $uid_results = $uid_row['CusID'];
-
+            $uid_results = $_SESSION['id_username'];
 
             //Find product.ProID , product.ProName  ,product.PricePerUnit , Qty
             $cur = "SELECT product.ProID , product.ProName  ,product.PricePerUnit , Qty  FROM cart
@@ -220,7 +213,8 @@
                     echo '<form method="post" action="accessCart.php">';
                     echo '<input type="hidden" name="CusID" value="' . $uid_results . '">';
                     echo '<input type="hidden" name="deleteID" value="' . $row['ProID'] . '">';
-                    echo '<input type="submit" class="remove-btn" value="Remove">';
+                    echo '<input type="image" alt="delete" class="remove-btn" style="width:" src="./image/minus-circle.png">';
+
                     echo '</form>';
                     echo '</div>';
 
@@ -229,16 +223,18 @@
             }
 
             echo '<div class="total">';
-            echo '<p>Total Price for All Items: ' . $totalPriceAllItems . '</p>';
+            echo '<p>Total Price : ' . $totalPriceAllItems . '</p>';
+            echo "<hr>";
             echo '</div>';
 
-            echo '<div classname="buy-button">
-                <form method="post" action="accessInvoice.php" >
-                    <input type="hidden" name="id_customer" value="'.$uid_results.'">
-                    <input class="buy-button" type="submit" value="Buy Products">
-                </form>
-            </div>';        
+            echo "<div class='buy-button-container'>
+            <form method='post' action='accessInvoice.php'>
+                <input type='hidden' name='id_customer' value='$uid_results'>
+                <input class='buy-button' type='submit' value='ซื้อสินค้า'>
+            </form>
+            </div>";
         ?>
     </div>
+  
 </body>
 </html>

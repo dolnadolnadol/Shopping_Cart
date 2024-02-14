@@ -101,7 +101,7 @@
 
     <div class="invoice-form">
         <form action="order_save_update.php" method="post">
-            <h2 style="color: #007bff;">Create Order</h2>
+            <h2 style="color: #007bff;">Update Order</h2>
     
             <!-- Invoice Information Section -->
             <div class="form-block">
@@ -125,7 +125,7 @@
                     <label for="status">Status:</label>
                     <select id="status" name="status" required>
                         <?php
-                            $statusCompare = ['Pending', 'Inprogress', 'Delivered'];
+                            $statusCompare = ['Pending', 'Inprogress', 'Delivered' , 'Canceled'];
                             foreach ($statusCompare as $value) {
                                 echo "<option value='$value'".($value == $status ? ' selected' : '').">$value</option>";
                             }
@@ -198,6 +198,7 @@
                 <tbody>
                     <?php
                         $showTotal = 0.0;
+                        $showVat = 0.0;
                         $result = mysqli_query($cx, " SELECT receive_detail.* , Product.*,
                             receive_detail.Qty * Product.PricePerUnit AS TotalPrice
                             FROM receive_detail 
@@ -212,10 +213,16 @@
                                   </tr>
                                   ";
                             $showTotal += $row['TotalPrice'];
-                        }          
+                        }        
+                        $showVat +=  $showTotal * 0.07;  
+                        $showTotal += $showVat;
                     ?>
                 </tbody>
                 <tfoot>
+                    <tr>
+                        <td colspan="3" style="text-align: right;"><strong>VAT 7%:</strong></td>
+                        <td id="totalVatPriceInput"><?php echo $showVat; ?></td>
+                    </tr>
                     <tr>
                         <td colspan="3" style="text-align: right;"><strong>Total Price:</strong></td>
                         <td id="totalProductPrice"><?php echo $showTotal; ?></td>
@@ -224,8 +231,8 @@
             </table>
 
             <?php
-                echo "<input type='hidden' id='selectedProductsInput' name='selectedProducts' value=''>
-                <input type='hidden' id='totalProductPriceInput' name='totalProductPrice' value='$showTotal'>
+                echo "<input type='hidden' id='selectedProductsInput' name='selectedProducts' value='$showVat'>
+                <input type='hidden' id='totalProductPriceInput' name='totalProductPrice' value='($showTotal + $showVat'>
                 <input type='submit' value='Submit'>
                 ";
             ?>
@@ -258,17 +265,20 @@
             // Function to update the grand total
             function updateGrandTotal() {
                 var grandTotal = 0;
+                var vatPrice = 0;
 
                 // Iterate through each row and add up the total prices
                 $('.total-price').each(function() {
                     grandTotal += parseFloat($(this).text());
+                    vatPrice += grandTotal*0.07;
                 });
 
-         
-                $('#totalProductPrice').text(grandTotal.toFixed(2));
+                $('#totalVatPriceInput').text(vatPrice.toFixed(2));
+
+                $('#totalProductPrice').text((grandTotal + vatPrice).toFixed(2));
 
                 // Update hidden input value
-                $('#totalProductPriceInput').val(grandTotal.toFixed(2));
+                $('#totalProductPriceInput').val((grandTotal + vatPrice).toFixed(2));
             }
     });
        

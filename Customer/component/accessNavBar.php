@@ -1,5 +1,4 @@
 <!-- navbar.php -->
-
 <style>
     body {
         margin: 0;
@@ -15,6 +14,14 @@
         z-index: 1000;
         display: flex;
         justify-content: space-between; /* Added to align items to the left and right */
+
+    }
+    .nav-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 3%;
+        position: relative; /* Added relative positioning */
     }
 
     ul {
@@ -76,17 +83,56 @@
         width: 50%; /* Adjust size as needed */
         height: 50%; /* Adjust size as needed */
     }
+
+    .cart-icon-container {
+        position: relative;
+    }
+
+    .badge {
+        position: absolute;
+        top: 0;
+        right: 25%;
+        background-color: #d9534f; /* Bootstrap's danger color */
+        color: white;
+        padding: 3px 8px;
+        border-radius: 50%;
+        font-size: 12px;
+    }
+
+    .cart-icon {
+        width: 50%; /* Adjust size as needed */
+        height: 50%; /* Adjust size as needed */
+        margin-top: -15%; /* Adjust margin as needed */
+    }
+  
 </style>
 
 <nav>
     <ul>
         <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'index.php') echo 'class="active"'; ?> href="index.php">Home</a></li>
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == '../invoiceHistory.php') echo 'class="active"'; ?> href="./invoiceHistory.php">Order History</a></li>
+        <li><a <?php if(basename($_SERVER['PHP_SELF']) == '../history.php') echo 'class="active"'; ?> href="./history.php">History</a></li>
     </ul>
 
     <ul class="nav-right">
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'cart.php') echo 'class="active"'; ?> href="cart.php"><img class="cart-icon" src="./image/cart.webp" alt="Cart"></a>
+        <?php
+            $cx =  mysqli_connect("localhost", "root", "", "shopping");
+            $uid = $_SESSION['id_username'];
+            $cur = "SELECT * FROM cart WHERE CusID = '$uid'";
+            $msresults = mysqli_query($cx, $cur);
+
+            if (mysqli_num_rows($msresults) > 0) {
+                echo "<li class='cart-icon-container'><a " . (basename($_SERVER['PHP_SELF']) == 'cart.php' ? "class='active'" : "") . " href='cart.php'><img class='cart-icon' src='./image/cart.webp' alt='Cart'></a><span class='badge badge-warning' id='lblCartCount'>" . mysqli_num_rows($msresults) . "</span></li>";
+
+            } else {
+                echo "<li class='cart-icon-container'><a " . (basename($_SERVER['PHP_SELF']) == 'cart.php' ? "class='active'" : "") . " href='cart.php'><img class='cart-icon' src='./image/cart.webp' alt='Cart'></a></li>";
+            }
+        ?>
+
+        
+        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'profile.php') echo 'class="active"'; ?> href="profile.php">Profile</a>
         </li>
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'loginProcess.php') echo 'class="active"'; ?> href="logoutProcess.php">Logout</a></li>
+        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'loginProcess.php') echo 'class="active"'; ?> href="logoutProcess.php">Logout</a>
+        </li>
+        
     </ul>
 </nav>

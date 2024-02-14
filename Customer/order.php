@@ -79,28 +79,51 @@
         .buy-button:hover {
             background-color: #2980b9;
         }
+
+        .container_order {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .item_order {
+            width: 400px;
+        }
+
+        .item_order2 {
+            align-self: flex-end;
+            width: 400px;
+            text-align: right;
+        }
+        
+        center {
+            margin-top: 100px;
+        }
+
     </style>
 </head>
 <body>
-
-<?php include('./component/navbar.php'); ?>
-<?php include('./component/backButton.php')?>
+<?php include('./component/accessNavbar.php')?>
+<!-- <?php include('./component/backButton.php')?> -->
 
 <?php    
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
-    $user = $_SESSION['username'];
+    $uid = $_SESSION['id_username'];
 
     echo "<center><h1>ขอขอบคุณที่ใช้บริการ!</h1></center>";
     echo "<div class='order-container'>";
     echo "<div class='order-header'>
-            <h1>Order</h1>
+            <h1>Product Order</h1>
           </div>";
 
-    $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE Username = '$user'");  
+    $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE CusID = '$uid'");  
     $customerDetails = mysqli_fetch_array($customerDetailsQuery);
 
-    echo "<div class='customer-details'>
-        <h2>Customer Details</h2>
+    echo "<div class='container_order'>
+    <div class='item_order'>
+        <h3>Company Name </h3>
+        <p>Name: Fastwork ck🤔</p>
+        <p>Address: ประเทศลาดกระบัง</p>
+        <h3>Ship to </h3>
         <p>Name: {$customerDetails['CusName']}</p>
         <p>Email: {$customerDetails['Tel']}</p>
         <p>Address: {$customerDetails['Address']}</p>
@@ -109,7 +132,7 @@
     if(isset($_POST['id_order'])){
         $customerId = $customerDetails['CusID'];
         $RecId = $_POST['id_order'];
-        $orderQuery = mysqli_query($cx, "SELECT Product.*, receive_detail.*  , receive.OrderDate
+        $orderQuery = mysqli_query($cx, "SELECT Product.*, receive_detail.*  , receive.*
                     FROM receive_detail
                     INNER JOIN receive ON receive.RecID = receive_detail.RecID
                     INNER JOIN Product ON Product.ProID = receive_detail.ProID
@@ -123,9 +146,12 @@
             $totalPriceAllItems += $totalPrice;
 
             if (!$detailsDisplayed) {
-                echo "<div class='order-details'>
+                echo "<div class='item_order2'>
                     <p>Order #: {$row['RecID']}</p>
+                    <p>Status : {$row['Status']}</p>
                     <p>Date: {$row['OrderDate']}</p>
+                    <p>Delivery Date : {$row['DeliveryDate']}</p>
+                    </div>
                 </div>";
                 
                 echo "<table>

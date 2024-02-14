@@ -52,11 +52,11 @@
         }
 
         input[type="submit"] {
-            background-color: #ef476f;
+            background-color: #4b93ff;
         }
 
         a {
-            background-color: #4b93ff;
+            background-color: #ef476f
         }
 
         input[type="submit"]:hover,
@@ -105,19 +105,24 @@
         if(mysqli_num_rows($msresults) > 0) {
             $row = mysqli_fetch_array($msresults);
             echo "<center>";
-            echo "<form method='post' action='order_delete.php'>";
-            echo "<h1> Delete Order Form </h1>";
-            echo "<h2>รหัสใบสั่งซื้อ ". $row['RecID'] ."</h2><br>";
-            echo "<input type='hidden' name='total_id_order' value='" . $row['RecID'] . "'>";
+            echo "<form method='POST' action='order_delete.php'>";
+            echo "<h4>รหัสข้อมูลที่จะลบ</h4><font size='8'>";
+            echo $code;
+            echo "<br></font><br>";
             echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
-            echo "<a href='order_index.php' 
-                    style='
-                    padding: 9px 14px;
-                    color: #ef476f;             
-                    text-decoration: none;
-                    margin-right: 5px;
-                    '>ยกเลิก</a>";
+            echo "<input type='hidden' name='list_id_order' value={$code}>";
+            echo "<a href='order_index.php'>ยกเลิก</a>"; 
             echo "<input type='submit' value='ยืนยัน'>";
+            echo "</form>\n";
+            echo "</center>";
+    
+            echo "<a href='order_index.php' 
+            style='
+            padding: 9px 14px;
+            color: #ef476f;             
+            text-decoration: none;
+            margin-right: 5px;
+            '>ยกเลิก</a>";
             echo "</form>\n"; 
             echo "</center>";
         }

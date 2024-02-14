@@ -119,7 +119,7 @@
     invoice.InvID, 
     customer.CusName, 
     invoice.Period, 
-    invoice_detail.status,
+    invoice.status,
     (invoice_detail.qty * product.pricePerUnit) AS totalprice
     FROM 
         invoice
@@ -148,9 +148,9 @@
         while ($row = mysqli_fetch_array($msresults)) {
             echo "<tr>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['InvID']}'></td>
-                    <td>{$row['invoice.InvID']}</td>
-                    <td>{$row['customer.CusName']}</td>
-                    <td>{$row['invoice.Period']}</td>
+                    <td>{$row['InvID']}</td>
+                    <td>{$row['CusName']}</td>
+                    <td>{$row['Period']}</td>
                     <td>{$row['totalprice']}</td>
                     <td>{$row['Status']}</td>
                     <td class='action-buttons'>

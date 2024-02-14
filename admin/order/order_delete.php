@@ -1,5 +1,5 @@
 <?php /* get connection */
-    // header( "location: ./order_index.php");
+    header( "location: ./order_index.php");
     $conn = mysqli_connect("localhost", "root", "", "shopping");
     if (isset($_POST['total_id_order'])){
         $code = $_POST['total_id_order'];

@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Insert RECEIVE record
             $stmt = mysqli_query($cx, "INSERT INTO receive(RecID, OrderDate ,CusID, TotalPrice , Status)
-                VALUES ('$RecID', NOW(),'$cusID','$totalPrice','Pickups');");
+                VALUES ('$RecID', NOW(),'$cusID','$totalPrice','Pending');");
 
 
             
@@ -36,8 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $numericPart = intval(substr($lastID, 3));
                 $newNumericPart = $numericPart + 1; 
                 $NumID = 'Num' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
-                echo $lastID."    ".$numericPart."    ".$newNumericPart."    ".$NumID;
-                echo "SELECT MAX(NumID) AS num_id FROM receive_detail WHERE RecID = '$RecID'";
+                // echo $lastID."    ".$numericPart."    ".$newNumericPart."    ".$NumID;
+                // echo "SELECT MAX(NumID) AS num_id FROM receive_detail WHERE RecID = '$RecID'";
 
                 $resultDetail = mysqli_query($cx, "SELECT invID , ProID , Qty FROM invoice_detail WHERE invID = '$invID' AND NumID = '$NumID'");
                 if ($resultDetail && mysqli_num_rows($resultDetail) > 0) {

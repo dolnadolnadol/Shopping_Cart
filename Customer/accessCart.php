@@ -7,14 +7,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $productId = $_POST['id_product'];
         $amount = $_POST['amount'];
-        $user = $_SESSION['username'];
-
+ 
         $cx =  mysqli_connect("localhost", "root", "", "shopping");
 
-
-        $uid_query = mysqli_query($cx, "SELECT CusID FROM customer WHERE Username = '$user'");
-        $uid_row = mysqli_fetch_assoc($uid_query);
-        $uid_results = $uid_row['CusID'];
+        // $uid_query = mysqli_query($cx, "SELECT CusID FROM customer WHERE Username = '$user'");
+        // $uid_row = mysqli_fetch_assoc($uid_query);
+        $uid_results = $_SESSION['id_username'];
 
         // Check if the record already exists in the cart table for the given CusID and ProID
         $check_query = mysqli_query($cx, "SELECT * FROM cart WHERE CusID = '$uid_results' AND ProID = '$productId'");

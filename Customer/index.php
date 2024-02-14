@@ -23,7 +23,7 @@
             max-width: 1550px;
             display: flex;
             flex-wrap: wrap;
-            margin-top: 20px;
+            margin-top: 35px;
         }
 
         .product-card {
@@ -71,9 +71,9 @@
     </style>
 </head>
 <body>
+    <?php include('./component/accessNavbar.php')?>
     <center>
-        <?php include('./component/accessNavbar.php')?>
-
+    
         <div class="product-container">
             <?php
                 $cx =  mysqli_connect("localhost", "root", "", "shopping");

@@ -13,8 +13,10 @@
                 if (password_verify($password, $row['Password'])) {
                     echo "Password match!";
                     $user = $row['Username'];
+                    $uid = $row['CusID'];
                     $_SESSION['status'] = 'true';
                     $_SESSION['username'] = $user;
+                    $_SESSION['id_username'] = $uid;
                     header("Location: index.php");
                     exit(); 
 

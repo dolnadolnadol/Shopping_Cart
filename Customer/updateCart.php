@@ -7,12 +7,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newQuantity = $_POST['newQuantity'];
 
     // Update the cart table with the new quantity
-    $user = $_SESSION['username'];
-    $uid_query = mysqli_query($cx, "SELECT CusID FROM customer WHERE Username = '$user'");
-    $uid_row = mysqli_fetch_assoc($uid_query);
-    $uid_results = $uid_row['CusID'];
+   
+    $uid = $_SESSION['id_username'];
+    // $uid_query = mysqli_query($cx, "SELECT CusID FROM customer WHERE Username = '$user'");
+    // $uid_row = mysqli_fetch_assoc($uid_query);
+    // $uid_results = $uid_row['CusID'];
 
-    $updateQuery = "UPDATE cart SET Qty = $newQuantity WHERE CusID = $uid_results AND ProID = $productId";
+    $updateQuery = "UPDATE cart SET Qty = $newQuantity WHERE CusID = $uid  AND ProID = $productId";
     mysqli_query($cx, $updateQuery);
 
     // You may need to handle errors and send appropriate responses

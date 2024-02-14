@@ -86,10 +86,11 @@
             display: inline-block;
         }
 
-        .action-button img {
-            width: 20px;
-            height: 20px;
+        .action-button input[type='image'] {
+            width: 30px;
+            height: 30px; 
         }
+
     </style>
 </head>
 
@@ -142,16 +143,33 @@
                     <td>{$row['CusName']}</td>
                     <td>{$row['TotalPrice']}</td>
                     <td>{$row['OrderDate']}</td>
-                    <td>{$row['DeliveryDate']}</td>
-                    <td>{$row['Status']}</td>
-                    <td>
-                        <form action='order_update.php' method='post' style='display: inline-block;'>  
+                    <td>{$row['DeliveryDate']}</td>";
+
+                    echo "<td><div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
+
+                    // เงื่อนไขตรวจสอบค่า Status และกำหนดสีให้กับ background-color
+                    if ($row['Status'] == 'Pickups') {
+                        echo '#0176FF;';
+                    } elseif ($row['Status'] == 'Pending' || $row['Status'] == 'pending') {
+                        echo '#FFA500;';
+                    } elseif ($row['Status'] == 'Inprogress') {
+                        echo '#7C6BFF;'; 
+                    } else if ($row['Status'] == 'Canceled'){
+                        echo '#FF0000;';
+                    } else {
+                        echo '#06D6B1;'; 
+                    }
+                    
+                    echo "'><span style='color: #ffff;'>{$row['Status']}</span></div></td>";
+                  
+            echo    "<td>
+                        <form class='action-button' action='order_update.php' method='post' style='display: inline-block;'>  
                             <input type='hidden' name='id_order' value={$row['RecID']}>
-                            <input type='image' alt='update' src='pen-solid.svg'/>
+                            <input type='image' alt='update' src='../img/pencil.png'/>
                         </form>
-                        <form action='order_delete_confirm.php' method='post' style='display: inline-block;'>
-                            <input type='hidden' name='id_order' value={$row['RecID']}>
-                            <input type='image' alt='delete' src='trash-solid.svg'/>
+                        <form class='action-button' action='order_delete_confirm.php' method='post' style='display: inline-block;'>
+                            <input type='hidden' name='total_id_order' value={$row['RecID']}>
+                            <input type='image' alt='delete' src='../img/trash.png'/>
                         </form>
                     </td>
                 </tr>";

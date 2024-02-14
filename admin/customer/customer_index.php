@@ -86,9 +86,9 @@
             display: inline-block;
         }
 
-        .action-button img {
-            width: 20px;
-            height: 20px;
+        .action-button input[type='image'] {
+            width: 30px;
+            height: 30px; 
         }
     </style>
 </head>
@@ -145,11 +145,11 @@
                     <td class='action-buttons'>
                         <form class='action-button' action='customer_update.php' method='post'>  
                             <input type='hidden' name='id_customer' value={$row['CusID']}>
-                            <input type='image' alt='update' src='pen-solid.svg'>
+                            <input type='image' alt='update' src='../img/pencil.png'>
                         </form>
                         <form class='action-button' action='customer_delete_confirm.php' method='post'>
                             <input type='hidden' name='id_customer' value={$row['CusID']}>
-                            <input type='image' alt='delete' src='trash-solid.svg'>
+                            <input type='image' alt='delete' src='../img/trash.png'>
                         </form>
                     </td>
                 </tr>";

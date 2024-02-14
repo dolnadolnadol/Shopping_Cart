@@ -196,7 +196,7 @@
 </body>
 
 </html>
-<?php include('./component/accessNavbar.php')?>
+<?php include('./component/accessNavBar.php'); ?>
 <?php include('./component/backButton.php')?>
 <?php
     $cx =  mysqli_connect("localhost", "root", "", "shopping");

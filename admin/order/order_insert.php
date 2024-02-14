@@ -123,9 +123,10 @@
                 <div class="form-group">
                     <label for="status">Status:</label>
                     <select id="status" name="status" required>
-                        <option value="pending">Pending</option>
+                        <option value="Pending">Pending</option>
                         <option value="Inprogress">Inprogress</option>
                         <option value="Delivered">Delivered</option>
+                        <option value="Canceled">Delivered</option>
                     </select>
                 </div>
             </div>
