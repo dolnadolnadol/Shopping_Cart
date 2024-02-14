@@ -202,7 +202,7 @@
 
 
                     echo '<div class="product">';
-                    echo '<img src="cart.png" alt="Product">';
+                    echo '<img src="./image/cart.png" alt="Product">';
                     echo '<div class="product-details">';
                     echo '<p>' . $row['ProName'] . '</p>';
                     echo '<p>Price: ' . $row['PricePerUnit'] . '</p>';

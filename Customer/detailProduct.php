@@ -196,7 +196,7 @@
 </body>
 
 </html>
-<?php include('./component/navbar.php'); ?>
+<?php include('./component/accessNavbar.php')?>
 <?php include('./component/backButton.php')?>
 <?php
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
@@ -208,16 +208,16 @@
     echo " <div class='container-body'>
             <div class='container-1'>
                 <div class='product-image'>
-                    <img src='cart.png' alt='Product Image'>
+                    <img src='./image/cart.png' alt='Product Image'>
                 </div>
                 <div class='product-image'>
-                    <img src='cart.png' alt='Product Image'>
+                    <img src='./image/cart.png' alt='Product Image'>
                 </div>
                 <div class='product-image'>
-                    <img src='cart.png' alt='Product Image'>
+                    <img src='./image/cart.png' alt='Product Image'>
                 </div>
                 <div class='product-image'>
-                    <img src='cart.png' alt='Product Image'>
+                    <img src='./image/cart.png' alt='Product Image'>
                 </div>
             </div>
             <div class='container-2'>

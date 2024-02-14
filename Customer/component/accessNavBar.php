@@ -81,13 +81,12 @@
 <nav>
     <ul>
         <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'index.php') echo 'class="active"'; ?> href="index.php">Home</a></li>
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'register.php') echo 'class="active"'; ?> href="register.php">Register</a></li>
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'invoiceHistory.php') echo 'class="active"'; ?> href="invoiceHistory.php">Order History</a></li>
+        <li><a <?php if(basename($_SERVER['PHP_SELF']) == '../invoiceHistory.php') echo 'class="active"'; ?> href="./invoiceHistory.php">Order History</a></li>
     </ul>
 
     <ul class="nav-right">
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'cart.php') echo 'class="active"'; ?> href="cart.php"><img class="cart-icon" src="cart.webp" alt="Cart"></a>
+        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'cart.php') echo 'class="active"'; ?> href="cart.php"><img class="cart-icon" src="./image/cart.webp" alt="Cart"></a>
         </li>
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'login.php') echo 'class="active"'; ?> href="login.php">Login</a></li>
+        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'loginProcess.php') echo 'class="active"'; ?> href="logoutProcess.php">Logout</a></li>
     </ul>
 </nav>

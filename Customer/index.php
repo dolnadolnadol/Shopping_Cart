@@ -72,7 +72,8 @@
 </head>
 <body>
     <center>
-        <?php include('./component/navbar.php'); ?>
+        <?php include('./component/accessNavbar.php')?>
+
         <div class="product-container">
             <?php
                 $cx =  mysqli_connect("localhost", "root", "", "shopping");
@@ -80,7 +81,7 @@
                 $msresults = mysqli_query($cx, $cur);
                 while ($row = mysqli_fetch_array($msresults)) {
                 echo "<div class='product-card'>
-                            <img class='product-image' src='cart.png'>
+                            <img class='product-image' src='./image/cart.png'>
                             <p class='product-name'>{$row['ProName']}</p>
                             <p class='product-price'>ราคา {$row['PricePerUnit']}</p>
                             <form method='post' action='detailProduct.php'>

@@ -188,6 +188,10 @@
                 <tbody></tbody>
                 <tfoot>
                     <tr>
+                        <td colspan="3" style="text-align: right;"><strong>VAT 7%:</strong></td>
+                        <td id="totalVatPriceInput">0</td>
+                    </tr>
+                    <tr>
                         <td colspan="3" style="text-align: right;"><strong>Total Price:</strong></td>
                         <td id="totalProductPrice">0</td>
                     </tr>
@@ -263,16 +267,20 @@
     function updateTotalPrice() {
         // Calculate total product price
         var totalProductPrice = 0;
+        var vatPrice = 0;
         $('#productTable tbody tr').each(function() {
             var totalPriceCell = $(this).find('td:last-child').text();
             totalProductPrice += parseFloat(totalPriceCell);
+            vatPrice = totalProductPrice * 0.07;
         });
 
+        
+        $('#totalVatPriceInput').text(vatPrice.toFixed(2));
         // Update total price in the footer
-        $('#totalProductPrice').text(totalProductPrice.toFixed(2));
-
+        $('#totalProductPrice').text((totalProductPrice + vatPrice).toFixed(2));
         // Update hidden input value
-        $('#totalProductPriceInput').val(totalProductPrice.toFixed(2));
+        $('#totalProductPriceInput').val((totalProductPrice + vatPrice).toFixed(2));
+        
     }
     });
        

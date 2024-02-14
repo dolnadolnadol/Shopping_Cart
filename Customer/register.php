@@ -54,14 +54,11 @@
             cursor: pointer;
             width: 150px;
         }
-        .container-register {
-            text-align: center;
-        }
     </style>
 </head>
 <body>
     <div class="font-login">
-        <p>Log In</p>
+        <p>Register</p>
     </div>
     <div class="body-container">
         <div class="container">
@@ -70,11 +67,12 @@
                 <input type="text" id="username" name="username"  required>
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password"  required>
-                <input type="submit" value="Login">
+                <label for="password">Confirm Password</label>
+                <input type="password" id="password" name="password"  required>
+                <label for="password">Tel. Number</label>
+                <input type="password" id="password" name="password"  required>
+                <input type="submit" value="Register">
             </form>
-            <div class='container-register'> 
-                <a href="register.php">มีบัญชีเเล้วหรือยัง?</a>
-            </div>
         </div>
     </div>
 </body>

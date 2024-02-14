@@ -137,7 +137,7 @@
     if (mysqli_num_rows($msresults) > 0) {
         while ($row = mysqli_fetch_array($msresults)) {
             echo "<tr>
-                    <td><input type='checkbox' name='checkbox[]' value='{$row['ProID']}'></td>
+                    <td><input type='checkbox' name='checkbox[]' value='{$row['RecID']}'></td>
                     <td>{$row['RecID']}</td>
                     <td>{$row['CusName']}</td>
                     <td>{$row['TotalPrice']}</td>

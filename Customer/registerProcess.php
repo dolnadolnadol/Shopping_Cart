@@ -26,9 +26,6 @@
         else if($username == 'admin' && $password == '123456'){
             header("Location: ../admin/customer/customer_index.php");
         }
-        else {
-            header("Location: ./login.php");
-        }
         mysqli_close($cx);
     }
 ?>
