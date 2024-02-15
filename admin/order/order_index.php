@@ -90,11 +90,15 @@
             width: 30px;
             height: 30px; 
         }
+        .navbar {
+            margin-top: 100px;
+        }
 
     </style>
 </head>
 
 <body>
+    <div class="navbar"> <?php include('../navbar/navbarAdmin.php') ?></div>
     <h1>Order List</h1>
     <div class="container">
         <div>

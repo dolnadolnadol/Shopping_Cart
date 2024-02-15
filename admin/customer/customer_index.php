@@ -77,11 +77,6 @@
             border-bottom: 1px solid #ccc;
         }
 
-        .action-buttons {
-            display: flex;
-            justify-content: space-around;
-        }
-
         .action-button {
             display: inline-block;
         }
@@ -90,10 +85,15 @@
             width: 30px;
             height: 30px; 
         }
+        .navbar {
+            margin-top: 100px;
+        }
+
     </style>
 </head>
 
 <body>
+    <div class="navbar"> <?php include('../navbar/navbarAdmin.php') ?></div>
     <h1>User List</h1>
     <div class="container">
         <div>

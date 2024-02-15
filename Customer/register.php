@@ -10,8 +10,8 @@
             justify-content: center;
             align-items: center;
             font-size: 50px;
-            color: #333; /* เปลี่ยนสีข้อความใน font-login */
-            margin-bottom: 20px; /* เพิ่มขอบล่าง */
+            color: #333;
+            margin-bottom: -10px;
         }
 
         .body-container {
@@ -22,7 +22,7 @@
         }
 
         .container {
-            background-color: #f4f4f4; /* เปลี่ยนสีพื้นหลังของ container */
+            background-color: #f4f4f4;
             padding: 50px 150px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -36,7 +36,7 @@
 
         label {
             margin-bottom: 8px;
-            color: #333; /* เปลี่ยนสีข้อความ label */
+            color: #333;
             align-self: flex-start;
         }
 
@@ -49,34 +49,74 @@
         }
 
         input[type="submit"] {
-            background-color: #ef476f; /* เปลี่ยนสีปุ่ม submit */
-            color: #fff; /* เปลี่ยนสีข้อความปุ่ม submit */
+            background-color: #3498db;
+            color: #fff;
             cursor: pointer;
             width: 150px;
+        }
+
+        /* Add styles for radio buttons and labels */
+        /* input[type="radio"] {
+            display: none;
+        } */
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .radio-input {
+            margin-right: 10px;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .radio-input:checked {
+            background-color: #06D6B1;
+            border-color: #06D6B1;
+        }
+
+        .main-container {
+            margin-top:-50px;
         }
     </style>
 </head>
 <body>
+    <?php include('./component/backLogin.php')?>
+    <div class="main-container">
     <div class="font-login">
         <p>Register</p>
     </div>
     <div class="body-container">
         <div class="container">
-            <form method="post" action="loginProcess.php">
+            <form method="post" action="registerProcess.php">
+                <label for="fullname">Fullname</label>
+                <input type="text" id="fullname" name="fullname" required>
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username"  required>
+                <input type="text" id="username" name="username" required>
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password"  required>
-                <label for="password">Confirm Password</label>
-                <input type="password" id="password" name="password"  required>
-                <label for="password">Tel. Number</label>
-                <input type="password" id="password" name="password"  required>
-                <input type="submit" value="Register">
-            </form>
+                <input type="password" id="password" name="password" required>
+                <label for="tel">Tel</label>
+                <input type="tel" id="tel" name="tel" required>
+                
+                <label class="radio-label">
+                    <input type="radio" class="radio-input" name="sex" value="M"> Male
+                </label>   
+                <label class="radio-label">
+                    <input type="radio" class="radio-input" name="sex" value="F"> Female
+                </label>
+
+                <input type="submit" value="ลงทะเบียน">
+            </form>          
         </div>
+    </div>
     </div>
 </body>
 </html>
-
-
-

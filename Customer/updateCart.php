@@ -1,5 +1,5 @@
 <?php
-session_start();
+include('./component/session.php');
 $cx = mysqli_connect("localhost", "root", "", "shopping");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

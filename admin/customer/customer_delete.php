@@ -1,5 +1,5 @@
 <?php /* POST connection */
-    // header( "location: ./index.php");
+    header( "location: ./customer_index.php");
     $conn = mysqli_connect("localhost", "root", "", "shopping");
     if (isset($_POST['id_customer'])){
         $code = $_POST['id_customer'];

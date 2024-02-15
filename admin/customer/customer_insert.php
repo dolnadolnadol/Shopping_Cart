@@ -1,4 +1,5 @@
 <?php 
+    header( "location: ./customer_index.php");
     $conn = mysqli_connect("localhost", "root", "", "shopping");   
     $a2 = $_POST['a2'];
     $a3 = $_POST['a3'];

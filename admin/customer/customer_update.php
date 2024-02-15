@@ -1,4 +1,5 @@
 <?php /* get connection */
+    header( "location: ./customer_index.php");
     $conn = mysqli_connect("localhost", "root", "", "shopping");
    
     /*SELECT*/

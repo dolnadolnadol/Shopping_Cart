@@ -1,6 +1,5 @@
 <?php /* get connection */
-    // header( "location: ./stock_index.php");
-   
+    header( "location: ./order_index.php");  
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $conn = mysqli_connect("localhost", "root", "", "shopping"); 
@@ -56,5 +55,5 @@
             echo "ขนาดของอาร์เรย์ ProID และ Qty ไม่เท่ากัน";
         }             
         }
-        header( "location: ./order_index.php");  
+        
 ?>

@@ -1,5 +1,5 @@
 <?php
-session_start();
+include('./component/session.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     /* Add product in cart */

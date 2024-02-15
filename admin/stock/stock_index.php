@@ -86,14 +86,18 @@
             display: inline-block;
         }
 
-        .action-button img {
-            width: 20px;
-            height: 20px;
+        .action-button input[type='image'] {
+            width: 30px;
+            height: 30px; 
+        }
+        .navbar {
+            margin-top: 100px;
         }
     </style>
 </head>
 
 <body>
+    <div class="navbar"> <?php include('../navbar/navbarAdmin.php') ?></div>
     <h1>Stock List</h1>
     <div class="container">
         <div>
@@ -139,17 +143,18 @@
                     <td>{$row['PricePerUnit']}</td>
                     <td>{$row['StockQty']}</td>
                     <td>
-                        <form action='stock_update.php' method='post' style='display: inline-block;'>  
+                        <form class='action-button action='stock_update.php' method='post' style='display: inline-block;'>  
                             <input type='hidden' name='id_stock' value={$row['ProID']}>
-                            <input type='image' alt='update' src='pen-solid.svg'/>
+                            <input type='image' alt='update' src='../img/pencil.png'/>
                         </form>
-                        <form action='stock_delete_confirm.php' method='post' style='display: inline-block;'>
+                        <form class='action-button action='stock_delete_confirm.php' method='post' style='display: inline-block;'>
                             <input type='hidden' name='id_stock' value={$row['ProID']}>
-                            <input type='image' alt='delete' src='trash-solid.svg'/>
+                            <input type='image' alt='delete' src='../img/trash.png'/>
                         </form>
                     </td>
                 </tr>";
         }
+      
     }
 
     echo "</table></div>";

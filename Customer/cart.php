@@ -233,6 +233,7 @@
                 <input class='buy-button' type='submit' value='ซื้อสินค้า'>
             </form>
             </div>";
+            mysqli_close($cx);
         ?>
     </div>
   

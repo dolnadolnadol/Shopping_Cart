@@ -187,6 +187,7 @@
               </div>";  
         echo "</div>";
     }
+    mysqli_close($cx);
 ?>
 </body>
 </html>

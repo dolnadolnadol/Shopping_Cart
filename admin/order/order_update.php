@@ -216,6 +216,7 @@
                         }        
                         $showVat +=  $showTotal * 0.07;  
                         $showTotal += $showVat;
+                        
                     ?>
                 </tbody>
                 <tfoot>
@@ -232,9 +233,8 @@
 
             <?php
                 echo "<input type='hidden' id='selectedProductsInput' name='selectedProducts' value='$showVat'>
-                <input type='hidden' id='totalProductPriceInput' name='totalProductPrice' value='($showTotal + $showVat'>
-                <input type='submit' value='Submit'>
-                ";
+                <input type='hidden' id='totalProductPriceInput' name='totalProductPrice' value='$showTotal'>
+                <input type='submit' value='Submit'>";
             ?>
         </form>
     </div>

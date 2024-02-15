@@ -139,7 +139,6 @@ mysqli_close($cx);
 
 <body>
     <?php include('./component/accessNavbar.php')?>
-    <!-- <?php include('./component/backButton.php')?> -->
     <div class="body-container">
         <div class="container">
             <p id='head-text'>Edit Profile</p>
@@ -161,7 +160,7 @@ mysqli_close($cx);
                 <label for="address">Address:<span>*</span></label>
                 <textarea name="address" rows="3" required><?php echo $user_data['Address']; ?></textarea>
 
-                <button type="submit" onclick="showOverlay()">Save Changes</button>
+                <button type="submit" onclick="showOverlay()">บันทึกข้อมูล</button>
             </form>
         </div>
     </div>
@@ -169,8 +168,8 @@ mysqli_close($cx);
     <!-- Overlay -->
     <div class="overlay" id="overlay" >
         <div class="overlay-content">
-            <p>Save successful!</p>
-            <button onclick="hideOverlay()">OK</button>
+            <p>บันทึกข้อมูลสำเน็จ!</p>
+            <button onclick="hideOverlay()">ตกลง</button>
         </div>
     </div>
 

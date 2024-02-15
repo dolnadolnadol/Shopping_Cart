@@ -90,10 +90,14 @@
             width: 20px;
             height: 20px;
         }
+        .navbar {
+            margin-top: 100px;
+        }
     </style>
 </head>
 
 <body>
+    <div class="navbar"> <?php include('../navbar/navbarAdmin.php') ?></div>
     <h1>Invoice List</h1>
     <div class="container">
         <div>
@@ -119,7 +123,7 @@
     invoice.InvID, 
     customer.CusName, 
     invoice.Period, 
-    invoice.status,
+    invoice.Status,
     (invoice_detail.qty * product.pricePerUnit) AS totalprice
     FROM 
         invoice

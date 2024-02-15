@@ -49,7 +49,7 @@
         }
 
         input[type="submit"] {
-            background-color: #ef476f; /* เปลี่ยนสีปุ่ม submit */
+            background-color: #3498db; /* เปลี่ยนสีปุ่ม submit */
             color: #fff; /* เปลี่ยนสีข้อความปุ่ม submit */
             cursor: pointer;
             width: 150px;
@@ -70,7 +70,7 @@
                 <input type="text" id="username" name="username"  required>
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password"  required>
-                <input type="submit" value="Login">
+                <input type="submit" value="เข้าสู่ระบบ">
             </form>
             <div class='container-register'> 
                 <a href="register.php">มีบัญชีเเล้วหรือยัง?</a>

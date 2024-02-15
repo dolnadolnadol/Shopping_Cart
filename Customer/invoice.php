@@ -75,6 +75,7 @@
             padding: 8px 16px;
             border: none;
             cursor: pointer;
+            margin-left:15px;
         }
 
         .buy-button:hover {
@@ -95,6 +96,38 @@
             margin-bottom: 60px;
         }
 
+        .action-buttons {
+            display: flex;
+            justify-content: end;
+            margin-top: 45px;
+        }
+
+        .action-button {
+            display: inline-block;
+        }
+
+        .action-button button[type='submit'] {
+            background-color: #364856;
+            cursor: pointer;
+            border: none;
+            width: 73px;
+            height: 33px; 
+        }
+
+        .action-button button[type='submit']:hover {
+            background-color: #9BA4AB;
+            cursor: pointer;
+            border: none;
+            width: 73px;
+            height: 33px; 
+        }
+
+        .action-button img {
+            width: 20px;
+            height: 20px; 
+        }
+
+
        
 
     </style>
@@ -107,6 +140,7 @@
     $uid = $_SESSION['id_username'];
 
     echo "<div class='invoice-container'>";
+    echo "<div class='body-container'>";
     echo "<div class='invoice-header'>
             <h1>Invoice</h1>
           </div>";
@@ -182,18 +216,27 @@
                 <p>Total: $totalAmount ฿</p>
               </div>";
 
-        if($stt == 'Unpaid'){ 
-            echo "<div class='buy-button-container'>
-                    <form method='post' action='accessOrder.php'>
-                        <input type='hidden' name='id_invoice' value='".$invoiceId."'>  
-                        <input type='hidden' name='id_customer' value='". $customerId ."'> 
-                        <input class='buy-button' type='submit' value='ชำระเงิน'>           
-                    </form>
-                </div>";         
-            echo "</div>";
-        }
+              echo "<div class='action-buttons'>";
+              echo "<form class='action-button' action='genarateTemplate.php' method='post' target='_blank'>
+                      <input type='hidden' name='id_invoice' value='".$invoiceId."'>
+                      <input type='hidden' name='id_customer' value='". $customerId ."'>
+                      <button type='submit'>
+                          <img src='./image/print.png' alt='print'>
+                      </button>
+                    </form>";
+              
+              if ($stt == 'Unpaid') {
+                  echo "<form class='action-button' method='post' action='accessOrder.php' target='go'>
+                          <input type='hidden' name='id_invoice' value='".$invoiceId."'>  
+                          <input type='hidden' name='id_customer' value='". $customerId ."'> 
+                          <input class='buy-button' type='submit' value='ชำระเงิน'>           
+                        </form>";
+              }
+              
+        echo "</div>";
 
     }
+    mysqli_close($cx);
 ?>
 </body>
 </html>
