@@ -14,6 +14,5 @@
     } else {
         echo "Update data = <font color=red> '$a1' </font> is Successful.";
     }
-
     mysqli_close($conn);
 ?>

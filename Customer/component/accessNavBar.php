@@ -131,7 +131,7 @@
         
         <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'profile.php') echo 'class="active"'; ?> href="profile.php">Profile</a>
         </li>
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'loginProcess.php') echo 'class="active"'; ?> href="logoutProcess.php">Logout</a>
+        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'logoutProcess.php') echo 'class="active"'; ?> href="logoutProcess.php">Logout</a>
         </li>
         
     </ul>

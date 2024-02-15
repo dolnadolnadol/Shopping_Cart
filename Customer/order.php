@@ -15,8 +15,8 @@
         }
 
         .order-container {
-            max-width: 800px;
-            margin: 50px auto;
+            max-width: 1150px;
+            margin: 100px auto 50px auto;
             border: 2px solid #4CAF50;
             background-color: #fff;
             padding: 20px;
@@ -83,7 +83,9 @@
         .container_order {
             display: flex;
             flex-direction: row;
+            justify-content: space-between;
         }
+
 
         .item_order {
             width: 400px;
@@ -91,12 +93,17 @@
 
         .item_order2 {
             align-self: flex-end;
-            width: 400px;
+            width: 280px;
             text-align: right;
         }
         
         center {
             margin-top: 100px;
+        }
+
+        #Status {
+            font-weight:800;
+            font-size: large;
         }
 
     </style>
@@ -109,10 +116,9 @@
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
     $uid = $_SESSION['id_username'];
 
-    echo "<center><h1>ขอขอบคุณที่ใช้บริการ!</h1></center>";
     echo "<div class='order-container'>";
     echo "<div class='order-header'>
-            <h1>Product Order</h1>
+            <h1>Order details</h1>
           </div>";
 
     $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE CusID = '$uid'");  
@@ -147,9 +153,9 @@
 
             if (!$detailsDisplayed) {
                 echo "<div class='item_order2'>
+                    <p id='Status'>Status : {$row['Status']}</p>
                     <p>Order #: {$row['RecID']}</p>
-                    <p>Status : {$row['Status']}</p>
-                    <p>Date: {$row['OrderDate']}</p>
+                    <p>Order Date: {$row['OrderDate']}</p>
                     <p>Delivery Date : {$row['DeliveryDate']}</p>
                     </div>
                 </div>";

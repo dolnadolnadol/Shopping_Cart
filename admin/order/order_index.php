@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <title>Order List</title>
     <style>
         body {
@@ -109,8 +110,13 @@
                 <input type='hidden' name='total_id_order' id='selectedTotal' value=''>
                 <input type='submit' id='deleteButton' value='Delete Order' disabled />
             </form>
+
         </div>
         <div>
+            <!------------- Fillter ------------------->
+            <label for="filter">Filter by Name:</label>
+            <input type="text" name="filter" id="filter" placeholder="Enter name to filter">
+            <!------------------------------------------>
             <form class="add-order-form" action='order_insert.php' method='post'>
                 <input type='submit' id="addOrderButton" value='Add Order'/>
             </form>
@@ -141,7 +147,7 @@
 
     if (mysqli_num_rows($msresults) > 0) {
         while ($row = mysqli_fetch_array($msresults)) {
-            echo "<tr>
+            echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['RecID']}'></td>
                     <td>{$row['RecID']}</td>
                     <td>{$row['CusName']}</td>
@@ -229,6 +235,51 @@
 
         deleteButton.disabled = !enableDeleteButton;
     }
+
+    /* Fillter */
+    function updateTable(filterKeyword) {
+            var tableRows = document.querySelectorAll('.user-row');
+
+            tableRows.forEach(function (row) {
+                var containsKeyword = false;
+
+                // Loop through all columns (td elements) in the current row
+                row.querySelectorAll('td').forEach(function (cell, index) {
+                    var cellText = cell.innerText.toLowerCase();
+
+                    // Check if the cell contains the filter keyword (string comparison)
+                    if (cellText.includes(filterKeyword.toLowerCase())) {
+                        containsKeyword = true;
+                        return; // Break out of the loop if the keyword is found in any cell
+                    }
+
+                    // Check if the cell contains the filter keyword as a number
+                    var cellNumber = parseFloat(cellText);
+                    var filterNumber = parseFloat(filterKeyword);
+
+                    if (!isNaN(cellNumber) && !isNaN(filterNumber) && cellNumber === filterNumber) {
+                        containsKeyword = true;
+                        return; // Break out of the loop if the numeric values match
+                    }
+                });
+
+                // Display or hide the row based on the keyword presence
+                if (containsKeyword) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Listen for input event on the filter input
+        $('#filter').on('input', function() {
+            // Get the value of the filter input
+            var filterKeyword = $(this).val();
+
+            // Update the table based on the filter keyword
+            updateTable(filterKeyword);
+        });
 </script>
 </body>
 </html>

@@ -43,7 +43,8 @@
         }
 
         .data-card {
-            flex: 1;
+            flex-grow: 1;
+            flex-basis: calc(33.33% - 20px); /* 33.33% for each card with a margin of 20px */
             margin: 0 10px 20px;
             background-color: #ffffff;
             padding: 20px;
@@ -53,7 +54,7 @@
         }
 
         .data-card:hover {
-            transform: scale(1.05);
+            transform: scale(1.0);
         }
 
         .data-card h2,
@@ -104,6 +105,13 @@
         }
         #Re {
             color: rgb(75, 147, 255);
+        }
+
+        #card-4 h1 {
+            text-align: center;
+            padding: auto;
+            margin-top: 35px;
+            margin-bottom: 35px;
         }
 
     </style>
@@ -207,7 +215,7 @@
                     while($row = mysqli_fetch_assoc($income_Query)) {
                         $total_income += (double)$row['PricePerUnit'] * (double)$row['Qty'];
                     }
-                    echo "<h3>Total Income: ฿" . number_format($total_income, 2) . "</h3>";
+                    echo "<h1>Total Income: ฿" . number_format($total_income, 2) . "</h1>";
                 ?>
             
                 <!-- <table>

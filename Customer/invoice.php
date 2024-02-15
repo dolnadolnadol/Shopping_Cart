@@ -15,7 +15,7 @@
         }
 
         .invoice-container {
-            max-width: 800px;
+            max-width: 1150px;
             margin: 50px auto;
             border: 2px solid #4CAF50;
             background-color: #fff;
@@ -85,12 +85,15 @@
         .container_order {
             display: flex;
             flex-direction: row;
+            justify-content: space-between;
         }
+
         .customer-details{
             width: 400px;
         }
+        
         .invoice-details {
-            width: 400px;
+            width: 280px;;
             align-self: flex-end;
             text-align: right;
             margin-bottom: 60px;
@@ -175,7 +178,7 @@
             $totalPriceAllItems += $totalPrice;
 
             $stt = $row['Status'];
-
+            
             if (!$detailsDisplayed) {
                 echo "<div class='invoice-details'>
                         <p>Invoice #: {$row['InvID']}</p>
@@ -211,7 +214,7 @@
 
         echo "<div class='invoice-total'>
                 <p>SubTotal: $totalPriceAllItems ฿</p>
-                <p>Tax: $tax ฿</p>
+                <p>VAT: $tax ฿</p>
                 <p>Discount: 0.00 ฿</p>
                 <p>Total: $totalAmount ฿</p>
               </div>";

@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User List</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -83,12 +84,12 @@
 
         .action-button input[type='image'] {
             width: 30px;
-            height: 30px; 
+            height: 30px;
         }
+
         .navbar {
             margin-top: 100px;
         }
-
     </style>
 </head>
 
@@ -97,15 +98,20 @@
     <h1>User List</h1>
     <div class="container">
         <div>
+
             <input type="checkbox" id="checkAll" onchange="checkAll()">
             <label class="check-all-label">Check All</label>
-            <form  id='deleteForm' class="delete-form" action="customer_delete_confirm.php" method="post">
+            <form id='deleteForm' class="delete-form" action="customer_delete_confirm.php" method="post">
                 <input type="hidden" name="list_id_customer" id="selectedValues" value="">
                 <input type="hidden" name="total_id_customer" id="selectedTotal" value="">
                 <input type="submit" id="deleteButton" value="Delete User" disabled>
             </form>
         </div>
         <div>
+            <!------------- Fillter ------------------->
+            <label for="filter">Filter by Name:</label>
+            <input type="text" name="filter" id="filter" placeholder="Enter name to filter">
+            <!------------------------------------------>
             <form class="add-user-form" action="customer_insert_form.html" method="post">
                 <input type="submit" id="addUserButton" value="Add User">
             </form>
@@ -134,7 +140,8 @@
 
     if (mysqli_num_rows($msresults) > 0) {
         while ($row = mysqli_fetch_array($msresults)) {
-            echo "<tr>
+            /* class='user-row' */
+            echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['CusID']}'></td>
                     <td>{$row['CusID']}</td>
                     <td>{$row['CusName']}</td>
@@ -159,7 +166,7 @@
     echo "</center>";
     mysqli_close($cx);
     ?>
-<script>
+    <script>
         function updateDeleteButtonStatus() {
             var checkboxes = document.getElementsByName('checkbox[]');
             var deleteButton = document.getElementById('deleteButton');
@@ -195,13 +202,53 @@
                 }
             }
 
-            // Join values into a comma-separated string
             document.getElementById('deleteForm').elements['selectedValues'].value = checkboxValues.join(',');
             var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
             var enableDeleteButton = checkedCheckboxes.length > 0;
 
             deleteButton.disabled = !enableDeleteButton;
         }
+
+        /* Fillter */
+        function updateTable(filterKeyword) {
+            var tableRows = document.querySelectorAll('.user-row');
+
+            tableRows.forEach(function (row) {
+                var containsKeyword = false;
+
+                row.querySelectorAll('td').forEach(function (cell, index) {
+                    var cellText = cell.innerText.toLowerCase();
+
+                    if (cellText.includes(filterKeyword.toLowerCase())) {
+                        containsKeyword = true;
+                        return; 
+                    }
+
+                    var cellNumber = parseFloat(cellText);
+                    var filterNumber = parseFloat(filterKeyword);
+
+                    if (!isNaN(cellNumber) && !isNaN(filterNumber) && cellNumber === filterNumber) {
+                        containsKeyword = true;
+                        return; 
+                    }
+                });
+
+                
+                if (containsKeyword) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+       
+        $('#filter').on('input', function() {    
+            var filterKeyword = $(this).val();
+            updateTable(filterKeyword);
+        });
+
     </script>
 </body>
+
 </html>

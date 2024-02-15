@@ -1,12 +1,14 @@
 <?php /* get connection */
+    header( "location: ./stock_index.php");
     $conn = mysqli_connect("localhost", "root", "", "shopping");   
     $a2 = $_POST['a2'];
     $a3 = $_POST['a3'];
     $a4 = $_POST['a4'];
+    $a5 = $_POST['a5'];
 
     /* run insert */
-    $stmt = mysqli_query($conn, "INSERT INTO product(ProName, PricePerUnit, StockQty)
-        VALUES('$a2', '$a3', '$a4');");
+    $stmt = mysqli_query($conn, "INSERT INTO product(ProName, Description ,PricePerUnit, StockQty)
+        VALUES('$a2', '$a5' ,'$a3', '$a4');");
 
     /* check for errors */
     if (!$stmt) {

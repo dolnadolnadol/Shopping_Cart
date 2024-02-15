@@ -1,18 +1,18 @@
-<?php /* POST connection */
-    // header( "location: ./index.php");
+<?php /* get connection */
+    header( "location: ./invoice_index.php");
     $conn = mysqli_connect("localhost", "root", "", "shopping");
-    if (isset($_POST['id_customer'])){
-        $code = $_POST['id_customer'];
+    if (isset($_POST['total_id_invoice'])){
+        $code = $_POST['total_id_invoice'];
         /* run delete */
-        // $stmt = odbc_prepra($conn, "DELETE FROM customer WHERE IDCust='$code'");
-        $stmt = mysqli_query($conn,"DELETE FROM customer WHERE CusID='$code'");
+        $stmt1 = mysqli_query($conn, "DELETE FROM invoice_detail WHERE InvID ='$code'");
+        $stmt2 = mysqli_query($conn, "DELETE FROM invoice WHERE InvID ='$code'");
         /* check for errors */
         if (!$stmt) { 
             /* error */
-            echo "Error deleting data with CusID = '$code'";
+            echo "Error deleting data with InvID = '$code'";
         } else {
             echo "Delete data = <font color=red> '$code' </font> is Successful. <br>";
-            echo "<a href='customer_index.php' 
+            echo "<a href='invoice_index.php' 
                 style='
                 padding: 9px 14px;
                 color: #ef476f;             
@@ -21,22 +21,23 @@
                 '>กลับหน้าหลัก</a>";
         }
     }
-    else if (isset($_POST['list_id_customer'])){
-        $list_ids = $_POST['list_id_customer'];  
+    else if (isset($_POST['list_id_invoice'])){
+        $list_ids = $_POST['list_id_invoice'];  
         $codesArray = explode(',', $list_ids);
         foreach ($codesArray as $code) {
             $code = mysqli_real_escape_string($conn, $code);
-            $stmt = mysqli_query($conn,"DELETE FROM customer WHERE CusID='$code'");
+            $stmt1 = mysqli_query($conn, "DELETE FROM invoice_detail WHERE InvID ='$code'");
+            $stmt2 = mysqli_query($conn, "DELETE FROM invoice WHERE InvID ='$code'");
     
             /* check for errors */
-            if (!$stmt) {
+            if (!$stmt1 && !$stmt2) {
                 /* error */
-                echo "Error deleting data with CusID = '$code'";
+                echo "Error deleting data with InvID = '$code'";
             } else {
-                echo "Delete data with CusID = <font color=red> '$code' </font> is Successful.<br>";
+                echo "Delete data with InvID = <font color=red> '$code' </font> is Successful.<br>";
             }
         }
-        echo "<a href='customer_index.php' 
+        echo "<a href='invoice_index.php' 
         style='
         padding: 9px 14px;
         color: #ef476f;             

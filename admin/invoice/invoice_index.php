@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <title>invoice List</title>
     <style>
         body {
@@ -77,21 +78,17 @@
             border-bottom: 1px solid #ccc;
         }
 
-        .action-buttons {
-            display: flex;
-            justify-content: space-around;
+        .navbar {
+            margin-top: 100px;
         }
 
         .action-button {
             display: inline-block;
         }
 
-        .action-button img {
-            width: 20px;
-            height: 20px;
-        }
-        .navbar {
-            margin-top: 100px;
+        .action-button input[type='image'] {
+            width: 30px;
+            height: 30px; 
         }
     </style>
 </head>
@@ -106,25 +103,24 @@
             <form  id='deleteForm' class="delete-form" action="invoice_delete_confirm.php" method="post">
                 <input type="hidden" name="list_id_invoice" id="selectedValues" value="">
                 <input type="hidden" name="total_id_invoice" id="selectedTotal" value="">
-                <input type="submit" id="deleteButton" value="Delete User" disabled>
+                <input type="submit" id="deleteButton" value="Delete Invoice" disabled>
             </form>
         </div>
         <div>
-            <form class="add-invoice-form" action="invoice_insert_form.html" method="post">
+            <!------------- Fillter ------------------->
+            <label for="filter">Filter by Name:</label>
+            <input type="text" name="filter" id="filter" placeholder="Enter name to filter">
+            <!------------------------------------------>
+            <form class="add-invoice-form" action="invoice_insert.php" method="post">
                 <input type="submit" id="addInvoiceButton" value="Add Invoice">
             </form>
             <br>
         </div>
     </div>
-
+    
     <?php
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
-    $cur = "SELECT 
-    invoice.InvID, 
-    customer.CusName, 
-    invoice.Period, 
-    invoice.Status,
-    (invoice_detail.qty * product.pricePerUnit) AS totalprice
+    $cur = "SELECT invoice.* , customer.CusName
     FROM 
         invoice
     JOIN
@@ -150,21 +146,32 @@
 
     if (mysqli_num_rows($msresults) > 0) {
         while ($row = mysqli_fetch_array($msresults)) {
-            echo "<tr>
+            echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['InvID']}'></td>
                     <td>{$row['InvID']}</td>
                     <td>{$row['CusName']}</td>
                     <td>{$row['Period']}</td>
-                    <td>{$row['totalprice']}</td>
-                    <td>{$row['Status']}</td>
-                    <td class='action-buttons'>
+                    <td>{$row['TotalPrice']}</td>";
+                    echo "<td><div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";                
+                    if ($row['Status'] == 'Unpaid') {
+                        echo '#FFA500;';
+                    } elseif ($row['Status'] == 'Paid') {
+                        echo '#06D6B1;';
+                    } else if ($row['Status'] == 'Canceled'){
+                        echo '#FF0000;';
+                    } else {
+                        echo '#06D6B1;'; 
+                    }                 
+                    echo "'><span style='color: #ffff;'>{$row['Status']}</span></div></td>";
+
+                    echo "<td class='action-buttons'>
                         <form class='action-button' action='invoice_update.php' method='post'>  
                             <input type='hidden' name='id_invoice' value={$row['InvID']}>
-                            <input type='image' alt='update' src='pen-solid.svg'>
+                            <input type='image' alt='update' src='../img/pencil.png'>
                         </form>
                         <form class='action-button' action='invoice_delete_confirm.php' method='post'>
-                            <input type='hidden' name='id_invoice' value={$row['InvID']}>
-                            <input type='image' alt='delete' src='trash-solid.svg'>
+                            <input type='hidden' name='total_id_invoice' value={$row['InvID']}>
+                            <input type='image' alt='delete' src='../img/trash.png'>
                         </form>
                     </td>
                 </tr>";
@@ -217,6 +224,50 @@
 
             deleteButton.disabled = !enableDeleteButton;
         }
+        /* Fillter */
+    function updateTable(filterKeyword) {
+            var tableRows = document.querySelectorAll('.user-row');
+
+            tableRows.forEach(function (row) {
+                var containsKeyword = false;
+
+                // Loop through all columns (td elements) in the current row
+                row.querySelectorAll('td').forEach(function (cell, index) {
+                    var cellText = cell.innerText.toLowerCase();
+
+                    // Check if the cell contains the filter keyword (string comparison)
+                    if (cellText.includes(filterKeyword.toLowerCase())) {
+                        containsKeyword = true;
+                        return; // Break out of the loop if the keyword is found in any cell
+                    }
+
+                    // Check if the cell contains the filter keyword as a number
+                    var cellNumber = parseFloat(cellText);
+                    var filterNumber = parseFloat(filterKeyword);
+
+                    if (!isNaN(cellNumber) && !isNaN(filterNumber) && cellNumber === filterNumber) {
+                        containsKeyword = true;
+                        return; // Break out of the loop if the numeric values match
+                    }
+                });
+
+                // Display or hide the row based on the keyword presence
+                if (containsKeyword) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Listen for input event on the filter input
+        $('#filter').on('input', function() {
+            // Get the value of the filter input
+            var filterKeyword = $(this).val();
+
+            // Update the table based on the filter keyword
+            updateTable(filterKeyword);
+        });
     </script>
 </body>
 </html>

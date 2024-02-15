@@ -9,7 +9,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            /* เปลี่ยนแบบอักษรเป็น Arial หรือแบบที่คุณต้องการ */
             background-color: #f4f4f4;
         }
 
@@ -17,11 +16,8 @@
         .container-body {
             display: flex;
             justify-content: space-between;
-            /* กระจายทั้งสองส่วนไปทางด้านข้าง */
-            max-width: 1200px;
-            /* จำกัดความกว้างของ container */
-            margin: 0 auto;
-            /* ตรงกลางหน้าจอ */
+            max-width: 1200px;      
+            margin: 100px auto 0px auto;
             padding: 20px;
         }
 
@@ -197,7 +193,7 @@
 
 </html>
 <?php include('./component/accessNavBar.php'); ?>
-<?php include('./component/backButton.php')?>
+<!-- <?php include('./component/backButton.php')?> -->
 <?php
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
     $code = $_POST['id_product'];
@@ -223,8 +219,7 @@
             <div class='container-2'>
                 <p><strong>{$row['ProName']}</strong></p>
                 <p style='font-size:20px;'>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut 
-                    enim ad minim veniam, quis nostrud exercitation ullamco laboris .
+                    {$row['Description']}
                 </p>
                 <p style='font-size:30px;'>ราคา: {$row['PricePerUnit']} บาท</p>
                 <p style='font-size:20px; color:red;'>จำนวนในสต็อก: {$onHandStock}</p>

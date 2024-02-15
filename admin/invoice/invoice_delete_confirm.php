@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete Customer</title>
+    <title>Delete invoice</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -67,54 +67,62 @@
 </head>
 
 <body>
-    <?php 
-    /* POST connection */
-    $conn = mysqli_connect("localhost", "root", "", "Shopping");
+<?php /* get connection */
+    $conn = mysqli_connect("localhost", "root", "", "shopping");
 
     /*SELECT*/
-    if (isset($_POST['list_id_customer'])){
-        $code = $_POST['list_id_customer'];
+    if (isset($_POST['list_id_invoice'])){
+        $code = $_POST['list_id_invoice'];
         $codesArray = explode(',', $code);
         echo "<center>";
-        echo "<form method='POST' action='customer_delete.php'>";
+        echo "<form method='POST' action='invoice_delete.php'>";
         echo "<h4>จำนวนชุดข้อมูลที่จะลบ</h4><font size='8'>";
         echo count($codesArray);
         echo "</font><br>";
         echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
-        echo "<input type='hidden' name='list_id_customer' value={$_POST['list_id_customer']}>";
-        echo "<a href='customer_index.php'>ยกเลิก</a>"; 
+        echo "<input type='hidden' name='list_id_invoice' value={$_POST['list_id_invoice']}>";
+        echo "<a href='invoice_index.php'>ยกเลิก</a>"; 
         echo "<input type='submit' value='ยืนยัน'>";
         echo "</form>\n";
         echo "</center>";
+
+        echo "<a href='invoice_index.php' 
+        style='
+        padding: 9px 14px;
+        color: #ef476f;             
+        text-decoration: none;
+        margin-right: 5px;
+        '>ยกเลิก</a>";
+        echo "</form>\n"; 
+        echo "</center>";
     }
     else {
-        $code = $_POST['id_customer'];
-        $cur = "SELECT * FROM Customer WHERE CusID = '$code'";
+        $code = $_POST['total_id_invoice'];
+        echo $code;
+        $cur = "SELECT * FROM invoice WHERE InvID = '$code'";
         $msresults = mysqli_query($conn,$cur);
+    
         if(mysqli_num_rows($msresults) > 0) {
             $row = mysqli_fetch_array($msresults);
             echo "<center>";
-            echo "<form method='POST' action='customer_delete.php'>";
-            echo "<h1>Delete Customer Form</h1>";
-            echo "<h2>รหัสลูกค้า ". $row['CusID'] ."</h2><br>";
-            echo "<input type='hidden' name='id_customer' value='" . $row['CusID'] . "'>";
-            echo "ชื่อ : {$row['CusName']}<br>";
-            echo "เพศ : {$row['Sex']}<br>";
-            echo "ที่อยู่ : {$row['Address']}<br>";
-            echo "เบอร์โทรศัพท์ : {$row['Tel']}<br><br>";
+            echo "<form method='POST' action='invoice_delete.php'>";
+            echo "<h4>รหัสข้อมูลที่จะลบ</h4><font size='8'>";
+            echo $code;
+            echo "<br></font><br>";
             echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
-            echo "<a href='customer_index.php'>ยกเลิก</a>";
+            echo "<input type='hidden' name='list_id_invoice' value={$code}>";
+            echo "<a href='invoice_index.php'>ยกเลิก</a>"; 
             echo "<input type='submit' value='ยืนยัน'>";
-            echo "</form>\n"; 
+            echo "</form>\n";
             echo "</center>";
+    
         }
     }
 
     /* close connection */
     mysqli_close($conn);
-    ?>
-</body>
+?>
 
-</html>
+
 
 
