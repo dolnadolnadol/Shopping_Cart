@@ -3,16 +3,24 @@ include('./component/session.php');
 
 $cx = mysqli_connect("localhost", "root", "", "shopping");
 
-$username = $_SESSION['username'];
-
-$query = "SELECT * FROM customer WHERE UserName = '$username'";
+$query = "SELECT * FROM customer INNER JOIN customer_account ON customer_account.CusID = customer.CusID WHERE  customer.CusID = '$uid'";
 $result = mysqli_query($cx, $query);
+$user_data = mysqli_fetch_assoc($result);
+$uid = $user_data['CusID'];
+
+$query_address = "SELECT * FROM receiver 
+    INNER JOIN receiver_detail ON receiver.RecvID = receiver_detail.RecvID  
+    WHERE receiver_detail.CusID = '$uid'";
+$result_address = mysqli_query($cx, $query_address);
+
+
 
 if (!$result) {
     die("Error fetching user data: " . mysqli_error($cx));
 }
 
-$user_data = mysqli_fetch_assoc($result);
+
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
     $uid = $_POST['id_customer'];
@@ -20,15 +28,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
     $new_tel = $_POST['tel'];
     $new_address = $_POST['address'];
 
-    $update_query = "UPDATE customer SET UserName = '$new_username' ,Tel = '$new_tel', Address = '$new_address' WHERE CusID = '$uid'";
+    $update_query = "UPDATE customer SET UserName = '$new_username' ,Tel = '$new_tel' WHERE CusID = '$uid'";
+    $update_result = mysqli_query($cx, $update_query);
+
+    $update_query = "UPDATE customer_account SET Username = '$new_username' WHERE CusID = '$uid'";
     $update_result = mysqli_query($cx, $update_query);
 
     if (!$update_result) {
         die("Error updating user data: " . mysqli_error($cx));
     }
 
-    $_SESSION['username'] = $new_username;
-    $_SESSION['tel'] = $new_tel;
+    // $_SESSION['username'] = $new_username;
+    // $_SESSION['tel'] = $new_tel;
 
 }
 
@@ -134,6 +145,63 @@ mysqli_close($cx);
         span {
             color: red;
         }
+
+        .user-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            width: 200px; /* ปรับขนาดตามต้องการ */
+            cursor: pointer;
+        }
+
+        .user-card:hover {
+            background-color: #f0f0f0; /* สีเวลา hover */
+        }
+
+         /* สไตล์ของปุ่ม */
+        .long-button {
+            display: inline-block;
+            padding: 5px 50px;
+            background-color: #3498db; /* สีพื้นหลัง */
+            color: #fff; /* สีตัวอักษร */
+            border: none;
+            /* border-radius: 20px;  */
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* สไตล์ของไอคอนกลม */
+        .circle-icon {
+            width: 24px;
+            height: 24px;
+            background-color: #fff; /* สีพื้นหลัง */
+            border-radius: 50%; /* รัศมีของวงกลม */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            /* margin-right: 10px; */
+        }
+
+        /* สไตล์ของสัญลักษณ์ '+' */
+        .plus-icon::before,
+        .plus-icon::after {
+            content: '';
+            width: 12px;
+            height: 2px;
+            background-color: #3498db; /* สีของเส้นสัญลักษณ์ */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .plus-icon::after {
+            transform: translate(-50%, -50%) rotate(90deg);
+        }
+
+        .address-container {
+            margin-top: 50px;
+        }
     </style>
 </head>
 
@@ -149,7 +217,7 @@ mysqli_close($cx);
                 <input type="hidden" name="id_customer" value="<?php echo $user_data['CusID'] ?>">
                 
                 <label for="username">Username:</label>
-                <input type="text" name="username" value="<?php echo $user_data['Username'] ?>" readonly>
+                <input type="text" name="username" value="<?php echo $user_data['Username'] ?>">
 
                 <label for="password">Password:</label>
                 <input type="password" name="password" value="<?php echo $user_data['Password'] ?>" readonly>
@@ -157,11 +225,48 @@ mysqli_close($cx);
                 <label for="tel">Tel:<span>*</span></label>
                 <input type="tel" name="tel" value="<?php echo $user_data['Tel']?>" required>
 
-                <label for="address">Address:<span>*</span></label>
-                <textarea name="address" rows="3" required><?php echo $user_data['Address']; ?></textarea>
-
                 <button type="submit" onclick="showOverlay()">บันทึกข้อมูล</button>
             </form>
+
+            <div class="address-container">
+                <label for="address" >Address:<span>*</span></label>
+                <?php
+                    $user_address = mysqli_fetch_array($result_address);
+                    while ($user_address) {
+                        $recvID = $user_address['RecvID'];
+                        echo '<div class="user-card" onclick="submitForm(\'' . $recvID . '\')">                       
+                                <p>' . $recvID . '</p>
+                                <p>' . $user_address['RecvFName'] . '</p>
+                                <p>' . $user_address['RecvLName'] . '</p>
+                                <p>' . $user_address['Tel'] . '</p>
+                                <p>' . $user_address['Address'] . '</p>              
+                            </div>';
+                        echo   '<form method="post" action="./accessAddressProfile.php">
+                                    <input type="hidden" name="delete_id_customer" value="' . $uid . '">
+                                    <input type="hidden" name="delete_id_receiver" id="id_receiver" value="'.$recvID.'">
+                                    <button type="submit">ลบ</button>
+                            </form>'; 
+
+                        $user_address = mysqli_fetch_array($result_address); // Update $user_address
+                    }
+                ?>
+                <!-- Add the hidden form outside the loop -->
+                <form id="addressForm" method="post" action="./profileAddress.php">
+                    <input type="hidden" name="id_customer" value="<?php echo $uid ?>">
+                    <input type="hidden" name="id_receiver" id="id_receiver" value="">
+                </form>
+
+                <form id="address" method="post" action="./profileAddress.php">
+                    <input type="hidden" name="id_customer" value="<?php echo $uid ?>">
+                    <input type="hidden" name="id_receiver" value="<?php echo '' ?>">
+                    <button class="long-button">
+                        <div class="circle-icon">
+                            <div class="plus-icon"></div>
+                        </div>
+                    </button>
+                <form>
+            <div>
+
         </div>
     </div>
 
@@ -174,35 +279,49 @@ mysqli_close($cx);
     </div>
 
     <script>
-        document.getElementById('profileForm').addEventListener('submit', function (event) {
-            event.preventDefault();
+        // Function to submit the form with the specified receiver ID
+        function submitForm(id_receiver) {
+            // Set the value of the hidden input in the form
+            document.getElementById('id_receiver').value = id_receiver;
 
-            var formData = new FormData(this);
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', this.action, true);
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    // Form submitted successfully
-                    showOverlay();
-                } else {
-                    // Handle error
-                    console.error('Error submitting form');
-                }
-            };
-            xhr.send(formData);
-        });
-
-        function showOverlay() {
-            document.getElementById('overlay').style.display = 'flex';
-            // Delay the hideOverlay function
-            setTimeout(hideOverlay, 10000); // Adjust the time (in milliseconds) as needed
-        }
-
-        function hideOverlay() {
-            document.getElementById('overlay').style.display = 'none';
+            // Submit the form
+            document.getElementById('addressForm').submit();
         }
     </script>
+   
+
+    <script>
+    document.getElementById('profileForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var formData = new FormData(this);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', this.action, true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                // Form submitted successfully
+                showOverlay();
+            } else {
+                // Handle error
+                console.error('Error submitting form');
+            }
+        };
+        xhr.send(formData);
+    });
+
+    function showOverlay() {
+        document.getElementById('overlay').style.display = 'flex';
+        // Delay the hideOverlay function
+        setTimeout(hideOverlay, 10000); // Adjust the time (in milliseconds) as needed
+    }
+
+    function hideOverlay() {
+        document.getElementById('overlay').style.display = 'none';
+        // Redirect to profileAddress.php after hiding the overlay
+        window.location.href = './profile.php';
+    }
+</script>
 </body>
 
 </html>

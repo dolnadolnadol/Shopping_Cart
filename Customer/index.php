@@ -1,4 +1,3 @@
-<?php include('./component/session.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,9 +70,9 @@
     </style>
 </head>
 <body>
-    <?php include('./component/accessNavbar.php')?>
+    <?php include('./component/session.php');?>
+    <?php include('./component/accessNavbar.php');?>
     <center>
-    
         <div class="product-container">
             <?php
                 $cx =  mysqli_connect("localhost", "root", "", "shopping");

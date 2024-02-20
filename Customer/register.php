@@ -97,8 +97,11 @@
     <div class="body-container">
         <div class="container">
             <form method="post" action="registerProcess.php">
-                <label for="fullname">Fullname</label>
-                <input type="text" id="fullname" name="fullname" required>
+                <label for="frist name">Frist name</label>
+                <input type="text" id="frist name" name="fname" required>
+                <label for="last name">Last name</label>
+                <input type="text" id="last name" name="lname" required>
+
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
                 <label for="password">Password</label>

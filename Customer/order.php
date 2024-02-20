@@ -121,8 +121,20 @@
             <h1>Order details</h1>
           </div>";
 
-    $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE CusID = '$uid'");  
-    $customerDetails = mysqli_fetch_array($customerDetailsQuery);
+
+    if (isset($_SESSION['cart'])) {
+        $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE customer.CusID = '$uid'");  
+        $customerDetails = mysqli_fetch_array($customerDetailsQuery);        
+        $customerId = $customerDetails['CusID'];
+    }
+    else {
+        $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer INNER JOIN customer_account ON customer_account.CusID = customer.CusID WHERE customer.CusID = '$uid'");  
+        $customerDetails = mysqli_fetch_array($customerDetailsQuery);
+        $customerId = $customerDetails['CusID'];
+    }
+       
+    // $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer INNER JOIN customer_account ON customer_account.CusID = customer.CusID WHERE customer.CusID = '$uid'"); 
+    // $customerDetails = mysqli_fetch_array($customerDetailsQuery);
 
     echo "<div class='container_order'>
     <div class='item_order'>
@@ -130,14 +142,16 @@
         <p>Name: Fastwork ck🤔</p>
         <p>Address: ประเทศลาดกระบัง</p>
         <h3>Ship to </h3>
-        <p>Name: {$customerDetails['CusName']}</p>
+        <p>Name: {$customerDetails['CusFName']} {$customerDetails['CusLName']}</p>
         <p>Email: {$customerDetails['Tel']}</p>
         <p>Address: {$customerDetails['Address']}</p>
     </div>";
-
+    echo '5555555123';
     if(isset($_POST['id_order'])){
+        echo '5555';
         $customerId = $customerDetails['CusID'];
         $RecId = $_POST['id_order'];
+        echo $RecId;
         $orderQuery = mysqli_query($cx, "SELECT Product.*, receive_detail.*  , receive.*
                     FROM receive_detail
                     INNER JOIN receive ON receive.RecID = receive_detail.RecID

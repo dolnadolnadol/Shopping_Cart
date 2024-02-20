@@ -2,15 +2,21 @@
 include('./component/session.php'); 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
     /* Manage Order to send */
     if(isset($_POST['id_invoice'])&&isset($_POST['id_customer'])){
         $cusID = $_POST['id_customer'];
         $invID = $_POST['id_invoice'];
+
+        echo $cusID;
+        echo $invID;
+
         $cx =  mysqli_connect("localhost", "root", "", "shopping");
 
         $check_query = mysqli_query($cx, "SELECT InvID , CusID , TotalPrice FROM invoice WHERE CusID = '$cusID' AND InvID = '$invID'");
         $row = mysqli_fetch_assoc($check_query);
         $totalPrice = $row['TotalPrice'];
+
         if(mysqli_num_rows($check_query) > 0){
             mysqli_data_seek($check_query, 0);
 
@@ -22,12 +28,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $newNumericPart = $numericPart + 1;
             $RecID = 'rec_id'.str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
 
+            echo $RecID;
+
             // Insert RECEIVE record
             $stmt = mysqli_query($cx, "INSERT INTO receive(RecID, OrderDate ,CusID, TotalPrice , Status)
                 VALUES ('$RecID', NOW(),'$cusID','$totalPrice','Pending');");
 
-
-            
+  
             while (true) {
                 // Generate new NumID
                 $resultDetail = mysqli_query($cx, "SELECT MAX(NumID) AS num_id FROM receive_detail WHERE RecID = '$RecID'");
@@ -36,10 +43,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $numericPart = intval(substr($lastID, 3));
                 $newNumericPart = $numericPart + 1; 
                 $NumID = 'Num' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
+
+                echo $NumID;
                 // echo $lastID."    ".$numericPart."    ".$newNumericPart."    ".$NumID;
                 // echo "SELECT MAX(NumID) AS num_id FROM receive_detail WHERE RecID = '$RecID'";
 
                 $resultDetail = mysqli_query($cx, "SELECT invID , ProID , Qty FROM invoice_detail WHERE invID = '$invID' AND NumID = '$NumID'");
+                
+                echo mysqli_num_rows($resultDetail);
+               
                 if ($resultDetail && mysqli_num_rows($resultDetail) > 0) {
                     $invoice_detail = mysqli_fetch_assoc($resultDetail);
                     $proID = $invoice_detail['ProID'];
@@ -80,10 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </script>";
             exit();
         }
-        else {
-            // header("Location: ./index.php");
-            // exit(); 
-        } 
+
     }
 }
 ?>

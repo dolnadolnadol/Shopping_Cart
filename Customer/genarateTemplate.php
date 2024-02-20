@@ -92,7 +92,7 @@
         $cx =  mysqli_connect("localhost", "root", "", "shopping");
         $invoiceQuery = mysqli_query($cx, "SELECT * FROM Customer WHERE CusID = '$customerId'");
         $row_customer = mysqli_fetch_array($invoiceQuery);
-        $customerName = $row_customer['CusName'];
+        $customerName = $row_customer['CusFName'] . $row_customer['CusLName'];
         $customerTel = $row_customer['Tel'];
         $customerAddress = $row_customer['Address'];
 
