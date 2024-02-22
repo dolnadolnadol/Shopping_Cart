@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         AND receiver.Address = '$new_address'";
         $result = mysqli_query($cx ,$select_query_head);
 
-        if(mysqli_num_rows($result) < 0){
+        if(mysqli_num_rows($result) < 1){
             $insert_query_head = "INSERT INTO receiver (RecvFName , RecvLName  , Tel , Address) 
             VALUES('$new_fname', '$new_lname', '$new_tel' , '$new_address')";
             $insert_result_head = mysqli_query($cx, $insert_query_head);
@@ -102,8 +102,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $InvID = 'INV' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
 
             // Insert a new invoice record
-            $stmt = mysqli_query($cx, "INSERT INTO invoice (InvID, Period, CusID, Status)
-                VALUES ('$InvID', NOW(), '$cusID', 'Unpaid');");
+            $stmt = mysqli_query($cx, "INSERT INTO invoice (InvID, Period, CusID, Status, RecvID)
+                VALUES ('$InvID', NOW(), '$cusID', 'Unpaid', '$recv_id');");
 
             // Iterate through each item in the cart
             while ($row = mysqli_fetch_array($check_query)) {
@@ -145,10 +145,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     echo "Deletion failed: " . mysqli_error($cx);
                 }
 
-                // echo $recv_id;
+                echo $recv_id;
 
                 // Auto-submit form to redirect to invoice page
-                echo "<form id='auto_submit_form' method='post' action='invoice.php'>
+                echo "<form id='auto_submit_form' method='post' action='paymentForm.php'>
                     <input type='hidden' name='id_invoice' value='$InvID'>
                     <input type='hidden' name='id_receiver' value='$recv_id'>
                 </form>";
@@ -162,9 +162,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </script>";
             }
         } else {
+            echo "alert('No Item In Cart!')";
             // Redirect to cart page if the cart is empty
-            header("Location: ./cart.php");
-            exit();
+            echo header("Location: ./cart.php");;
+            // exit();
         }
 
     /* Guest */
@@ -239,8 +240,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $InvID = 'INV' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
 
             // Insert a new invoice record for guests
-            $stmt = mysqli_query($cx, "INSERT INTO invoice (InvID, Period, CusID, Status)
-                VALUES ('$InvID', NOW(), $cusID, 'Unpaid');");
+            $stmt = mysqli_query($cx, "INSERT INTO invoice (InvID, Period, CusID, Status, RecvID)
+                VALUES ('$InvID', NOW(), $cusID, 'Unpaid', $recv_id);");
 
             // Iterate through each item in the session cart
             foreach ($_SESSION['cart'] as $product_id => $product) {
@@ -280,7 +281,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['id_username'] = $cusID;
 
                 // Auto-submit form to redirect to invoice page
-                echo "<form id='auto_submit_form' method='post' action='invoice.php'>
+                echo "<form id='auto_submit_form' method='post' action='paymentForm.php'>
+                    <input type='hidden' name='cart' value='" . json_encode($_SESSION['cart']) . "'>
                     <input type='hidden' name='id_invoice' value='$InvID'>
                     <input type='hidden' name='id_receiver' value='$recv_id'>
                 </form>";

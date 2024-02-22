@@ -78,16 +78,21 @@
                 $cx =  mysqli_connect("localhost", "root", "", "shopping");
                 $cur = "SELECT * FROM product";
                 $msresults = mysqli_query($cx, $cur);
-                while ($row = mysqli_fetch_array($msresults)) {
-                echo "<div class='product-card'>
-                            <img class='product-image' src='./image/cart.png'>
-                            <p class='product-name'>{$row['ProName']}</p>
-                            <p class='product-price'>ราคา {$row['PricePerUnit']}</p>
-                            <form method='post' action='detailProduct.php'>
-                                <input type='hidden' name='id_product' value='{$row['ProID']}'>
-                                <input class='buy-button' type='submit' value='ซื้อสินค้า'>
-                            </form>
-                    </div>";
+                if(mysqli_num_rows($msresults) > 0){
+                    while ($row = mysqli_fetch_array($msresults)) {
+                    echo "<div class='product-card'>
+                                <img class='product-image' src='./image/cart.png'>
+                                <p class='product-name'>{$row['ProName']}</p>
+                                <p class='product-price'>ราคา {$row['PricePerUnit']}</p>
+                                <form method='post' action='detailProduct.php'>
+                                    <input type='hidden' name='id_product' value='{$row['ProID']}'>
+                                    <input class='buy-button' type='submit' value='ซื้อสินค้า'>
+                                </form>
+                        </div>";
+                    }
+                }
+                else {
+                    echo "<center><h1>ไม่มีสินค้า</h1></center>";
                 }
             ?>
         </div>

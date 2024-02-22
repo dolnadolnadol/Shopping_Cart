@@ -7,13 +7,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(isset($_POST['id_invoice'])&&isset($_POST['id_customer'])){
         $cusID = $_POST['id_customer'];
         $invID = $_POST['id_invoice'];
+        $recvID = $_POST['id_receiver'];
+
+        /* Order */
+        $payer_fname = $_POST['fname'];
+        $payer_lname = $_POST['lname'];
+        $payer_tel = $_POST['tel'];
 
         echo $cusID;
         echo $invID;
+        echo $recvID;
 
-        $cx =  mysqli_connect("localhost", "root", "", "shopping");
+        $conn =  mysqli_connect("localhost", "root", "", "shopping");
 
-        $check_query = mysqli_query($cx, "SELECT InvID , CusID , TotalPrice FROM invoice WHERE CusID = '$cusID' AND InvID = '$invID'");
+
+        // Create Payer info
+        $result = mysqli_query($conn, "SELECT MAX(TaxID) AS tax_id FROM payer");
+        $row = mysqli_fetch_assoc($result);
+        $lastID = $row['tax_id'];
+        $numericPart = intval(substr($lastID, 3));
+        $newNumericPart = $numericPart + 1;
+        $TaxID = 'Tax' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
+
+        $insert_query_head = "INSERT INTO payer(TaxID, PayerFName, PayerLName, Tel) 
+                            VALUES('$TaxID', '$payer_fname', '$payer_lname', '$payer_tel')";
+        $insert_result_head = mysqli_query($conn, $insert_query_head);
+
+        if (!$insert_result_head) {
+            die("Error inserting into payer: " . mysqli_error($conn));
+        }
+
+    
+        echo $TaxID;
+
+
+        // Generate new NumID for payer_detail
+        $resultDetail = mysqli_query($conn, "SELECT MAX(CAST(SUBSTRING(NumID, 4) AS UNSIGNED)) AS num_id FROM payer_detail WHERE CusID = '$cusID'");
+        $latestID = mysqli_fetch_assoc($resultDetail);
+        $lastID = $latestID['num_id'];
+
+        // Increment the numeric part
+        $newNumericPart = $lastID + 1;
+    
+        // Format the complete NumID
+        $NumID_payer = 'Num' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
+
+        // Insert into payer_detail
+        $insert_query_detail = "INSERT INTO payer_detail (CusID, TaxID, NumID) VALUES('$cusID', '$TaxID', '$NumID_payer')";
+        $insert_result_detail = mysqli_query($conn, $insert_query_detail);
+
+        if (!$insert_result_detail) {
+            die("Error inserting payer_detail: " . mysqli_error($conn));
+        }
+
+
+        $check_query = mysqli_query($conn, "SELECT InvID , CusID , TotalPrice FROM invoice WHERE CusID = '$cusID' AND InvID = '$invID'");
         $row = mysqli_fetch_assoc($check_query);
         $totalPrice = $row['TotalPrice'];
 
@@ -21,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_data_seek($check_query, 0);
 
             // Generate new RECEIVE ID
-            $result = mysqli_query($cx, "SELECT MAX(RecID) AS rec_id FROM receive");
+            $result = mysqli_query($conn, "SELECT MAX(RecID) AS rec_id FROM receive");
             $row = mysqli_fetch_assoc($result);
             $lastID = $row['rec_id'];
             $numericPart = intval(substr($lastID, 6));
@@ -31,13 +79,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo $RecID;
 
             // Insert RECEIVE record
-            $stmt = mysqli_query($cx, "INSERT INTO receive(RecID, OrderDate , TaxID ,CusID, TotalPrice , Status)
-                VALUES ('$RecID', NOW() ,'$cusID','$totalPrice','Pending');");
+            $stmt = mysqli_query($conn, "INSERT INTO receive(RecID, OrderDate , TaxID , RecvID ,CusID, TotalPrice , Status)
+                VALUES ('$RecID', NOW() , '$TaxID' , '$recvID' ,'$cusID','$totalPrice','Pending');");
 
   
             while (true) {
                 // Generate new NumID
-                $resultDetail = mysqli_query($cx, "SELECT MAX(NumID) AS num_id FROM receive_detail WHERE RecID = '$RecID'");
+                $resultDetail = mysqli_query($conn, "SELECT MAX(NumID) AS num_id FROM receive_detail WHERE RecID = '$RecID'");
                 $latestID = mysqli_fetch_assoc($resultDetail);
                 $lastID = $latestID['num_id'];
                 $numericPart = intval(substr($lastID, 3));
@@ -45,10 +93,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $NumID = 'Num' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
 
                 echo $NumID;
-                // echo $lastID."    ".$numericPart."    ".$newNumericPart."    ".$NumID;
-                // echo "SELECT MAX(NumID) AS num_id FROM receive_detail WHERE RecID = '$RecID'";
 
-                $resultDetail = mysqli_query($cx, "SELECT invID , ProID , Qty FROM invoice_detail WHERE invID = '$invID' AND NumID = '$NumID'");
+                $resultDetail = mysqli_query($conn, "SELECT invID , ProID , Qty FROM invoice_detail WHERE invID = '$invID' AND NumID = '$NumID'");
                 
                 echo mysqli_num_rows($resultDetail);
                
@@ -59,13 +105,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $invID = $invoice_detail['invID'];
 
                     // Insert invoice_detail record
-                    $stmt = mysqli_query($cx, "INSERT INTO receive_detail (RecID, NumID, ProID, Qty) VALUES ('$RecID', '$NumID', '$proID', '$Qty')");
+                    $stmt = mysqli_query($conn, "INSERT INTO receive_detail (RecID, NumID, ProID, Qty) VALUES ('$RecID', '$NumID', '$proID', '$Qty')");
 
                     // Update Status
-                    $stmt = mysqli_query($cx, "UPDATE invoice SET Status = 'Paid' WHERE invID ='$invID'");
+                    $stmt = mysqli_query($conn, "UPDATE invoice SET Status = 'Paid' WHERE invID ='$invID'");
 
                     // Update Stock and OnHands
-                    $stmt = mysqli_query($cx, "UPDATE product SET StockQty = StockQty - '$Qty', OnHands = OnHands - '$Qty' WHERE ProID ='$proID'");
+                    $stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty - '$Qty', OnHands = OnHands - '$Qty' WHERE ProID ='$proID'");
                 } else {
                     // No more matching records found, break the loop
                     break;
@@ -75,12 +121,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
             /*-------------------------------------*/
-            $stmt = mysqli_query($cx, "UPDATE receive SET TotalPrice ='$TotalWithTax'
+            $stmt = mysqli_query($conn, "UPDATE receive SET TotalPrice ='$TotalWithTax'
             WHERE RecID ='$RecID'");
             /*-------------------------------------*/
 
             // Form submission with hidden values
-            echo "<form id='auto_submit_form' method='post' action='order.php'>
+            echo "<form id='auto_submit_form' method='post' action='bill.php'>
             <input type='hidden' name='id_order' value='$RecID'>
             </form>";
     

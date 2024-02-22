@@ -25,9 +25,9 @@
                 }
             }
         }
-        else if($username == 'admin' && $password == '123456'){
-            header("Location: ../admin/dashboard/dashboard.php");
-        }
+        // else if($username == 'admin' && $password == '123456'){
+        //     header("Location: ../admin/dashboard/dashboard.php");
+        // }
         else {
             header("Location: ./login.php");
         }

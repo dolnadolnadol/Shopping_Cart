@@ -91,10 +91,11 @@
 </head>
 
 <body>
+    <?php include('./component/backButton.php');?>
     <form id="profileForm" method="post" action="accessInvoice.php">
         <?php
-        if (isset($_POST['id_customer'])) {
-            $uid = $_POST['id_customer'];
+        if (isset($_SESSION['id_username'])) {
+            $uid = $_SESSION['id_username'];
 
             $cx =  mysqli_connect("localhost", "root", "", "shopping");
             $query_address = "SELECT * FROM receiver 
@@ -113,9 +114,9 @@
             </div>
 
             <div class="checkout-steps">
-                <div class="checkout-step active" onclick="goToStep(1)">Step 1: Shipping</div>
-                <div class="checkout-step" onclick="goToStep(2)">Step 2: Payment</div>
-                <div class="checkout-step" onclick="goToStep(3)">Step 3: Success</div>
+                <div class="checkout-step active" >Step 1: Shipping</div>
+                <div class="checkout-step" >Step 2: Payment</div>
+                <div class="checkout-step" >Step 3: Success</div>
             </div>
 
             <div id="shippingForm" class="checkout-form" style="display: block;">
@@ -134,102 +135,24 @@
                     <textarea name="address" id="address" rows="3"><?php echo $row['Address'] ?? ''; ?></textarea>
                 </div>
 
-                <button class="checkout-button" onclick="goToStep(2)">Next: Payment</button>
-            </div>
-
-            <div id="paymentForm" class="checkout-form" style="display: none;">
-                <!-- Payment form content -->
-                <div class="form-group">
-                    <label for="creditCard">Credit Card Number:</label>
-                    <input type="text" id="creditCard" name="creditCard" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="expiryDate">Expiry Date:</label>
-                    <input type="text" id="expiryDate" name="expiryDate" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="cvv">CVV:</label>
-                    <input type="text" id="cvv" name="cvv" required>
-                </div>
+                <button class="checkout-button" onclick="submit()">Next: Payment</button>
 
                 <!-- ตรวจสอบว่าเป็น Guest หรือ User และแสดงปุ่ม 'ชำระเงิน' ตามเงื่อนไข -->
                 <?php if (isset($_SESSION['cart'])) : ?>
                     <input type='hidden' name='cart' value='<?php echo json_encode($_SESSION['cart']); ?>'>
-                    <input class='buy-button' type='submit' value='ชำระเงิน'>
-                <?php elseif (isset($_POST['id_customer'])) : ?>
+                <?php elseif (isset($_SESSION['id_username'])) : ?>
                     <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
-                    <input class='buy-button' type='submit' value='ชำระเงิน'>
                 <?php else : ?>
                     <p>Oops Something went wrong</p>
                     <?php echo 'header("Location: ./cart.php")'; ?>
                 <?php endif; ?>
             </div>
-
-            <div id="successForm" class="checkout-form" style="display: none;">
-                <!-- Success form content -->
-                <h3>Order Placed Successfully!</h3>
-                <p>Your order has been confirmed. Thank you for shopping with us.</p>
-                <input class='buy-button' type='submit' value='ชำระเงิน'>
-            </div>
         </div>
     </form>
     <script>
-        function goToStep(step) {
-            // Hide all forms
-            document.getElementById('shippingForm').style.display = 'none';
-            document.getElementById('paymentForm').style.display = 'none';
-            document.getElementById('successForm').style.display = 'none';
 
-            // Show the selected form
-            document.getElementById(getFormId(step)).style.display = 'block';
-
-            // Update the active step indicator
-            updateActiveStep(step);
-        }
-
-        function updateActiveStep(step) {
-            // Remove 'active' class from all steps
-            document.querySelectorAll('.checkout-step').forEach(function(element) {
-                element.classList.remove('active');
-                element.style.cursor = 'pointer'; // Set cursor to pointer for all steps
-            });
-
-            // Add 'active' class to the selected step
-            document.querySelector('.checkout-step:nth-child(' + step + ')').classList.add('active');
-
-            // Set cursor to not-allowed for incomplete steps
-            if (step > 1 && !isStep1Completed()) {
-                document.querySelector('.checkout-step:nth-child(1)').style.cursor = 'not-allowed';
-            }
-
-            if (step > 2 && !isStep2Completed()) {
-                document.querySelector('.checkout-step:nth-child(2)').style.cursor = 'not-allowed';
-            }
-        }
-
-        function isStep1Completed() {
-            // Add logic to check if Step 1 is completed
-            var fullName = document.getElementById('fullname').value;
-            var address = document.getElementById('address').value;
-            return fullName && address;
-        }
-
-        function isStep2Completed() {
-            // Add logic to check if Step 2 is completed
-            var creditCard = document.getElementById('creditCard').value;
-            var expiryDate = document.getElementById('expiryDate').value;
-            var cvv = document.getElementById('cvv').value;
-            return creditCard && expiryDate && cvv;
-        }
-
-        function getFormId(step) {
-            // Map step number to form ID
-            return (step === 1) ? 'shippingForm' :
-                (step === 2) ? 'paymentForm' :
-                (step === 3) ? 'successForm' :
-                '';
+        function submit() {
+            document.querySelector('form').submit();
         }
     </script>
 </body>

@@ -178,30 +178,35 @@ function includeInvoice($query) {
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
     $msresults = mysqli_query($cx, $query);
     while ($row = mysqli_fetch_array($msresults)) {
-        echo '<div class="order">';
-        echo "<div class='icon-container'>
-                <form method='post' action='invoice.php'>
-                    <input type='hidden' name='id_invoice' value='{$row['InvID']}'>
-                    <button type='submit'>
-                        <img src='./image/search-alt.png' alt='Invoice Icon' width='20'>
-                    </button>
-                </form>
-            </div>";
-        echo "<pf>Invoice ID: {$row['InvID']}</pf>";
-        echo "<p>Order Date: {$row['Period']}</p>";
-        echo "<p>Total Amount: {$row['TotalPrice']} ฿</p>";
-        if($row['Status'] == 'Paid') {
-            echo "<pl id='Paid'>Status: {$row['Status']}</pl>";
+    
+        if($row['Status'] == 'Unpaid') {
+            echo '<div class="order">';
+            echo "<div class='icon-container'>
+                    <form method='post' action='paymentForm.php'>
+                        <input type='hidden' name='id_invoice' value='{$row['InvID']}'>
+                        <input type='hidden' name='id_receiver' value='{$row['RecvID']}'>
+                        <button type='submit'>
+                            <img src='./image/search-alt.png' alt='Invoice Icon' width='20'>
+                        </button>
+                    </form>
+                </div>";
+            echo "<pf>Invoice ID: {$row['InvID']}</pf>";
+            echo "<p>Order Date: {$row['Period']}</p>";
+            echo "<p>Total Amount: {$row['TotalPrice']} ฿</p>";
+            if($row['Status'] == 'Paid') {
+                echo "<pl id='Paid'>Status: {$row['Status']}</pl>";
+            }
+            else {
+                echo "<pl id='Unpaid'>Status: {$row['Status']}</pl>";
+            }
+            echo '</div>';
         }
-        else {
-            echo "<pl id='Unpaid'>Status: {$row['Status']}</pl>";
-        }
-        echo '</div>';
     }
 }
 
 function includeOrders($query) {
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
+
     $msresults = mysqli_query($cx, $query);
     while ($row = mysqli_fetch_array($msresults)) {
         echo '<div class="order">';
