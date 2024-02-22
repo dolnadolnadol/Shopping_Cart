@@ -150,7 +150,7 @@
             echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['RecID']}'></td>
                     <td>{$row['RecID']}</td>
-                    <td>{$row['CusName']}</td>
+                    <td>{$row['CusFName']} {$row['CusLName']}</td>
                     <td>{$row['TotalPrice']}</td>
                     <td>{$row['OrderDate']}</td>
                     <td>{$row['DeliveryDate']}</td>";

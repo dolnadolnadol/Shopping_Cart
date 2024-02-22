@@ -143,15 +143,28 @@
                             // Your PHP code to fetch products from the database
                             $result = mysqli_query($cx, "SELECT * FROM Customer");
                             while ($row = mysqli_fetch_assoc($result)) {
-                                echo "<option value='{$row['CusID']}'>{$row['CusName']}</option>";
+                                echo "<option value='{$row['CusID']}'>{$row['CusFName']} {$row['CusLName']}</option>";
                             }
                         ?>
                     </select>
                              
                 </div>
-                <!-- <div class="form-group">
-                    <label for="dueDate">Due Date:</label>
-                    <input type="date" id="dueDate" name="dueDate" required>
+                <!-- <div class="form-group" style="color: #007bff">
+                    <label style="color: #007bff" for="customerName">Customer Address:</label>
+
+                    <?php 
+                        // $cur = "SELECT * FROM invoice 
+                        // INNER JOIN customer ON customer.CusID = invoice.CusID
+                        // INNER JOIN receiver ON receiver.CusID = Customer.CusID
+                        // WHERE InvID = '$InvID'";
+                        // $msresults = mysqli_query($cx, $cur);
+                        // $recv_row = mysqli_fetch_array($msresults);
+                    ?>
+                    <input type='hidden' name='id_receiver' value='<?php echo $recv_row['RecvID']; ?>'>
+                    FirstName: <input type='text' name='recv_fname' value='<?php echo $recv_row['RecvFName']; ?>'>
+                    LastName: <input type='text' name='recv_lname' value='<?php echo $recv_row['RecvLName']; ?>'>
+                    Tel: <input type='text' name='recv_tel' value='<?php echo $recv_row['Tel']; ?>'>
+                    Address: <input type='text' name='recv_address' value='<?php echo $recv_row['Address']; ?>'>
                 </div> -->
             </div>
 

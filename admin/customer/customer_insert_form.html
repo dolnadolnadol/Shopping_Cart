@@ -68,14 +68,17 @@
 <body>
     <form method="post" action="customer_insert.php">
         <h1>ใส่ข้อมูลลูกค้าที่ต้องการ</h1>
-        <label for="a2">ชื่อ:</label>
+        <label for="a1">ชื่อ:</label>
+        <input type="text" id="a1" name="a1" maxlength="20" required>
+
+        <label for="a2">นามสกุล:</label>
         <input type="text" id="a2" name="a2" maxlength="20" required>
 
         <label for="a3">เพศ:</label>
         <input type="text" id="a3" name="a3" maxlength="1" required>
 
         <label for="a4">ที่อยู่:</label>
-        <textarea id="a4" name="a4" rows="4" required></textarea>
+        <textarea id="a4" name="a4" rows="a4" required></textarea>
 
         <label for="a5">เบอร์โทรศัพท์:</label>
         <input type="tel" id="a5" name="a5" maxlength="10" required>

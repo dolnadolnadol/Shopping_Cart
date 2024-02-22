@@ -31,8 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo $RecID;
 
             // Insert RECEIVE record
-            $stmt = mysqli_query($cx, "INSERT INTO receive(RecID, OrderDate ,CusID, TotalPrice , Status)
-                VALUES ('$RecID', NOW(),'$cusID','$totalPrice','Pending');");
+            $stmt = mysqli_query($cx, "INSERT INTO receive(RecID, OrderDate , TaxID ,CusID, TotalPrice , Status)
+                VALUES ('$RecID', NOW() ,'$cusID','$totalPrice','Pending');");
 
   
             while (true) {

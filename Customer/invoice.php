@@ -152,12 +152,13 @@
         if (isset($_SESSION['cart'])) {
             $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM receiver INNER JOIN receiver_detail ON receiver.RecvID =  receiver_detail.RecvID WHERE receiver_detail.CusID = '$uid' AND receiver_detail.RecvID = '$recv_id' ");  
             $customerDetails = mysqli_fetch_array($customerDetailsQuery);
-            $customerId = $customerDetails['CusID'];
+            $customerId = $uid;
         }
         else {
+            echo $recv_id;
             $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM receiver INNER JOIN receiver_detail ON receiver.RecvID =  receiver_detail.RecvID WHERE receiver_detail.CusID = '$uid' AND receiver_detail.RecvID = '$recv_id'");  
             $customerDetails = mysqli_fetch_array($customerDetailsQuery);
-            $customerId = $customerDetails['CusID'];
+            $customerId = $uid;
         }
       
         $invoiceId = $_POST['id_invoice'];

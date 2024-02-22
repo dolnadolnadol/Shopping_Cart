@@ -4,6 +4,8 @@
 
         $conn = mysqli_connect("localhost", "root", "", "shopping"); 
         $RecID = $_POST['RecID'];
+        $RecvID = $_POST['id_receiver'];
+        $TaxID = $_POST['id_payer'];
         $Qty = $_POST['Qty'];
         $ProID = $_POST['ProID'];
      
@@ -15,18 +17,42 @@
         echo $totalPrice;
         echo $cusID;
         echo $status;
+        echo $RecvID;
         print_r($ProID);
         
+        /* Receiver */
+        $recv_fname = $_POST['recv_fname'];
+        $recv_lname = $_POST['recv_lname'];
+        $recv_tel = $_POST['recv_tel'];
+        $recv_address = $_POST['recv_address'];
+
+        /* Payer */
+        $payer_fname = $_POST['payer_fname'];
+        $payer_lname = $_POST['payer_lname'];
+        $payer_tel = $_POST['payer_tel'];
 
         // Insert RECEIVE record
         if($status != 'Pending'){
-            $stmt = mysqli_query($conn, "UPDATE receive SET DeliveryDate = NOW() , TotalPrice = '$totalPrice', Status ='$status'
+            mysqli_query($conn, "UPDATE receive SET DeliveryDate = NOW() , TotalPrice = '$totalPrice', Status ='$status'
             WHERE RecID ='$RecID'");
+
+            mysqli_query($conn, "UPDATE receiver SET RecvFName = '$recv_fname', RecvLName = '$recv_lname' , Tel = '$recv_tel'
+            WHERE RecvID ='$RecvID'");
+
+            mysqli_query($conn, "UPDATE payer SET PayerFName = '$payer_fname', PayerLName = '$payer_lname' , Tel = '$payer_tel'
+            WHERE TaxID ='$TaxID'");
 
         }
         else{
-            $stmt = mysqli_query($conn, "UPDATE receive SET TotalPrice = '$totalPrice'
+            mysqli_query($conn, "UPDATE receive SET TotalPrice = '$totalPrice'
             WHERE RecID ='$RecID'");
+
+            mysqli_query($conn, "UPDATE receiver SET RecvFName = '$recv_fname', RecvLName = '$recv_lname' , Tel = '$recv_tel'
+            WHERE RecvID ='$RecvID'");
+
+            mysqli_query($conn, "UPDATE payer SET PayerFName = '$payer_fname', PayerLName = '$payer_lname' , Tel = '$payer_tel'
+            WHERE TaxID ='$TaxID'");
+
         }
 
         if (count($ProID) == count($Qty)) {

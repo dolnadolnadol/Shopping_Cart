@@ -120,7 +120,7 @@
     
     <?php
     $cx =  mysqli_connect("localhost", "root", "", "shopping");
-    $cur = "SELECT invoice.* , customer.CusName
+    $cur = "SELECT invoice.* , customer.CusFName , customer.CusLName
     FROM 
         invoice
     JOIN
@@ -149,7 +149,7 @@
             echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['InvID']}'></td>
                     <td>{$row['InvID']}</td>
-                    <td>{$row['CusName']}</td>
+                    <td>{$row['CusFName']} {$row['CusLName']}</td>
                     <td>{$row['Period']}</td>
                     <td>{$row['TotalPrice']}</td>";
                     echo "<td><div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";                

@@ -132,9 +132,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Sex</th>
-                <th>Address</th>
                 <th>Tel</th>
-                <th>Username</th>
                 <th>Action</th>
             </tr>";
 
@@ -144,11 +142,9 @@
             echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['CusID']}'></td>
                     <td>{$row['CusID']}</td>
-                    <td>{$row['CusName']}</td>
+                    <td>{$row['CusFName']} {$row['CusLName']}</td>
                     <td>{$row['Sex']}</td>
-                    <td>{$row['Address']}</td>
                     <td>{$row['Tel']}</td>
-                    <td>{$row['Username']}</td>
                     <td class='action-buttons'>
                         <form class='action-button' action='customer_update.php' method='post'>  
                             <input type='hidden' name='id_customer' value={$row['CusID']}>

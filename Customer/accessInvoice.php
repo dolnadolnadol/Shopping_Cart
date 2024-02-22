@@ -36,10 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $select_query_head = "SELECT * FROM receiver 
         INNER JOIN receiver_detail ON receiver_detail.RecvID = receiver.RecvID 
         WHERE receiver_detail.CusID = '$uid' 
-        AND receiver.RecvFName = 'new_fname' 
-        AND receiver.RecvLName = 'new_lname'
-        AND receiver.Tel = 'new_tel'
-        AND receiver.Address = 'new_address'";
+        AND receiver.RecvFName = '$new_fname' 
+        AND receiver.RecvLName = '$new_lname'
+        AND receiver.Tel = '$new_tel'
+        AND receiver.Address = '$new_address'";
         $result = mysqli_query($cx ,$select_query_head);
 
         if(mysqli_num_rows($result) < 0){
@@ -48,6 +48,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $insert_result_head = mysqli_query($cx, $insert_query_head);
             if ($insert_result_head) {
                 $recv_id = mysqli_insert_id($cx);
+                // $insert_query = "SELECT * FROM receiver WHERE  RecvID = '$recv_id'";
+                // $insert_result= mysqli_query($cx, $insert_query_head);
+                // $row = mysqli_fetch_assoc($insert_result);
+                // echo $row['RecvID'] ;
             } else {
                 die("Error inserting into receiver: " . mysqli_error($cx));
             }
@@ -73,8 +77,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 die("Error inserting receiver_detail: " . mysqli_error($cx));
             }
         }
+        else {
+            $result = mysqli_fetch_assoc($result);
+            $recv_id =  $result['RecvID'];
+            echo $recv_id;
+        }
 
-   
         /* ------------------------------------------------------------------------- */
         /* ------------------------------------------------------------------------- */
 
@@ -158,6 +166,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: ./cart.php");
             exit();
         }
+
+    /* Guest */
     } elseif (isset($_POST['cart'])) {
 
         // Check if the session cart is set and not empty
@@ -166,8 +176,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
      
             // Insert a customer record for guests
-            $stmt_customer = mysqli_query($cx, "INSERT INTO customer(CusFName , CusLName , Tel , Address )
-                VALUES('$fname', '$lname' , '$tel' ,'$address' );");
+            $stmt_customer = mysqli_query($cx, "INSERT INTO customer(CusFName , CusLName , Tel )
+                VALUES('$fname', '$lname' , '$tel' );");
             $cusID = mysqli_insert_id($cx);
 
             /* ------------------------------------------------------------------------- */
