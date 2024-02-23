@@ -119,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             $TotalWithTax = $totalPrice * 1.07;
 
-
+            
             /*-------------------------------------*/
             $stmt = mysqli_query($conn, "UPDATE receive SET TotalPrice ='$TotalWithTax'
             WHERE RecID ='$RecID'");

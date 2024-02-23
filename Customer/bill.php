@@ -287,10 +287,7 @@
                     $customerId = $customerDetails['CusID'];
                 }
                 
-                // $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer INNER JOIN customer_account ON customer_account.CusID = customer.CusID WHERE customer.CusID = '$uid'"); 
-                // $customerDetails = mysqli_fetch_array($customerDetailsQuery);
-
-                
+                     
                 $RecId = $_POST['id_order'];
 
                 $payerQuery = mysqli_query($cx, "SELECT * FROM receive
@@ -317,7 +314,7 @@
                         <h1 style='display: inline;'>เลขใบเสร็จของท่านคือ :{$recResult['RecID']} </h1>
                         
                         <form class='action-button' action='pdf.php' method='post' target='_blank' style='display: inline-block;'>
-                            <input type='hidden' name='id_invoice' value='".$RecId."'>
+                            <input type='hidden' name='id_receive' value='".$RecId."'>
                             <input type='hidden' name='id_customer' value='". $customerId ."'>
                             <button type='submit'>
                                 <img src='./image/print.png' alt='print'>
@@ -413,6 +410,11 @@
                         </div>";  
                         
                     echo "</div>";
+                    if(isset($_SESSION['guest'])){
+                        unset($_SESSION['guest']);
+                        unset($_SESSION['id_username']);
+                    }
+        
                     
                 }
                 mysqli_close($cx);

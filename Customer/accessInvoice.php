@@ -279,10 +279,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($cusID) && !empty($cusID)) {
                 // Set the customer ID in the session
                 $_SESSION['id_username'] = $cusID;
-
+                $_SESSION['guest'] = 1;
+                unset($_SESSION['cart']);
                 // Auto-submit form to redirect to invoice page
                 echo "<form id='auto_submit_form' method='post' action='paymentForm.php'>
-                    <input type='hidden' name='cart' value='" . json_encode($_SESSION['cart']) . "'>
                     <input type='hidden' name='id_invoice' value='$InvID'>
                     <input type='hidden' name='id_receiver' value='$recv_id'>
                 </form>";
