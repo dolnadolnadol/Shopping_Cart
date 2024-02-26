@@ -1,4 +1,6 @@
 <?php include('./component/session.php'); ?>
+<?php include('../logFolder/AccessLog.php'); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 

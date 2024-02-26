@@ -1,3 +1,4 @@
+<?php include('../logFolder/AccessLog.php'); ?>
 <?php
 include('./component/session.php');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -6,8 +7,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $productId = $_POST['id_product'];
         $amount = $_POST['amount'];
-   
-        $cx =  mysqli_connect("localhost", "root", "", "shopping");    
+        
+        $cx =  mysqli_connect("localhost", "root", "", "shopping");
         if (isset($_SESSION['id_username'])){
             $check_query = mysqli_query($cx, "SELECT * FROM cart WHERE CusID = '$uid' AND ProID = '$productId'");
             if(mysqli_num_rows($check_query) > 0){
