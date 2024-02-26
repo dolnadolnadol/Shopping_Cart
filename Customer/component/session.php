@@ -3,15 +3,14 @@
 session_start();
 
 if (isset($_SESSION['id_username']) && isset($_SESSION['status'])) {
-    if($_SESSION['status'] == true){
+    if ($_SESSION['status'] == true) {
         $uid = $_SESSION['id_username'];
         $status = $_SESSION['status'];
         unset($_SESSION['cart']);
-    }
-    else {
+    } else {
         $_SESSION['status'] = false;
+        $uid = "GUEST";
         $_SESSION['cart'];
-    } 
-} 
+    }
+}
 // var_dump($_SESSION);
-?>
