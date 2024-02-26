@@ -137,28 +137,36 @@
 </head>
 <body>
 <?php include('./component/accessNavbar.php')?>
-<!-- <?php include('./component/backButton.php')?> -->
 <?php    
     $cx = mysqli_connect("localhost", "root", "", "shopping");
-    $uid = $_SESSION['id_username'];
-
     echo "<div class='invoice-container'>";
     echo "<div class='body-container'>";
     echo "<div class='invoice-header'>
             <h1>Invoice</h1>
           </div>";
 
-    $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE CusID = '$uid'");  
-    $customerDetails = mysqli_fetch_array($customerDetailsQuery);
-
+    $recv_id = $_POST['id_receiver'];
+    $uid = $_SESSION['id_username'];
+  
     if(isset($_POST['id_invoice'])){
-        $customerId = $customerDetails['CusID'];
+        if (isset($_SESSION['cart'])) {
+            $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM receiver INNER JOIN receiver_detail ON receiver.RecvID =  receiver_detail.RecvID WHERE receiver_detail.CusID = '$uid' AND receiver_detail.RecvID = '$recv_id' ");  
+            $customerDetails = mysqli_fetch_array($customerDetailsQuery);
+            $customerId = $uid;
+        }
+        else {
+            echo $recv_id;
+            $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM receiver INNER JOIN receiver_detail ON receiver.RecvID =  receiver_detail.RecvID WHERE receiver_detail.CusID = '$uid' AND receiver_detail.RecvID = '$recv_id'");  
+            $customerDetails = mysqli_fetch_array($customerDetailsQuery);
+            $customerId = $uid;
+        }
+      
         $invoiceId = $_POST['id_invoice'];
 
         echo "<div class='container_order'>";
         echo "<div class='customer-details'>
                     <h2>Customer Details</h2>
-                    <p>Name: {$customerDetails['CusName']}</p>
+                    <p>Name: {$customerDetails['RecvFName']} {$customerDetails['RecvLName']} </p>
                     <p>Tel: {$customerDetails['Tel']}</p>
                     <p>Address: {$customerDetails['Address']}</p>
                   </div>";

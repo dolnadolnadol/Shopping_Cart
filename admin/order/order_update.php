@@ -114,7 +114,9 @@
                     $RecID = $_POST['id_order'];
                     echo "<input type='text' id='RecID' name='RecID' value='$RecID' readonly>
                     </div>";
-                    $cur = "SELECT Status FROM receive WHERE RecID = '$RecID'";
+                    $cur = "SELECT * FROM receive 
+                    INNER JOIN Customer ON Customer.CusID = receive.CusID
+                    WHERE RecID = '$RecID'";
                     $msresults = mysqli_query($cx, $cur);
                     $row = mysqli_fetch_array($msresults);
                     $status = $row['Status'];
@@ -143,16 +145,47 @@
                             // Your PHP code to fetch products from the database
                             $result = mysqli_query($cx, "SELECT * FROM Customer");
                             while ($row = mysqli_fetch_assoc($result)) {
-                                echo "<option value='{$row['CusID']}'>{$row['CusName']}</option>";
+                                echo "<option value='{$row['CusID']}'>{$row['CusFName']} {$row['CusLName']}</option>";
                             }
                         ?>
                     </select>
                              
                 </div>
-                <!-- <div class="form-group">
-                    <label for="dueDate">Due Date:</label>
-                    <input type="date" id="dueDate" name="dueDate" required>
-                </div> -->
+                <div class="form-group" style="color: #007bff">
+                    <label style="color: #007bff" for="customerName">Customer Address:</label>
+
+                    <?php 
+                        $cur = "SELECT * FROM receive 
+                        INNER JOIN receiver ON receiver.RecvID = receive.RecvID
+                        WHERE RecID = '$RecID'";
+                        $msresults = mysqli_query($cx, $cur);
+                        $recv_row = mysqli_fetch_array($msresults);
+                    ?>
+                    <input type='hidden' name='id_receiver' value='<?php echo $recv_row['RecvID']; ?>'>
+                    FirstName: <input type='text' name='recv_fname' value='<?php echo $recv_row['RecvFName']; ?>'>
+                    LastName: <input type='text' name='recv_lname' value='<?php echo $recv_row['RecvLName']; ?>'>
+                    Tel: <input type='text' name='recv_tel' value='<?php echo $recv_row['Tel']; ?>'>
+                    Address: <input type='text' name='recv_address' value='<?php echo $recv_row['Address']; ?>'>
+                </div>
+            </div>
+
+            <div class="form-block">
+                <h3 style="color: #007bff;">Payer Form</h3>
+                <div class="form-group" style="color: #007bff">
+                    <?php 
+                        $cur = "SELECT * FROM receive 
+                        INNER JOIN payer ON payer.TaxID = receive.TaxID
+                        WHERE RecID = '$RecID'";
+                        $msresults = mysqli_query($cx, $cur);
+                        $payer_row = mysqli_fetch_array($msresults);
+                    ?>
+                    <label style="color: #007bff" for="customerName">Payer info:</label>
+                        <!-- <input type='text' name='id_recevier' value=''> -->
+                        <input type='hidden' name='id_payer' value='<?php echo $payer_row['TaxID']; ?>'>
+                        FirstName: <input type='text' name='payer_fname' value='<?php echo $payer_row['PayerFName']; ?>'>
+                        LastName: <input type='text' name='payer_lname' value='<?php echo $payer_row['PayerLName']; ?>'>
+                        Tel: <input type='text' name='payer_tel' value='<?php echo $payer_row['Tel']; ?>'>
+                </div>
             </div>
 
             <!-- Add Products Section -->

@@ -139,16 +139,20 @@
                             // Your PHP code to fetch products from the database
                             $result = mysqli_query($cx, "SELECT * FROM Customer");
                             while ($row = mysqli_fetch_assoc($result)) {
-                                echo "<option value='{$row['CusID']}'>{$row['CusName']}</option>";
+                                echo "<option value='{$row['CusID']}'>{$row['CusFName']} {$row['CusLName']}</option>";
                             }
                         ?>
                     </select>
                              
                 </div>
-                <!-- <div class="form-group">
-                    <label for="dueDate">Due Date:</label>
-                    <input type="date" id="dueDate" name="dueDate" required>
-                </div> -->
+                <div class="form-group" style="color: #007bff">
+                    <label style="color: #007bff" for="customerName">Customer Address:</label>
+                        <!-- <input type='text' name='id_recevier' value=''> -->
+                        FirstName: <input type='text' name='recv_fname' value=''>
+                        LastName: <input type='text' name='recv_lname' value=''>
+                        Tel: <input type='text' name='recv_tel' value=''>
+                        Address: <input type='text' name='recv_address' value=''>
+                </div>
             </div>
 
             <!-- Add Products Section -->

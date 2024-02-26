@@ -1,22 +1,32 @@
 <?php
     session_start();
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $fullname = $_POST['fullname'];
+        $fname = $_POST['fname'];
+        $lname = $_POST['lname'];
+
         $username = $_POST['username'];
         $sex = $_POST['sex'];
         $tel = $_POST['tel'];
         $password  = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
         $cx = mysqli_connect("localhost", "root", "", "shopping");
-        $select_user = "SELECT * FROM customer WHERE Username = '$username'";
+        $select_user = "SELECT * FROM customer_account WHERE Username = '$username'";
         $run_qry = mysqli_query($cx, $select_user);
         echo mysqli_num_rows($run_qry);
         if (mysqli_num_rows($run_qry) == 0) {
-            echo '2222';
-            $stmt = mysqli_query($cx, "INSERT INTO customer(CusName, Sex ,Tel , UserName , PassWord)
-            VALUES('$fullname', '$sex','$tel' , '$username' , '$password');");
-            echo '2233';
-            if (!$stmt) {
+            $stmt_1 = mysqli_query($cx, "INSERT INTO customer(CusFName , CusLName, Sex ,Tel )
+            VALUES('$fname', '$lname' ,'$sex','$tel');");
+
+
+            $findByID = mysqli_query($cx, "SELECT CusID FROM customer WHERE CusFName = '$fname' AND CusLName = '$lname' ");
+            $row = mysqli_fetch_assoc($findByID);
+            $cusID = $row['CusID'];
+
+
+            $stmt_2 = mysqli_query($cx, "INSERT INTO customer_account (UserName , PassWord , CusID)
+            VALUES('$username' , '$password' , ' $cusID' );");
+
+            if (!$stmt_1 && !$stmt_2) {
                 echo "Error";
             } else {
                 echo 'Insert data = is Successful.';

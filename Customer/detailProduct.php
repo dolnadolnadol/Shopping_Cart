@@ -1,4 +1,6 @@
 <?php include('./component/session.php'); ?>
+<?php include('../logFolder/AccessLog.php'); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -81,7 +83,6 @@
             width: 1.4em;
             border-radius: .25rem;
             font-weight: 300;
-            height: 100%;
             font-size: 1.4em;
             color: #878a99;
         }
@@ -231,7 +232,7 @@
                         <button type='button'  id='change-amount' onclick='incrementAmount()'>+</button>
                     </div>
                     <br><br>
-                    <input class='buy-button' type='submit' value='เพิ่มลงตะกร้า'>           
+                    <input class='buy-button' type='submit' name='add_to_cart' value='เพิ่มลงตะกร้า'>           
                 </form>
             </div>
         </div>";

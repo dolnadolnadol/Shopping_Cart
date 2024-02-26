@@ -99,6 +99,7 @@
             <li><a class="a" href="../stock/stock_index.php">Stock</a></li>
             <li><a class="a" href="../invoice/invoice_index.php">Invoice</a></li>
             <li><a class="a" href="../order/order_index.php">Order</a></li>
+            <li><a class="a" href="../summary/summary.php">Summary</a></li>
             <li class="nav-right"><a class="a" href="../../Customer/login.php">Logout</a></li>
         </ul>
     </nav>

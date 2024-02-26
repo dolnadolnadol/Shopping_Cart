@@ -70,10 +70,16 @@
         margin-top: 50px; /* Adjust margin to avoid content being hidden under the fixed navbar */
     }
 
+    .nav-left {
+        display: flex;
+        align-items: center;
+        margin-left: 2%;
+    }
+
     .nav-right {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-end;
         margin-right: 3%;
     }
 
@@ -108,31 +114,55 @@
 </style>
 
 <nav>
-    <ul>
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'index.php') echo 'class="active"'; ?> href="index.php">Home</a></li>
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == '../history.php') echo 'class="active"'; ?> href="./history.php">History</a></li>
-    </ul>
+    <div class="nav-left">
+        <ul>
+            <li><a <?php echo isActive('index.php'); ?> href="index.php">Home</a></li>
+            <?php $cartIconClass = (basename($_SERVER['PHP_SELF']) == 'cart.php') ? 'class="active"' : ''; ?>
+            <?php if (isset($_SESSION['id_username']) && isset($_SESSION['status']) === true) : ?>
+                <li><a <?php echo isActive('../history.php'); ?> href="./history.php">History</a></li>
+            <?php endif; ?>
+        </ul>
+    </div>
 
     <ul class="nav-right">
-        <?php
-            $cx =  mysqli_connect("localhost", "root", "", "shopping");
-            $uid = $_SESSION['id_username'];
-            $cur = "SELECT * FROM cart WHERE CusID = '$uid'";
-            $msresults = mysqli_query($cx, $cur);
+        <li class='cart-icon-container'>
+        <a <?php echo $cartIconClass; ?> href='cart.php'>
+                <img class='cart-icon' src='./image/cart.webp' alt='Cart'>
+                <?php if(isset($_SESSION['cart'])) : ?>
+                    <?php $cartIconCount = (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) ? count($_SESSION['cart']) : 0; ?>
 
-            if (mysqli_num_rows($msresults) > 0) {
-                echo "<li class='cart-icon-container'><a " . (basename($_SERVER['PHP_SELF']) == 'cart.php' ? "class='active'" : "") . " href='cart.php'><img class='cart-icon' src='./image/cart.webp' alt='Cart'></a><span class='badge badge-warning' id='lblCartCount'>" . mysqli_num_rows($msresults) . "</span></li>";
+                <?php elseif(isset($_SESSION['id_username']) && isset($_SESSION['status']) === true) :?>
+                    <?php
+                        echo 'TEST123456';
+                        $cx =  mysqli_connect("localhost", "root", "", "shopping");
+                        $uid = (isset($_SESSION['id_username'])) ? $_SESSION['id_username'] : '';
+                        $cur = "SELECT * FROM cart WHERE CusID = '$uid'";
+                        $msresults = mysqli_query($cx, $cur);
 
-            } else {
-                echo "<li class='cart-icon-container'><a " . (basename($_SERVER['PHP_SELF']) == 'cart.php' ? "class='active'" : "") . " href='cart.php'><img class='cart-icon' src='./image/cart.webp' alt='Cart'></a></li>";
-            }
-        ?>
+                        $cartIconCount = (mysqli_num_rows($msresults) > 0) ? mysqli_num_rows($msresults) : 0;
+                        mysqli_close($cx);
+                    ?>
+                <?php endif; ?>
+                <?php if (!empty($cartIconCount)) : ?>
 
-        
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'profile.php') echo 'class="active"'; ?> href="profile.php">Profile</a>
+                    <span class='badge badge-warning' id='lblCartCount'><?php echo $cartIconCount; ?></span>
+                <?php endif; ?>
+            </a>
         </li>
-        <li><a <?php if(basename($_SERVER['PHP_SELF']) == 'logoutProcess.php') echo 'class="active"'; ?> href="logoutProcess.php">Logout</a>
-        </li>
-        
+        <?php if (isset($_SESSION['id_username']) && isset($_SESSION['status']) && $_SESSION['status'] === true) : ?>
+            <li><a <?php echo isActive('profile.php'); ?> href="profile.php">Profile</a></li>
+            <li><a <?php echo isActive('logoutProcess.php'); ?> href="logoutProcess.php">Logout</a></li>
+
+        <?php else : ?>
+            <li><a <?php echo isActive('login.php'); ?> href="login.php">Login</a></li>
+        <?php endif; ?>
     </ul>
 </nav>
+<?php
+    // Function to check and set 'active' class
+    function isActive($page)
+    {
+        return (basename($_SERVER['PHP_SELF']) == $page) ? 'class="active"' : '';
+    }
+?>
+
