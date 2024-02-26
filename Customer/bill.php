@@ -277,13 +277,13 @@
 
                 echo "<div class='order-container'>";
                 if (isset($_SESSION['cart'])) {
-                    $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE customer.CusID = '$uid'");  
-                    $customerDetails = mysqli_fetch_array($customerDetailsQuery);        
+                    $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer INNER JOIN customer_account ON customer_account.CusID = customer.CusID WHERE customer.CusID = '$uid'");  
+                    $customerDetails = mysqli_fetch_array($customerDetailsQuery);
                     $customerId = $customerDetails['CusID'];
                 }
                 else {
-                    $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer INNER JOIN customer_account ON customer_account.CusID = customer.CusID WHERE customer.CusID = '$uid'");  
-                    $customerDetails = mysqli_fetch_array($customerDetailsQuery);
+                    $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM customer WHERE customer.CusID = '$uid'");  
+                    $customerDetails = mysqli_fetch_array($customerDetailsQuery);        
                     $customerId = $customerDetails['CusID'];
                 }
                 

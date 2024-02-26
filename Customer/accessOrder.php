@@ -111,7 +111,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $stmt = mysqli_query($conn, "UPDATE invoice SET Status = 'Paid' WHERE invID ='$invID'");
 
                     // Update Stock and OnHands
-                    $stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty - '$Qty', OnHands = OnHands - '$Qty' WHERE ProID ='$proID'");
+                    if(isset($_SESSION['guest'])){
+                        $stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty - '$Qty', OnHands = OnHands WHERE ProID ='$proID'");
+                    } else {$stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty - '$Qty', OnHands = OnHands - '$Qty' WHERE ProID ='$proID'");}
                 } else {
                     // No more matching records found, break the loop
                     break;
