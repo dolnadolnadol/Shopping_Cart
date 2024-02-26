@@ -26,9 +26,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt = "INSERT INTO cart(CusID, ProID, Qty) VALUES('$uid', '$productId', '$amount')";
 
                 // ACCESS LOG
+                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                } else {
+                    $ipAddress = $_SERVER['REMOTE_ADDR'];
+                }
                 $callingFile = __FILE__;
                 $action = 'INSERT'; // Static Change Action
-                CallLog::callLog($cx,$uid,$productId,$callingFile,$action);
+                CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
                 //END LOG
 
                 $msresults = mysqli_query($cx, $stmt);

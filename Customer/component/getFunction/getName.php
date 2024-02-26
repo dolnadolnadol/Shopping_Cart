@@ -46,7 +46,7 @@ function generateGuestNumber()
     return $guestNumber;
 }
 
-function logAction($uid, $customerName, $action, $productName, $callingFile)
+function logAction($ipAddress, $uid, $customerName, $action, $productName, $callingFile)
 {
-    AccessLog::log($uid, $customerName, $action, $productName, $callingFile);
+    AccessLog::log($ipAddress, $uid, $customerName, $action, $productName, $callingFile);
 }
