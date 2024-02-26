@@ -1,7 +1,7 @@
 <?php
 class CallLog
 {
-    public static function callLog($cx, $uid, $productId, $calledFile)
+    public static function callLog($cx, $uid, $productId, $calledFile, $action)
     {
         // ACCESS LOG
 
@@ -15,12 +15,12 @@ class CallLog
         if (isset($_SESSION['id_username'])) { // Make  a copy of checking GUEST!
             // Registered user
             error_log('REG USer');
-            AccessLog::log($uid, $getCName, 'INSERT', $getPName, $calledFile);
+            AccessLog::log($uid, $getCName, $action, $getPName, $calledFile);
         } else {
             // Guest user
             $ipAddress = $_SERVER['REMOTE_ADDR'];
             error_log('GUEST USer');
-            AccessLog::logGuest($ipAddress, 'INSERT', $getPName, $calledFile);
+            AccessLog::logGuest($ipAddress, $action, $getPName, $calledFile);
         }
         //END LOG
     }

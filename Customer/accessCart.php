@@ -27,7 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // ACCESS LOG
                 $callingFile = __FILE__;
-                CallLog::callLog($cx,$uid,$productId,$callingFile);
+                $action = 'INSERT'; // Static Change Action
+                CallLog::callLog($cx,$uid,$productId,$callingFile,$action);
                 //END LOG
 
                 $msresults = mysqli_query($cx, $stmt);
