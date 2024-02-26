@@ -20,6 +20,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "Product already exists in the cart for the user.";
                 $stmt = mysqli_query($cx, "UPDATE cart SET Qty ='$amount'
                 WHERE CusID ='$uid' AND ProID = '$productId'");
+
+                // ACCESS LOG
+                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                } else {
+                    $ipAddress = $_SERVER['REMOTE_ADDR'];
+                }
+                $callingFile = __FILE__;
+                $action = 'UPDATE'; // Static Change Action
+                CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
+                //END LOG
+
                 header("Location: ./cart.php");
             } else {
                 //insert in cart
@@ -38,34 +50,84 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 $msresults = mysqli_query($cx, $stmt);
                 $stmt2 = mysqli_query($cx, "UPDATE product SET OnHands = OnHands + '$amount' WHERE ProID = '$productId'");
+
                 header("Location: ./index.php");
                 exit();
             }
         } else if (isset($_POST['add_to_cart'])) {
             if (isset($_SESSION['cart'][$productId])) {
                 $_SESSION['cart'][$productId]['quantity'] = $amount;
+
+                // ACCESS LOG
+                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                } else {
+                    $ipAddress = $_SERVER['REMOTE_ADDR'];
+                }
+                $callingFile = __FILE__;
+                $action = 'UPDATE'; // Static Change Action
+                CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
+                //END LOG
+
             } else {
                 $_SESSION['cart'][$productId] = [
                     'quantity' => 1
                 ];
+
+                // ACCESS LOG
+                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                } else {
+                    $ipAddress = $_SERVER['REMOTE_ADDR'];
+                }
+                $callingFile = __FILE__;
+                $action = 'INSERT'; // Static Change Action
+                CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
+                //END LOG
+
             }
             header("Location: ./index.php");
         }
     }
     /* Delete product in cart */ else if (isset($_POST['deleteID'])) {
-        $proID = $_POST['deleteID'];
+        $cx =  mysqli_connect("localhost", "root", "", "shopping");
+        $productId = $_POST['deleteID'];
         if (isset($_POST['CusID'])) {
-            $cx =  mysqli_connect("localhost", "root", "", "shopping");
             $cusID = $_POST['CusID'];
-            $cart_query = mysqli_query($cx, "SELECT * FROM cart WHERE CusID = '$cusID' AND ProID = '$proID'");
+            $cart_query = mysqli_query($cx, "SELECT * FROM cart WHERE CusID = '$cusID' AND ProID = '$productId'");
             $cart_row = mysqli_fetch_assoc($cart_query);
             $cart_qty = (int)$cart_row['Qty'];
             if (mysqli_num_rows($cart_query) > 0) {
-                $OnHands_update = mysqli_query($cx, "UPDATE product SET OnHands = OnHands - '$cart_qty' WHERE ProID = '$proID'");
-                $check_query = mysqli_query($cx, "DELETE FROM cart WHERE CusID = '$cusID' AND ProID = '$proID'");
+                $OnHands_update = mysqli_query($cx, "UPDATE product SET OnHands = OnHands - '$cart_qty' WHERE ProID = '$productId'");
+
+                $check_query = mysqli_query($cx, "DELETE FROM cart WHERE CusID = '$cusID' AND ProID = '$productId'");
+
+                // ACCESS LOG
+                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                } else {
+                    $ipAddress = $_SERVER['REMOTE_ADDR'];
+                }
+                $callingFile = __FILE__;
+                $action = 'DELETE'; // Static Change Action
+                CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
+                //END LOG
+
             }
-        } else if (isset($_SESSION['cart'][$proID])) {
-            unset($_SESSION['cart'][$proID]);
+        } else if (isset($_SESSION['cart'][$productId])) {
+
+            // ACCESS LOG
+            if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else {
+                $ipAddress = $_SERVER['REMOTE_ADDR'];
+            }
+            $callingFile = __FILE__;
+            $action = 'DELETE'; // Static Change Action
+            CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
+            //END LOG
+
+            unset($_SESSION['cart'][$productId]);
         }
 
         header("Location: ./cart.php");

@@ -1,6 +1,8 @@
 <?php
 // Include session file for session management
 include('./component/session.php');
+include('../logFolder/AccessLog.php');
+include('../logFolder/CallLog.php');
 
 // Check if the request method is POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

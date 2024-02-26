@@ -1,5 +1,7 @@
 <?php
 include('./component/session.php'); 
+include('../logFolder/AccessLog.php');
+include('../logFolder/CallLog.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
