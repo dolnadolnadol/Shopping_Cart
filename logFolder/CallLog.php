@@ -3,10 +3,9 @@ class CallLog
 {
     public static function callLog($ipAddress, $cx, $uid, $productId, $calledFile, $action)
     {
+        
         // ACCESS LOG
-
         $getCName = getCustomerName($cx, $uid);
-
 
         $getPName = getProductName($cx, $productId);
 

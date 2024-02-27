@@ -106,6 +106,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Insert a new invoice record
             $stmt = mysqli_query($cx, "INSERT INTO invoice (InvID, Period, CusID, Status, RecvID)
                 VALUES ('$InvID', NOW(), '$cusID', 'Unpaid', '$recv_id');");
+            
+            // $productId = '';
+            // // ACCESS LOG
+            // if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            //     $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            // } else {
+            //     $ipAddress = $_SERVER['REMOTE_ADDR'];
+            // }
+            // $callingFile = __FILE__;
+            // $action = 'INSERT'; // Static Change Action
+            // CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
+            // //END LOG
 
             // Iterate through each item in the cart
             while ($row = mysqli_fetch_array($check_query)) {
@@ -176,7 +188,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Check if the session cart is set and not empty
         if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
             //Manage new Guest for receive
-            
      
             // Insert a customer record for guests
             $stmt_customer = mysqli_query($cx, "INSERT INTO customer(CusFName , CusLName , Tel )
@@ -244,6 +255,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Insert a new invoice record for guests
             $stmt = mysqli_query($cx, "INSERT INTO invoice (InvID, Period, CusID, Status, RecvID)
                 VALUES ('$InvID', NOW(), $cusID, 'Unpaid', $recv_id);");
+
+            // $productId = '';
+            // // ACCESS LOG
+            // if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            //     $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            // } else {
+            //     $ipAddress = $_SERVER['REMOTE_ADDR'];
+            // }
+            // $callingFile = __FILE__;
+            // $action = 'INSERT'; // Static Change Action
+            // CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
+            // //END LOG
 
             // Iterate through each item in the session cart
             foreach ($_SESSION['cart'] as $product_id => $product) {
