@@ -106,18 +106,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Insert a new invoice record
             $stmt = mysqli_query($cx, "INSERT INTO invoice (InvID, Period, CusID, Status, RecvID)
                 VALUES ('$InvID', NOW(), '$cusID', 'Unpaid', '$recv_id');");
-            
-            // $productId = '';
-            // // ACCESS LOG
-            // if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            //     $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            // } else {
-            //     $ipAddress = $_SERVER['REMOTE_ADDR'];
-            // }
-            // $callingFile = __FILE__;
-            // $action = 'INSERT'; // Static Change Action
-            // CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
-            // //END LOG
+
+            // ACCESS LOG
+            $productId = "";
+            if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else {
+                $ipAddress = $_SERVER['REMOTE_ADDR'];
+            }
+            $callingFile = __FILE__;
+            $action = 'INSERT'; // Static Change Action
+            CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
+            //END LOG
 
             // Iterate through each item in the cart
             while ($row = mysqli_fetch_array($check_query)) {
@@ -212,6 +212,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 $insert_query_head = "INSERT INTO receiver (RecvFName , RecvLName  , Tel , Address) 
                 VALUES('$fname', '$lname', '$tel' , '$address')";
+
                 $insert_result_head = mysqli_query($cx, $insert_query_head);
 
                 if ($insert_result_head) {
@@ -256,17 +257,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = mysqli_query($cx, "INSERT INTO invoice (InvID, Period, CusID, Status, RecvID)
                 VALUES ('$InvID', NOW(), $cusID, 'Unpaid', $recv_id);");
 
-            // $productId = '';
-            // // ACCESS LOG
-            // if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            //     $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            // } else {
-            //     $ipAddress = $_SERVER['REMOTE_ADDR'];
-            // }
-            // $callingFile = __FILE__;
-            // $action = 'INSERT'; // Static Change Action
-            // CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
-            // //END LOG
+            // ACCESS LOG
+            $uid = "";
+            $productId = "";
+            if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else {
+                $ipAddress = $_SERVER['REMOTE_ADDR'];
+            }
+            $callingFile = __FILE__;
+            $action = 'INSERT'; // Static Change Action
+            CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
+            //END LOG
 
             // Iterate through each item in the session cart
             foreach ($_SESSION['cart'] as $product_id => $product) {

@@ -84,6 +84,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = mysqli_query($conn, "INSERT INTO receive(RecID, OrderDate , TaxID , RecvID ,CusID, TotalPrice , Status)
                 VALUES ('$RecID', NOW() , '$TaxID' , '$recvID' ,'$cusID','$totalPrice','Pending');");
 
+            // ACCESS LOG
+            $uid = $cusID;
+            $productId = "";
+            if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else {
+                $ipAddress = $_SERVER['REMOTE_ADDR'];
+            }
+            $callingFile = __FILE__;
+            $action = 'INSERT'; // Static Change Action
+            CallLog::callLog($ipAddress, $cx, $uid, $productId, $callingFile, $action);
+            //END LOG
   
             while (true) {
                 // Generate new NumID

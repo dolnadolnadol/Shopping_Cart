@@ -13,4 +13,4 @@ if (isset($_SESSION['id_username']) && isset($_SESSION['status'])) {
         $_SESSION['cart'];
     }
 }
-// var_dump($_SESSION);
+var_dump($_SESSION);
