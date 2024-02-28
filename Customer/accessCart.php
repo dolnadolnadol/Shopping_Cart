@@ -2,9 +2,6 @@
 include('../logFolder/AccessLog.php');
 include('../logFolder/CallLog.php');
 include('./component/getFunction/getName.php');
-?>
-
-<?php
 include('./component/session.php');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     /* Add product in cart */

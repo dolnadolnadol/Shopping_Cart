@@ -14,7 +14,7 @@ class CallLog
 
         if (isset($_SESSION['id_username'])) { // Make  a copy of checking GUEST!
             // Registered user
-            // $getCName = getCustomerName($cx, $uid);
+            $getCName = getCustomerName($cx, $uid);
             error_log('REG User');
             AccessLog::log($ipAddress, $uid, $getCName, $action, $getPName, $calledFile);
         } else {

@@ -1,4 +1,8 @@
-<?php include('./component/session.php'); ?>
+<?php include('./component/session.php');
+include('./component/backButton.php');
+include('../logFolder/AccessLog.php');
+include('../logFolder/CallLog.php');
+include('./component/getFunction/getName.php');?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -167,7 +171,6 @@
 </head>
 
 <body>
-    <?php include('./component/backButton.php');?>
     <form id="profileForm" method="post" action="accessOrder.php">
         <?php
         if (isset($_SESSION['id_username'])) {
@@ -233,10 +236,6 @@
                     echo "<div class='invoice-header'>
                     <h4></h4>
                     </div>";
-
-                
-                   
-
                     // echo $recv_id;
                     // echo  $uid;
 
@@ -246,8 +245,6 @@
                         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
                         $customerId = $uid;            
                         $invoiceId = $_POST['id_invoice'];
-
-                    
 
                         echo "<div class='customer-details'>
                        
@@ -281,7 +278,6 @@
                         
                         $tax = $totalPriceAllItems * 0.07;
                         $totalAmount = $tax + $totalPriceAllItems;
-
                        
                         echo "
                        <h4>สรุปยอดชำระเงิน</h4>

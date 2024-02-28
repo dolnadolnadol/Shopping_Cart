@@ -1,4 +1,8 @@
-<?php include('./component/session.php'); ?>
+<?php include('./component/backButton.php');
+    include('./component/session.php');
+    include('../logFolder/AccessLog.php');
+    include('../logFolder/CallLog.php');
+    include('./component/getFunction/getName.php');?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -91,7 +95,6 @@
 </head>
 
 <body>
-    <?php include('./component/backButton.php');?>
     <form id="profileForm" method="post" action="accessInvoice.php">
         <?php
         if (isset($_SESSION['id_username'])) {
