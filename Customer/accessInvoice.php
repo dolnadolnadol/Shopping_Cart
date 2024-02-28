@@ -30,7 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         /* ------------------------------------------------------------------------- */
             
         //Manage user for receive
-        $uid = $_POST['id_customer'];
         $new_fname = $_POST['fname'];
         $new_lname = $_POST['lname'];
         $new_tel = $_POST['tel'];
