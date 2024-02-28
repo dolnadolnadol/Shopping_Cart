@@ -144,6 +144,7 @@
                 <th>Action</th>
             </tr>";
 
+    $index = 1;
     if (mysqli_num_rows($msresults) > 0) {
         while ($row = mysqli_fetch_array($msresults)) {
             echo "<tr class='user-row'>
@@ -152,7 +153,28 @@
                     <td>{$row['CusFName']} {$row['CusLName']}</td>
                     <td>{$row['Period']}</td>
                     <td>{$row['TotalPrice']}</td>";
-                    echo "<td><div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";                
+
+
+                    // echo "<td><div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";                
+                    // if ($row['Status'] == 'Unpaid') {
+                    //     echo '#FFA500;';
+                    // } elseif ($row['Status'] == 'Paid') {
+                    //     echo '#06D6B1;';
+                    // } else if ($row['Status'] == 'Canceled'){
+                    //     echo '#FF0000;';
+                    // } else {
+                    //     echo '#06D6B1;'; 
+                    // }                 
+                    // echo "'><span style='color: #ffff;'>{$row['Status']}</span></div></td>";
+
+
+                    
+
+
+                    echo "<td>";
+                    echo "<div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
+
+                    // เงื่อนไขตรวจสอบค่า Status และกำหนดสีให้กับ background-color
                     if ($row['Status'] == 'Unpaid') {
                         echo '#FFA500;';
                     } elseif ($row['Status'] == 'Paid') {
@@ -161,8 +183,27 @@
                         echo '#FF0000;';
                     } else {
                         echo '#06D6B1;'; 
-                    }                 
-                    echo "'><span style='color: #ffff;'>{$row['Status']}</span></div></td>";
+                    }       
+
+                    echo "'>";
+                    echo "<select id='select_$index' data-recid='{$row['InvID']}' style='background-color: inherit; color: #ffff;' required>";
+
+                    $statusCompare = ['Unpaid', 'Paid', 'Canceled'];
+
+                    foreach ($statusCompare as $value) {
+                        $selected = ($value == $row['Status']) ? 'selected' : '';
+ 
+
+                        echo "<option value='$value' style='background-color: #ffff; color: black;' $selected>{$value}</option>";
+                    }
+
+                    echo "</select>";
+                    echo "</div></td>";
+
+
+
+
+
 
                     echo "<td class='action-buttons'>
                         <form class='action-button' action='invoice_update.php' method='post'>  
@@ -175,6 +216,7 @@
                         </form>
                     </td>
                 </tr>";
+                $index++;
         }
     }
     echo "</table></div>";
@@ -269,5 +311,61 @@
             updateTable(filterKeyword);
         });
     </script>
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+    // Loop through all select elements and attach event listeners
+    for (var i = 1; i <= <?php echo $index; ?>; i++) {
+        var selectElement = document.getElementById('select_' + i);
+
+        if (selectElement) {
+            selectElement.addEventListener('change', function () {
+                var selectedValue = this.value;
+                var selectDiv = this.parentElement;
+                var recID = this.getAttribute('data-recid');
+
+                switch (selectedValue) {
+                    case 'Unpaid':
+                        selectDiv.style.backgroundColor = '#FFA500';
+                        break;
+                    case 'Paid':
+                        selectDiv.style.backgroundColor = '#06D6B1';
+                        break;
+                    case 'Canceled':
+                        selectDiv.style.backgroundColor = '#FF0000';
+                        break;
+                    default:
+                        selectDiv.style.backgroundColor = '#06D6B1';
+                }
+
+                console.log(recID , selectedValue );
+                // Update the status using AJAX
+                updateStatus(recID, selectedValue);
+            });
+        }
+    }
+
+    function updateStatus(invID, newStatus) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'invoice_update_status.php', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        console.log(invID , newStatus )
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Handle successful response
+                    console.log('Status updated successfully');
+                } else {
+                    // Handle error
+                    console.error('Error updating status');
+                }
+            }
+        };
+        xhr.send('InvID=' + encodeURIComponent(invID) + '&newStatus=' + encodeURIComponent(newStatus));
+
+    }
+    });
+</script>
 </body>
 </html>

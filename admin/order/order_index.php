@@ -145,8 +145,10 @@
                 <th>Action</th>
             </tr>";
 
+    $index = 1;
     if (mysqli_num_rows($msresults) > 0) {
         while ($row = mysqli_fetch_array($msresults)) {
+
             echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['RecID']}'></td>
                     <td>{$row['RecID']}</td>
@@ -155,7 +157,9 @@
                     <td>{$row['OrderDate']}</td>
                     <td>{$row['DeliveryDate']}</td>";
 
-                    echo "<td><div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
+
+                    echo "<td>";
+                    echo "<div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
 
                     // เงื่อนไขตรวจสอบค่า Status และกำหนดสีให้กับ background-color
                     if ($row['Status'] == 'Pickups') {
@@ -164,13 +168,28 @@
                         echo '#FFA500;';
                     } elseif ($row['Status'] == 'Inprogress') {
                         echo '#7C6BFF;'; 
-                    } else if ($row['Status'] == 'Canceled'){
+                    } elseif ($row['Status'] == 'Canceled') {
                         echo '#FF0000;';
                     } else {
                         echo '#06D6B1;'; 
                     }
-                    
-                    echo "'><span style='color: #ffff;'>{$row['Status']}</span></div></td>";
+
+                    echo "'>";
+                    echo "<select id='select_$index' data-recid='{$row['RecID']}' style='background-color: inherit; color: #ffff;' required>";
+
+                    $statusCompare = ['Pending', 'Inprogress', 'Delivered', 'Canceled'];
+
+                    foreach ($statusCompare as $value) {
+                        $selected = ($value == $row['Status']) ? 'selected' : '';
+ 
+
+                        echo "<option value='$value' style='background-color: #ffff; color: black;' $selected>{$value}</option>";
+                    }
+
+                    echo "</select>";
+                    echo "</div></td>";
+
+
                   
             echo    "<td>
                         <form class='action-button' action='order_update.php' method='post' style='display: inline-block;'>  
@@ -183,6 +202,7 @@
                         </form>
                     </td>
                 </tr>";
+            $index++;
         }
     }
 
@@ -213,6 +233,62 @@
             updateDeleteButtonStatus(); // Update deleteButton's status
         });
     }
+</script>
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+    // Loop through all select elements and attach event listeners
+    for (var i = 1; i <= <?php echo $index; ?>; i++) {
+        var selectElement = document.getElementById('select_' + i);
+
+        if (selectElement) {
+            selectElement.addEventListener('change', function () {
+                var selectedValue = this.value;
+                var selectDiv = this.parentElement;
+                var recID = this.getAttribute('data-recid');
+
+                switch (selectedValue) {
+                    case 'Pending':
+                        selectDiv.style.backgroundColor = '#FFA500';
+                        break;
+                    case 'Inprogress':
+                        selectDiv.style.backgroundColor = '#7C6BFF';
+                        break;
+                    case 'Canceled':
+                        selectDiv.style.backgroundColor = '#FF0000';
+                        break;
+                    default:
+                        selectDiv.style.backgroundColor = '#06D6B1';
+                }
+
+                console.log(recID , selectedValue )
+                // Update the status using AJAX
+                updateStatus(recID, selectedValue);
+            });
+        }
+    }
+
+    function updateStatus(recID, newStatus) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'order_update_status.php', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        console.log(recID , newStatus )
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Handle successful response
+                    console.log('Status updated successfully');
+                } else {
+                    // Handle error
+                    console.error('Error updating status');
+                }
+            }
+        };
+        xhr.send('recID=' + encodeURIComponent(recID) + '&newStatus=' + encodeURIComponent(newStatus));
+
+    }
+});
 </script>
 <script>
     function checkAll() {

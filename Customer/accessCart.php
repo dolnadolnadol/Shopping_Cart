@@ -51,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: ./index.php");
                 exit();
             }
+            /* Guest */
         } else if (isset($_POST['add_to_cart'])) {
             if (isset($_SESSION['cart'][$productId])) {
                 $_SESSION['cart'][$productId]['quantity'] = $amount;
@@ -68,9 +69,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             } else {
                 $_SESSION['cart'][$productId] = [
-                    'quantity' => 1
+                    'quantity' => $amount
                 ];
-
                 // ACCESS LOG
                 if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                     $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -86,7 +86,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: ./index.php");
         }
     }
-    /* Delete product in cart */ else if (isset($_POST['deleteID'])) {
+    /* Delete product in cart */ 
+    else if (isset($_POST['deleteID'])) {
         $cx =  mysqli_connect("localhost", "root", "", "shopping");
         $productId = $_POST['deleteID'];
         if (isset($_POST['CusID'])) {

@@ -1,5 +1,9 @@
 <?php include('./component/session.php');
+
+/* มี ฺBug ถ้าไม่ลบ Guest ก่อนที่จะกดกลับไปหน้าหลัก */
 include('./component/backButton.php');
+/* --------------------------------------- */
+
 include('../logFolder/AccessLog.php');
 include('../logFolder/CallLog.php');
 include('./component/getFunction/getName.php');?>

@@ -166,7 +166,10 @@
                     }
                 }
             };
-            xhr.send('productId=' + encodeURIComponent(productId) + '&newQuantity=' + encodeURIComponent(newQuantity));
+
+             // Append the data to the request body
+            var data = 'productId=' + encodeURIComponent(productId) + '&newQuantity=' + encodeURIComponent(newQuantity);
+            xhr.send(data);
         }
 
     </script>
