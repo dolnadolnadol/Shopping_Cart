@@ -55,11 +55,6 @@
             width: 150px;
         }
 
-        /* Add styles for radio buttons and labels */
-        /* input[type="radio"] {
-            display: none;
-        } */
-
         .radio-label {
             display: flex;
             align-items: center;
