@@ -68,7 +68,7 @@
 
 <body>
 <?php /* get connection */
-    $conn = mysqli_connect("localhost", "root", "", "mydb");
+    $conn = mysqli_connect("localhost", "root", "", "shopping");
 
     /*SELECT*/
     if (isset($_POST['list_id_stock'])){
@@ -98,9 +98,8 @@
     }
     else {
         $code = $_POST['id_stock'];
-        $cur = "SELECT * FROM stock WHERE ProID = '$code'";
+        $cur = "SELECT * FROM product WHERE ProID = '$code'";
         $msresults = mysqli_query($conn,$cur);
-    
         if(mysqli_num_rows($msresults) > 0) {
             $row = mysqli_fetch_array($msresults);
             echo "<center>";
@@ -129,6 +128,7 @@
     mysqli_close($conn);
 ?>
 
+</body>
 
 
 

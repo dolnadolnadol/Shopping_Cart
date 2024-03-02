@@ -149,11 +149,11 @@
                     <td>{$row['PricePerUnit']}</td>
                     <td>{$row['StockQty']}</td>
                     <td>
-                        <form class='action-button action='stock_update.php' method='post' style='display: inline-block;'>  
+                        <form class='action-button' action='stock_update.php' method='post' style='display: inline-block;'>  
                             <input type='hidden' name='id_stock' value={$row['ProID']}>
                             <input type='image' alt='update' src='../img/pencil.png'/>
                         </form>
-                        <form class='action-button action='stock_delete_confirm.php' method='post' style='display: inline-block;'>
+                        <form class='action-button' action='stock_delete_confirm.php' method='post' style='display: inline-block;'>
                             <input type='hidden' name='id_stock' value={$row['ProID']}>
                             <input type='image' alt='delete' src='../img/trash.png'/>
                         </form>
