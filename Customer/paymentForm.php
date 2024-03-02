@@ -171,6 +171,17 @@ include('./component/getFunction/getName.php');?>
     border-radius: 8px; /* มุมโค้งของ <h4> */
     margin-top: 0; /* ลบ margin ด้านบนของ <h4> */
 }
+input[type="submit"]{
+    background-color: #3498db;
+    font-weight:bold;
+    color:white;
+}
+input[type="submit"]:hover{
+    background-color: #2B7EB5;
+}
+input[type="submit"]:focus{
+    background-color: #194969;
+}
     </style>
 </head>
 
@@ -227,7 +238,8 @@ include('./component/getFunction/getName.php');?>
                         <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
                         <input type='hidden' name='id_receiver' value='<?php echo $row['RecvID']; ?>'>
                         <input type='hidden' name='id_invoice' value='<?php echo $inv; ?>'>
-                        <button class="checkout-button" onclick="submit()">ชำระเงิน</button>
+                        <!-- <button class="checkout-button" onclick="submit()">ชำระเงิน</button> -->
+                        <input type="submit">
                     </div>
                 </div>
 
@@ -305,9 +317,9 @@ include('./component/getFunction/getName.php');?>
         </div>
     </form>
     <script>
-        function submit() {
-            document.querySelector('form').submit();
-        }
+        // function submit() {
+        //     document.querySelector('form').submit();
+        // }
     </script>
 </body>
 

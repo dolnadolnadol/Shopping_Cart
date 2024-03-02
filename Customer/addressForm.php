@@ -77,6 +77,13 @@
             box-sizing: border-box;
             border: 1px solid #ddd;
             border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        Textarea{
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
         }
 
         .checkout-button {
@@ -125,38 +132,37 @@
             <div id="shippingForm" class="checkout-form" style="display: block;">
                 <!-- Shipping form content -->
                 <div class="form-group">
-                    <label for="fullname">First Name:</label>
-                    <input type="text" id="fullname" name="fname" value="<?php echo $row['RecvFName'] ?? ''; ?>" required>
-                    <label for="lastname">Last Name:</label>
-                    <input type="text" id="lastname" name="lname" value="<?php echo $row['RecvLName'] ?? ''; ?>" required>
+                    <label for="fullname">First Name</label>
+                    <input type="text" id="fullname" name="fname" required>
+                    <label for="lastname">Last Name</label>
+                    <input type="text" id="lastname" name="lname" required>
+                    <label for="tel">Tel<span>*</span></label>
+                    <input required type="tel" name="tel">
+                    <label for="address">Address</label>
+                    <textarea style="resize:none;" name="address" id="address" rows="3" required></textarea>
                 </div>
-
-                <div class="form-group">
-                    <label for="tel">Tel:<span>*</span></label>
-                    <input type="tel" name="tel" value="<?php echo $row['Tel'] ?? ''; ?>" required>
-                    <label for="address">Address:</label>
-                    <textarea name="address" id="address" rows="3"><?php echo $row['Address'] ?? ''; ?></textarea>
-                </div>
-
-                <button class="checkout-button" onclick="submit()">Next: Payment</button>
-
+                
+                <!-- <button class="checkout-button" onclick="submit()">Next to Payment</button> -->
+                <input type='submit'>
+                
                 <!-- ตรวจสอบว่าเป็น Guest หรือ User และแสดงปุ่ม 'ชำระเงิน' ตามเงื่อนไข -->
                 <?php if (isset($_SESSION['cart'])) : ?>
-                    <input type='hidden' name='cart' value='<?php echo json_encode($_SESSION['cart']); ?>'>
+                <input type='hidden' name='cart' value='<?php echo json_encode($_SESSION['cart']); ?>'>
                 <?php elseif (isset($_SESSION['id_username'])) : ?>
-                    <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
+                <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
                 <?php else : ?>
-                    <p>Oops Something went wrong</p>
-                    <?php echo 'header("Location: ./cart.php")'; ?>
+                <p>Oops Something went wrong</p>
+                <?php echo 'header("Location: ./cart.php")'; ?>
                 <?php endif; ?>
             </div>
         </div>
     </form>
+    
     <script>
 
-        function submit() {
-            document.querySelector('form').submit();
-        }
+        // function submit() {
+        //     document.querySelector('form').submit();
+        // }
     </script>
 </body>
 

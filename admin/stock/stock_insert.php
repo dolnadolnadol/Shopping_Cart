@@ -1,6 +1,8 @@
 <?php /* get connection */
     header( "location: ./stock_index.php");
-    $conn = mysqli_connect("localhost", "root", "", "shopping");   
+    $conn = mysqli_connect("localhost", "root", "", "shopping");
+    // if(!isset($_POST['back'])){
+
     $a2 = $_POST['a2'];
     $a3 = $_POST['a3'];
     $a4 = $_POST['a4'];
@@ -27,4 +29,6 @@
     /* close connection */
     // odbc_close($conn);
     mysqli_close($conn);
+    
+// }
 ?>

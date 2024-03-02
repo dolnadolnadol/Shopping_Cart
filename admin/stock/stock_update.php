@@ -14,16 +14,18 @@ if (mysqli_num_rows($msresults) > 0) {
     echo "<form method='post' action='stock_save_update.php'>";
     echo "<center>";
     echo "<div style='max-width: 400px;'>";
-    echo "<h1 style='text-align: center; color: #3498db;'>Update Customer Form</h1>";
-    echo "<h2>รหัสลูกค้า " . $row['ProID'] . "</h2><br>";
+    echo "<h1 style='text-align: center; color: #3498db;'>Update Stock</h1>";
+    echo "<h2>สินค้า ID" . $row['ProID'] . "</h2><br>";
     echo "<input type='hidden' name='a1' value='" . $row['ProID'] . "'>";
-    echo "ชื่อ <input type='text' name='a2' value='" . $row['ProName'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
-    echo "เพศ <input type='text' name='a3' value='" . $row['PricePerUnit'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
-    echo "ที่อยู่ <input type='text' name='a4' value='" . $row['StockQty'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
+    echo "ชื่อสินค้า <input type='text' name='a2' value='" . $row['ProName'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
+    echo "ราคาต่อหน่วย (บาท) <input type='text' name='a3' value='" . $row['PricePerUnit'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
+    echo "จำนวน <input type='text' name='a4' value='" . $row['StockQty'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
+    echo "onHand <input disabled type='text' name='a5' value='" . $row['OnHands'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
+
     echo "<div style='text-align: center;'>";
-    echo "⚠️ โปรดให้แน่ใจที่จะต้องการอัปเดตข้อมูล ⚠️<br><br>";
-    echo "<input type='submit' value='ยืนยัน' style='background-color: #3498db; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px;'>";
-    echo "<input type='reset' value='รีเซ็ท' style='background-color: #3498db; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px;'>";
+    echo "⚠️ โปรดตรวจสอบให้แน่ใจว่าคุณต้องการอัปเดตข้อมูล ⚠️<br><br>";
+    echo "<input type='reset' value='รีเซ็ท' style='background-color: green; color: #fff; padding: 10px 20px; border: none; cursor: pointer; margin-right:2rem; border-radius: 4px;'>";
+    echo "<input type='submit' value='ยืนยัน' style='background-color: blue; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px;'>";
     echo "</div>";
     echo "</div>";
     echo "</form>\n";

@@ -64,10 +64,11 @@ mysqli_close($cx);
         }
 
         .body-container {
+            /* background-color:blue; */
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 60vh;
+            height: screen;
         }
 
         .container {
@@ -77,7 +78,7 @@ mysqli_close($cx);
             background-color: #fff; /* Added background color */
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Added box-shadow */
             border-radius: 8px; /* Added border-radius for a rounded appearance */
-            margin-top: 140px;
+            margin-top: 2rem;
         }
 
         #head-text {
@@ -206,8 +207,8 @@ mysqli_close($cx);
 </head>
 
 <body>
-    <?php include('./component/accessNavbar.php')?>
     <div class="body-container">
+        <?php include('./component/accessNavbar.php')?>
         <div class="container">
             <p id='head-text'>Edit Profile</p>
             <p id='text-1'>Change your basic account here. You may also want to edit your profile</p>

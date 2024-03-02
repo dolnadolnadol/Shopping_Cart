@@ -41,6 +41,7 @@
         input[type="number"],
         input[type="tel"],
         textarea {
+            resize:none;
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -50,19 +51,23 @@
         }
 
         input[type="submit"],
-        input[type="reset"] {
+        input[type="reset"],
+        #back {
             background-color: #3498db;
             color: #fff;
             padding: 10px 20px;
             border: none;
             cursor: pointer;
             border-radius: 4px;
+            font-size: 12px;
         }
 
         input[type="submit"]:hover,
-        input[type="reset"]:hover {
+        input[type="reset"]:hover,
+        #back:hover {
             background-color: #2980b9;
         }
+        
     </style>
 </head>
 <body>
@@ -80,8 +85,12 @@
         <label for="a4">จำนวนสินค้า:</label>
         <input type="text" id="a4" name="a4" size="1" required>
 
-        <input type="submit" value="ยืนยัน">
-        <input type="reset" value="ยกเลิก">
+        <div style="display:flex; justify-content: center;">
+            <a href="stock_index.php" style="text-decoration:none; margin-right: 2rem;">
+                <div id="back" type="back" value="ยกเลิก">ยกเลิก</div>
+            </a>
+            <input type="submit" value="ยืนยัน">
+        </div>
     </form>
 </body>
 </html>
