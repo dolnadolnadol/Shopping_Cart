@@ -223,17 +223,17 @@ input[type="submit"]:focus{
                         <!-- Payment form content -->
                         <div class="form-group">
                             <label for="firstname">Reciever First Name: </label>
-                            <input type="text" id="fname" name="fname" required>
+                            <input type="text" id="fname" name="fname" value="<?php echo $row['RecvFName'] ?? ''; ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label for="lasttname">Reciever Last Name: </label>
-                            <input type="text" id="lname" name="lname" required>
+                            <input type="text" id="lname" name="lname" value="<?php echo $row['RecvLName'] ?? ''; ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label for="tel">Tel :</label>
-                            <input type="text" id="tel" name="tel" required>
+                            <input type="text" id="tel" name="tel" value="<?php echo $row['Tel'] ?? ''; ?>" required>
                         </div>
                         <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
                         <input type='hidden' name='id_receiver' value='<?php echo $row['RecvID']; ?>'>
@@ -252,14 +252,12 @@ input[type="submit"]:focus{
                     echo "<div class='invoice-header'>
                     <h4></h4>
                     </div>";
-                    // echo $recv_id;
-                    // echo  $uid;
 
                     if (isset($_POST['id_invoice'])) {
                         $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM receiver 
                         INNER JOIN receiver_detail ON receiver.RecvID =  receiver_detail.RecvID WHERE receiver_detail.CusID = '$uid' AND receiver_detail.RecvID = '$recv_id'");
                         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
-                        $customerId = $uid;            
+                        $customerId = $uid;
                         $invoiceId = $_POST['id_invoice'];
 
                         echo "<div class='customer-details'>

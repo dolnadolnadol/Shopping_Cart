@@ -133,7 +133,7 @@
 
                 <?php elseif(isset($_SESSION['id_username']) && isset($_SESSION['status']) === true) :?>
                     <?php
-                        echo 'TEST123456';
+                        // echo 'TEST123456';
                         $cx =  mysqli_connect("localhost", "root", "", "shopping");
                         $uid = (isset($_SESSION['id_username'])) ? $_SESSION['id_username'] : '';
                         $cur = "SELECT * FROM cart WHERE CusID = '$uid'";

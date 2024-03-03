@@ -1,8 +1,8 @@
 <?php include('./component/backButton.php');
-    include('./component/session.php');
-    include('../logFolder/AccessLog.php');
-    include('../logFolder/CallLog.php');
-    include('./component/getFunction/getName.php');?>
+include('./component/session.php');
+include('../logFolder/AccessLog.php');
+include('../logFolder/CallLog.php');
+include('./component/getFunction/getName.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -80,7 +80,7 @@
             margin-bottom: 1rem;
         }
 
-        Textarea{
+        Textarea {
             border: 1px solid #ddd;
             border-radius: 4px;
             width: 100%;
@@ -98,6 +98,20 @@
         .checkout-button:hover {
             background-color: #219653;
         }
+
+        input[type="submit"] {
+            background-color: #3498db;
+            font-weight: bold;
+            color: white;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2B7EB5;
+        }
+
+        input[type="submit"]:focus {
+            background-color: #194969;
+        }
     </style>
 </head>
 
@@ -107,7 +121,7 @@
         if (isset($_SESSION['id_username'])) {
             $uid = $_SESSION['id_username'];
 
-            $cx =  mysqli_connect("localhost", "root", "", "shopping");
+            $cx = mysqli_connect("localhost", "root", "", "shopping");
             $query_address = "SELECT * FROM receiver 
             INNER JOIN receiver_detail ON receiver.RecvID = receiver_detail.RecvID  
             WHERE receiver_detail.CusID = '$uid'";
@@ -124,40 +138,43 @@
             </div>
 
             <div class="checkout-steps">
-                <div class="checkout-step active" >Step 1: Shipping</div>
-                <div class="checkout-step" >Step 2: Payment</div>
-                <div class="checkout-step" >Step 3: Success</div>
+                <div class="checkout-step active">Step 1: Shipping</div>
+                <div class="checkout-step">Step 2: Payment</div>
+                <div class="checkout-step">Step 3: Success</div>
             </div>
 
             <div id="shippingForm" class="checkout-form" style="display: block;">
                 <!-- Shipping form content -->
                 <div class="form-group">
                     <label for="fullname">First Name</label>
-                    <input type="text" id="fullname" name="fname" required>
+                    <input type="text" id="fullname" name="fname" value="<?php echo $row['RecvFName'] ?? ''; ?>"
+                        required>
                     <label for="lastname">Last Name</label>
-                    <input type="text" id="lastname" name="lname" required>
+                    <input type="text" id="lastname" name="lname" value="<?php echo $row['RecvLName'] ?? ''; ?>"
+                        required>
                     <label for="tel">Tel<span>*</span></label>
-                    <input required type="tel" name="tel">
+                    <input required type="tel" name="tel" value="<?php echo $row['Tel'] ?? ''; ?>">
                     <label for="address">Address</label>
-                    <textarea style="resize:none;" name="address" id="address" rows="3" required></textarea>
+                    <textarea style="resize:none;" name="address" id="address" rows="3"
+                        required><?php echo $row['Address'] ?? ''; ?></textarea>
                 </div>
-                
+
                 <!-- <button class="checkout-button" onclick="submit()">Next to Payment</button> -->
                 <input type='submit'>
-                
+
                 <!-- ตรวจสอบว่าเป็น Guest หรือ User และแสดงปุ่ม 'ชำระเงิน' ตามเงื่อนไข -->
-                <?php if (isset($_SESSION['cart'])) : ?>
-                <input type='hidden' name='cart' value='<?php echo json_encode($_SESSION['cart']); ?>'>
-                <?php elseif (isset($_SESSION['id_username'])) : ?>
-                <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
-                <?php else : ?>
-                <p>Oops Something went wrong</p>
-                <?php echo 'header("Location: ./cart.php")'; ?>
+                <?php if (isset($_SESSION['cart'])): ?>
+                    <input type='hidden' name='cart' value='<?php echo json_encode($_SESSION['cart']); ?>'>
+                <?php elseif (isset($_SESSION['id_username'])): ?>
+                    <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
+                <?php else: ?>
+                    <p>Oops Something went wrong</p>
+                    <?php echo 'header("Location: ./cart.php")'; ?>
                 <?php endif; ?>
             </div>
         </div>
     </form>
-    
+
     <script>
 
         // function submit() {

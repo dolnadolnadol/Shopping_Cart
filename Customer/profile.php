@@ -235,8 +235,7 @@ mysqli_close($cx);
                     $user_address = mysqli_fetch_array($result_address);
                     while ($user_address) {
                         $recvID = $user_address['RecvID'];
-                        echo '<div class="user-card" onclick="submitForm(\'' . $recvID . '\')">                       
-                                <p>' . $recvID . '</p>
+                        echo '<div class="user-card" onclick="submitForm(\'' . $recvID . '\')">
                                 <p>' . $user_address['RecvFName'] . '</p>
                                 <p>' . $user_address['RecvLName'] . '</p>
                                 <p>' . $user_address['Tel'] . '</p>
@@ -274,7 +273,7 @@ mysqli_close($cx);
     <!-- Overlay -->
     <div class="overlay" id="overlay" >
         <div class="overlay-content">
-            <p>บันทึกข้อมูลสำเน็จ!</p>
+            <p>บันทึกข้อมูลสำเร็จ!</p>
             <button onclick="hideOverlay()">ตกลง</button>
         </div>
     </div>
@@ -288,10 +287,7 @@ mysqli_close($cx);
             // Submit the form
             document.getElementById('addressForm').submit();
         }
-    </script>
-   
-
-    <script>
+        
     document.getElementById('profileForm').addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -314,13 +310,13 @@ mysqli_close($cx);
     function showOverlay() {
         document.getElementById('overlay').style.display = 'flex';
         // Delay the hideOverlay function
-        setTimeout(hideOverlay, 10000); // Adjust the time (in milliseconds) as needed
+        setTimeout(hideOverlay, 1000); // Adjust the time (in milliseconds) as needed
     }
 
     function hideOverlay() {
         document.getElementById('overlay').style.display = 'none';
         // Redirect to profileAddress.php after hiding the overlay
-        window.location.href = './profile.php';
+        // window.location.href = './profile.php';
     }
 </script>
 </body>

@@ -124,10 +124,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Update Status
                     $stmt = mysqli_query($cx, "UPDATE invoice SET Status = 'Paid' WHERE invID ='$invID'");
 
+                    $stmt2 = mysqli_query($cx,"SELECT StockQty from product where ProID = '$proID'");
+                    $stockQtyRow = mysqli_fetch_assoc($stmt2);
+                    $stockQty = $stockQtyRow['StockQty'];
+
                     // Update Stock and OnHands
-                    if(isset($_SESSION['guest'])){
+                    if(isset($_SESSION['guest']) && ($stockQty-$Qty) >= 0 ){
                         $stmt = mysqli_query($cx, "UPDATE product SET StockQty = StockQty - '$Qty', OnHands = OnHands WHERE ProID ='$proID'");
-                    } else {$stmt = mysqli_query($cx, "UPDATE product SET StockQty = StockQty - '$Qty', OnHands = OnHands - '$Qty' WHERE ProID ='$proID'");}
+                    } else if(($stockQty-$Qty) >= 0) {
+                        $stmt = mysqli_query($cx, "UPDATE product SET StockQty = StockQty - '$Qty', OnHands = OnHands - '$Qty' WHERE ProID ='$proID'");
+                    }
                 } else {
                     // No more matching records found, break the loop
                     break;

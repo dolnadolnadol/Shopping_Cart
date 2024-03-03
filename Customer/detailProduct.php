@@ -18,7 +18,7 @@
         .container-body {
             display: flex;
             justify-content: space-between;
-            max-width: 1200px;      
+            max-width: 1200px;
             margin: 100px auto 0px auto;
             padding: 20px;
         }
@@ -164,45 +164,45 @@
     </style>
 </head>
 <script>
-        function incrementAmount() {
-            var amountInput = document.getElementById('amount');
-            amountInput.value = parseInt(amountInput.value) + 1;
-        }
+    function incrementAmount() {
+        var amountInput = document.getElementById('amount');
+        amountInput.value = parseInt(amountInput.value) + 1;
+    }
 
-        function decrementAmount() {
-            var amountInput = document.getElementById('amount');
-            if (parseInt(amountInput.value) > 1) {
-                amountInput.value = parseInt(amountInput.value) - 1;
-            }
+    function decrementAmount() {
+        var amountInput = document.getElementById('amount');
+        if (parseInt(amountInput.value) > 1) {
+            amountInput.value = parseInt(amountInput.value) - 1;
         }
+    }
 </script>
 
 <body class="detail-page">
-            <script>
-                function openOverlay() {
-                    document.getElementById('overlay').style.display = 'flex';
-                    // Prevent the form from submitting immediately
-                    return false;
-                }
+    <script>
+        function openOverlay() {
+            document.getElementById('overlay').style.display = 'flex';
+            // Prevent the form from submitting immediately
+            return false;
+        }
 
-                function closeOverlay() {
-                    // Perform the redirection after closing the overlay
-                    document.getElementById('overlay').style.display = 'none';
-                }
-            </script>
+        function closeOverlay() {
+            // Perform the redirection after closing the overlay
+            document.getElementById('overlay').style.display = 'none';
+        }
+    </script>
 </body>
 
 </html>
 <?php include('./component/accessNavBar.php'); ?>
-<!-- <?php include('./component/backButton.php')?> -->
+<!-- <?php include('./component/backButton.php') ?> -->
 <?php
-    $cx =  mysqli_connect("localhost", "root", "", "shopping");
-    $code = $_POST['id_product'];
-    $cur = "SELECT * FROM product WHERE ProID = $code ";
-    $msresults = mysqli_query($cx, $cur);
-    $row = mysqli_fetch_array($msresults);
-    $onHandStock = $row['StockQty'] - $row['OnHands'];
-    echo " <div class='container-body'>
+$cx = mysqli_connect("localhost", "root", "", "shopping");
+$code = $_POST['id_product'];
+$cur = "SELECT * FROM product WHERE ProID = $code ";
+$msresults = mysqli_query($cx, $cur);
+$row = mysqli_fetch_array($msresults);
+$onHandStock = $row['StockQty'] - $row['OnHands'];
+echo " <div class='container-body'>
             <div class='container-1'>
                 <div class='product-image'>
                     <img src='./image/cart.png' alt='Product Image'>
@@ -232,11 +232,18 @@
                         <button type='button'  id='change-amount' onclick='incrementAmount()'>+</button>
                     </div>
                     <br><br>
-                    <input class='buy-button' type='submit' name='add_to_cart' value='เพิ่มลงตะกร้า'>           
+                    ";
+                    if ($onHandStock <= 0) {
+                        echo "<input class='buy-button' type='submit' style='background-color:gray;' name='add_to_cart' value='เพิ่มลงตะกร้า' disabled>";
+                    }else {
+                        echo "<input class='buy-button' type='submit' name='add_to_cart' value='เพิ่มลงตะกร้า'>";
+                    }
+                    echo "         
                 </form>
             </div>
         </div>";
 ?>
+
 <div id="overlay" class="overlay" style="display: none;">
     <div class="modal">
         <p>เพิ่มลงตะกร้าเรียบร้อย!</p>
