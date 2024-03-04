@@ -123,7 +123,7 @@
     </div>
     
     <?php
-    $cx =  mysqli_connect("localhost", "root", "", "shopping");
+    include_once '../../dbConfig.php'; 
     $cur = "SELECT invoice.* , customer.CusFName , customer.CusLName
     FROM 
         invoice
@@ -134,7 +134,7 @@
     JOIN
         product ON invoice_detail.ProID = product.proID";
 
-    $msresults = mysqli_query($cx, $cur);
+    $msresults = mysqli_query($conn, $cur);
     echo "<center>";
     echo "<div>
         <table>
@@ -204,7 +204,7 @@
     }
     echo "</table></div>";
     echo "</center>";
-    mysqli_close($cx);
+    mysqli_close($conn);
     ?>
 <script>
         function updateDeleteButtonStatus() {

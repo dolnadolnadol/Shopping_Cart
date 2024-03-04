@@ -129,11 +129,11 @@
     </div>
 
     <?php
-    $cx =  mysqli_connect("localhost", "root", "", "shopping");
+    include_once '../../dbConfig.php'; 
     $cur = "SELECT * FROM receive 
     INNER JOIN customer ON customer.CusID = receive.CusID
     INNER JOIN receive_detail ON receive_detail.RecID = receive.RecID";
-    $msresults = mysqli_query($cx, $cur);
+    $msresults = mysqli_query($conn, $cur);
 
     echo "<center>";
     echo "<div>
@@ -210,7 +210,7 @@
 
     echo "</table></div>";
     echo "</center>";
-    mysqli_close($cx);
+    mysqli_close($conn);
     ?>
 <script>
     function updateDeleteButtonStatus() {

@@ -75,9 +75,9 @@
     <center>
         <div class="product-container">
             <?php
-                $cx =  mysqli_connect("localhost", "root", "", "shopping");
+                include_once '../dbConfig.php';
                 $cur = "SELECT * FROM product";
-                $msresults = mysqli_query($cx, $cur);
+                $msresults = mysqli_query($conn, $cur);
                 if(mysqli_num_rows($msresults) > 0){
                     while ($row = mysqli_fetch_array($msresults)) {
                     echo "<div class='product-card'>

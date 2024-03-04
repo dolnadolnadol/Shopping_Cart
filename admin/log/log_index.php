@@ -1,29 +1,19 @@
 <?php
-    include('../callDatabase/sql_connection.php');
-    $sqlConnectionInstance = new Sql_connection();
-    $cx = $sqlConnectionInstance->sql_Connection();
+    include_once '../../dbConfig.php'; 
 
-  
-    /* Paginition */
-    // Number of records per page
     $recordsPerPage = 10;
 
-    // Calculate the total number of records
-    $totalRecords = mysqli_fetch_array(mysqli_query($cx, "SELECT COUNT(*) FROM log"))[0];
+    $totalRecords = mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) FROM log"))[0];
 
     $recordsPerPage = isset($_GET['recordsPerPage']) ? (int)$_GET['recordsPerPage'] : 10;
   
-    // Get the current page number from the URL, default to 1 if not set
     $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-    // Calculate the offset for the SQL query
     $offset = ($currentPage - 1) * $recordsPerPage;
 
-    // Modify the SQL query to include LIMIT and OFFSET
     $cur = "SELECT * FROM log LIMIT $recordsPerPage OFFSET $offset";
-    $msresults = mysqli_query($cx, $cur);
+    $msresults = mysqli_query($conn, $cur);
     
-    // Calculate the total number of pages
     $totalPages = ceil($totalRecords / $recordsPerPage);
 ?>
 
@@ -164,30 +154,18 @@
     <div class="navbar"> <?php include('../navbar/navbarAdmin.php') ?></div>
     <h1>Access Log</h1>
     <div class="container">
-        <!-- <div>
-            <input type='checkbox' id='checkAll' onchange='checkAll()'>
-            <label class="check-all-label">Check All</label>
-            <form id='deleteForm' class="delete-form" action='stock_delete_confirm.php' method='post'>
-                <input type='hidden' name='list_id_stock' id='selectedValues' value=''>
-                <input type='hidden' name='total_id_stock' id='selectedTotal' value=''>
-                <input type='submit' id='deleteButton' value='Delete Product' disabled />
-            </form>
-        </div> -->
         <div>
             <!------------- Fillter ------------------->
             <label for="filter"><img src="../img/settings.png" id='img-setting'>Filter by Name:</label>
             <input type="text" name="filter" id="filter" placeholder="Enter name to filter">
             <!------------------------------------------>
-            <!-- <form class="add-user-form" action='stock_insert_form.html' method='post'>
-                <input type='submit' id="addUserButton" value='Add Product'/>
-            </form> -->
             <br>
         </div>
     </div>
 
     <?php
         $cur = "SELECT * FROM log LIMIT $recordsPerPage OFFSET $offset";
-        $msresults = mysqli_query($cx, $cur);
+        $msresults = mysqli_query($conn, $cur);
         
         echo "<center>";
         echo "<div>
@@ -214,16 +192,8 @@
         
         echo "</table></div>";
         echo "</center>";
-        mysqli_close($cx);
+        mysqli_close($conn);
     ?>
-    <!-- เพิ่มส่วนของ Pagination ที่นี่ -->
-    <!-- <div style='text-align:center;'>
-        <?php
-            // for ($i = 1; $i <= $totalPages; $i++) {
-            //     echo "<a href='log_index.php?page=$i'>$i</a> ";
-            // }
-        ?>
-    </div> -->
     <div class="pagination">
         <?php
         for ($i = 1; $i <= $totalPages; $i++) {

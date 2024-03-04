@@ -117,9 +117,9 @@
 </div>
 <?php    
     session_start();
-    $cx =  mysqli_connect("localhost", "root", "", "shopping");
+    include_once '../dbConfig.php'; 
     $user = $_SESSION['username'];
-    $uid_query = mysqli_query($cx, "SELECT * FROM customer WHERE Username = '$user'");  
+    $uid_query = mysqli_query($conn, "SELECT * FROM customer WHERE Username = '$user'");  
     $row = mysqli_fetch_array($uid_query);
 
     echo "<div class='invoice-container'>'>
@@ -140,7 +140,7 @@
     if(isset($_POST['id_invoice'])){
         $uid = $uid_results;
         $InvID = $_POST['id_invoice'];
-        $msresults = mysqli_query($cx, "SELECT invoice.*, invoice_detail.* , product.*
+        $msresults = mysqli_query($conn, "SELECT invoice.*, invoice_detail.* , product.*
                                         FROM invoice
                                         INNER JOIN invoice_detail ON invoice.InvID = invoice_detail.InvID
                                         INNER JOIN Product ON invoice_detail.ProID = Product.ProID

@@ -2,7 +2,7 @@
 require_once('./vendor/autoload.php');
 
 session_start();
-$conn =  mysqli_connect("localhost", "root", "", "shopping");
+include_once '../dbConfig.php'; 
 
 
 

@@ -72,9 +72,6 @@
                 <input type="password" id="password" name="password"  required>
                 <input type="submit" value="เข้าสู่ระบบ">
             </form>
-            <!-- <div class='container-register'> 
-                <a href="register.php">มีบัญชีเเล้วหรือยัง?</a>
-            </div> -->
         </div>
     </div>
 </body>

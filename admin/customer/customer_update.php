@@ -1,5 +1,5 @@
 <?php /* get connection */
-    $conn = mysqli_connect("localhost", "root", "", "shopping");
+    include_once '../../dbConfig.php'; 
    
     /*SELECT*/
     $code = $_POST['id_customer'];
@@ -38,5 +38,5 @@
     }
 
     /* close connection */
-    mysqli_close($conn);
+     
 ?>

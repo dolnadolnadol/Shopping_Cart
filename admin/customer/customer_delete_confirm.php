@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: gray;
             margin: 0;
             padding: 0;
         }
@@ -69,8 +69,7 @@
 <body>
     <?php 
     /* POST connection */
-    $conn = mysqli_connect("localhost", "root", "", "Shopping");
-    echo '123';
+    include_once '../../dbConfig.php';
     /*SELECT*/
     if (isset($_POST['list_id_customer'])){
 
@@ -83,7 +82,8 @@
         echo "</font><br>";
         echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
         echo "<input type='hidden' name='list_id_customer' value={$_POST['list_id_customer']}>";
-        echo "<a href='customer_index.php'>ยกเลิก</a>"; 
+        echo "<a href='customer_index.php' style='color: black;   
+        background-color: #F2F3F5;'>ยกเลิก</a>"; 
         echo "<input type='submit' value='ยืนยัน'>";
         echo "</form>\n";
         echo "</center>";
@@ -107,7 +107,7 @@
             $row = mysqli_fetch_array($msresults);
             echo "<center>";
             echo "<form method='POST' action='customer_delete.php'>";
-            echo "<h1>Delete Customer Form</h1>";
+            echo "<h1>Delete Customer</h1>";
             echo "<h2>รหัสลูกค้า ". $row['CusID'] ."</h2><br>";
             echo "<input type='hidden' name='id_customer' value='" . $row['CusID'] . "'>";
             echo "<input type='hidden' name='id_receiver' value='" . (isset($row_recv['RecvID']) ? $row_recv['RecvID'] : "") . "'>";
@@ -116,7 +116,8 @@
             echo "ที่อยู่ : " . (isset($row_recv['Address']) ? $row_recv['Address'] : "-") . "<br>";
             echo "เบอร์โทรศัพท์ : {$row['Tel']}<br><br>";
             echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
-            echo "<a href='customer_index.php'>ยกเลิก</a>";
+            echo "<a href='customer_index.php' style='color: black;   
+            background-color: #F2F3F5;'>ยกเลิก</a>";
             echo "<input type='submit' value='ยืนยัน'>";
             echo "</form>\n"; 
             echo "</center>";

@@ -92,7 +92,7 @@
             <div class="data-card" id='card-1'>
                 <h2 id='PQ'>Product Summary</h2>
                 <?php 
-                    $cx =  mysqli_connect("localhost", "root", "", "shopping");
+                    include_once '../../dbConfig.php'; 
                 ?>
                 <table>
                     <tr>
@@ -103,7 +103,7 @@
                         <th>Total Price</th>
                     </tr>
                     <?php
-                        $bestSell_Query = mysqli_query($cx, "SELECT product.ProID, product.ProName, product.Description, product.PricePerUnit, SUM(receive_detail.Qty) AS TotalQty
+                        $bestSell_Query = mysqli_query($conn, "SELECT product.ProID, product.ProName, product.Description, product.PricePerUnit, SUM(receive_detail.Qty) AS TotalQty
                         FROM product
                         INNER JOIN receive_detail ON product.ProID = receive_detail.ProID
                         INNER JOIN receive ON receive_detail.RecID = receive.RecID
@@ -123,7 +123,7 @@
                 </table>
                 <h1 id='Re'>Revenue</h1>
                     <?php 
-                        $income_Query = mysqli_query($cx, "SELECT SUM(product.PricePerUnit * receive_detail.Qty) AS TotalIncome
+                        $income_Query = mysqli_query($conn, "SELECT SUM(product.PricePerUnit * receive_detail.Qty) AS TotalIncome
                         FROM product 
                         INNER JOIN receive_detail ON product.ProID = receive_detail.ProID
                         INNER JOIN receive ON receive_detail.RecID = receive.RecID

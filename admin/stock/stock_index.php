@@ -127,9 +127,9 @@
     </div>
 
     <?php
-    $cx =  mysqli_connect("localhost", "root", "", "shopping");
+    include_once '../../dbConfig.php'; 
     $cur = "SELECT * FROM product";
-    $msresults = mysqli_query($cx, $cur);
+    $msresults = mysqli_query($conn, $cur);
 
     echo "<center>";
     echo "<div>
@@ -169,7 +169,7 @@
 
     echo "</table></div>";
     echo "</center>";
-    mysqli_close($cx);
+    mysqli_close($conn);
     ?>
 <script>
     function updateDeleteButtonStatus() {

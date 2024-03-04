@@ -123,8 +123,8 @@
             <div class="data-card" id='card-1'>
                 <h2 id='PQ'>Product Quantity</h2>
                 <?php 
-                    $cx =  mysqli_connect("localhost", "root", "", "shopping");
-                    $ProductQuery = mysqli_query($cx, "SELECT COUNT(*) AS total_products FROM product");  
+                    include_once '../../dbConfig.php'; 
+                    $ProductQuery = mysqli_query($conn, "SELECT COUNT(*) AS total_products FROM product");  
                     $ProductDetails = mysqli_fetch_assoc($ProductQuery);
                     echo "<h3>Total Products: " . $ProductDetails['total_products'] . "</h3>";
                 ?>
@@ -138,7 +138,7 @@
                         <th>Remaining Quantity</th>
                     </tr>
                     <?php 
-                        $ProductQuery = mysqli_query($cx, "SELECT * FROM product");  
+                        $ProductQuery = mysqli_query($conn, "SELECT * FROM product");  
                         while($row = mysqli_fetch_assoc($ProductQuery)) {
                             $total = (double)$row['PricePerUnit'] * (double)$row['StockQty'];
                             echo "<tr>";
@@ -155,7 +155,7 @@
             <div class="data-card" id='card-2'>
                 <h2 id='PR'>Products with Reservations</h2>
                 <?php 
-                    $OnhandsQuery = mysqli_query($cx, "SELECT COUNT(*) AS total_onHands FROM product WHERE OnHands != '0'"); 
+                    $OnhandsQuery = mysqli_query($conn, "SELECT COUNT(*) AS total_onHands FROM product WHERE OnHands != '0'"); 
                     $OnhandsDetails = mysqli_fetch_assoc($OnhandsQuery);
                     echo "<h3>Total Products on hands: " . $OnhandsDetails['total_onHands'] . "</h3>";
                 ?>
@@ -168,7 +168,7 @@
                         <th>Reserved Quantity</th>
                     </tr>
                     <?php 
-                        $ProductQuery = mysqli_query($cx, "SELECT * FROM product WHERE OnHands != '0'");  
+                        $ProductQuery = mysqli_query($conn, "SELECT * FROM product WHERE OnHands != '0'");  
                         while($row = mysqli_fetch_assoc($ProductQuery)) {
                             $total = (double)$row['PricePerUnit'] * (double)$row['OnHands'];
                             echo "<tr>";
@@ -191,7 +191,7 @@
                         <th>Sold Quantity</th>
                     </tr>
                     <?php
-                        $bestSell_Query = mysqli_query($cx, "SELECT product.ProID, product.ProName, SUM(receive_detail.Qty) AS TotalQty
+                        $bestSell_Query = mysqli_query($conn, "SELECT product.ProID, product.ProName, SUM(receive_detail.Qty) AS TotalQty
                         FROM product
                         INNER JOIN receive_detail ON product.ProID = receive_detail.ProID
                         GROUP BY product.ProID
@@ -209,7 +209,7 @@
             <div class="data-card" id='card-4'>
                 <h2 id='Re'>Revenue</h2>
                 <?php 
-                    $income_Query = mysqli_query($cx, "SELECT * FROM product INNER JOIN receive_detail ON product.ProID = receive_detail.ProID");
+                    $income_Query = mysqli_query($conn, "SELECT * FROM product INNER JOIN receive_detail ON product.ProID = receive_detail.ProID");
                     (double)$total_income = 0;
                     while($row = mysqli_fetch_assoc($income_Query)) {
                         $total_income += (double)$row['PricePerUnit'] * (double)$row['Qty'];

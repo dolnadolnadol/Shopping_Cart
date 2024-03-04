@@ -1,4 +1,7 @@
-<!-- navbar.php -->
+<?php
+    include_once '../dbConfig.php'; 
+?>
+
 <style>
     body {
         margin: 0;
@@ -6,7 +9,7 @@
     }
 
     nav {
-        background-color: #FCFCFC ; /* Light red color with transparency */
+        background-color: #FCFCFC ;
         padding: 10px;
         position: fixed;
         width: 100%;
@@ -16,16 +19,15 @@
         border : 0;
         border-bottom: 1px;
         border-style: solid;
-        justify-content: space-between; /* Added to align items to the left and right */
+        justify-content: space-between;
 
     }
     .nav-right {
-        /* background-color: red; */
         display: flex;
         align-items: center;
         justify-content: center;
         margin-right: 3%;
-        position: relative; /* Added relative positioning */
+        position: relative;
         margin-right: 7%;
     }
 
@@ -38,7 +40,6 @@
 
     li {
         float: left;
-        /* width: 100px; */
         height: 50px;
     }
     li a {
@@ -49,47 +50,32 @@
         text-align: center;
         padding: 14px 16px;
         text-decoration: none;
-        transition: background-color 0.25s ease; /* Smooth transition effect */
-        position: relative; /* Added for absolute positioning of the underline */
-    }
-    li a.active {
-        /* background-color: #D676A0; Bootstrap's danger color */
-        /* font-weight: bold; */
-        /* color:blue; */
+        transition: background-color 0.25s ease;
+        position: relative;
     }
     li a:hover {
         background-color: #F2F1F1;
     }
 
-    /* Style for the clicked link */
 
     li a.active::after {
-        content: ''; /* Create a pseudo-element for the underline */
+        content: '';
         position: absolute;
         left: 0;
         bottom: 0;
         width: 100%;
-        height: 2px; /* Underline thickness */
+        height: 2px;
     }
 
     body {
-        margin-top: 50px; /* Adjust margin to avoid content being hidden under the fixed navbar */
+        margin-top: 50px;
     }
 
     .nav-left {
         display: flex;
-        /* background-color:blue; */
         align-items: center;
         margin-left: 7%;
     }
-
-    /* .nav-right {
-        background-color: red;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        margin-right: 7%;
-    } */
 
     .cart-icon {
         justify-content: center;
@@ -98,7 +84,6 @@
     }
 
     .cart-icon-container {
-        /* background-color:blue; */
         position: relative;
     }
 
@@ -106,7 +91,7 @@
         position: absolute;
         top: 0;
         right: 10%;
-        background-color: red; /* Bootstrap's danger color */
+        background-color: red;
         color: white;
         padding: 3px 8px;
         border-radius: 50%;
@@ -151,9 +136,6 @@
 
     <ul class="nav-right">
         <li style="display:flex; align-items:center;">
-            <!-- <div class="divSearch">
-                <input id="searchBar" type="text" placeholder="Search...">
-            </div> -->
         <li class='cart-icon-container'>
         <a <?php echo $cartIconClass; ?> style="padding:10px; width:40px;" href='cart.php'>
                 <img class='cart-icon' src='./image/shopping-cart.png' alt='Cart'>
@@ -162,14 +144,12 @@
 
                 <?php elseif(isset($_SESSION['id_username']) && isset($_SESSION['status']) === true) :?>
                     <?php
-                        // echo 'TEST123456';
-                        $cx =  mysqli_connect("localhost", "root", "", "shopping");
                         $uid = (isset($_SESSION['id_username'])) ? $_SESSION['id_username'] : '';
                         $cur = "SELECT * FROM cart WHERE CusID = '$uid'";
-                        $msresults = mysqli_query($cx, $cur);
+                        $msresults = mysqli_query($conn, $cur);
 
                         $cartIconCount = (mysqli_num_rows($msresults) > 0) ? mysqli_num_rows($msresults) : 0;
-                        mysqli_close($cx);
+                         
                     ?>
                 <?php endif; ?>
                 <?php if (!empty($cartIconCount)) : ?>
@@ -186,49 +166,7 @@
         <?php endif; ?>
     </ul>
 </nav>
-<!-- <script>
-    function updateTable(filterKeyword) {
-            var tableRows = document.querySelectorAll('.user-row');
-
-            tableRows.forEach(function (row) {
-                var containsKeyword = false;
-
-                // Loop through all columns (td elements) in the current row
-                row.querySelectorAll('td').forEach(function (cell, index) {
-                    var cellText = cell.innerText.toLowerCase();
-
-                    // Check if the cell contains the filter keyword (string comparison)
-                    if (cellText.includes(filterKeyword.toLowerCase())) {
-                        containsKeyword = true;
-                        return; // Break out of the loop if the keyword is found in any cell
-                    }
-
-                    // Check if the cell contains the filter keyword as a number
-                    var cellNumber = parseFloat(cellText);
-                    var filterNumber = parseFloat(filterKeyword);
-
-                    if (!isNaN(cellNumber) && !isNaN(filterNumber) && cellNumber === filterNumber) {
-                        containsKeyword = true;
-                        return; // Break out of the loop if the numeric values match
-                    }
-                });
-
-                // Display or hide the row based on the keyword presence
-                if (containsKeyword) {
-                    row.style.display = 'table-row';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        $('#filter').on('input', function() {
-            var filterKeyword = $(this).val();
-            updateTable(filterKeyword);
-        });
-</script> -->
 <?php
-    // Function to check and set 'active' class
     function isActive($page)
     {
         return (basename($_SERVER['PHP_SELF']) == $page) ? 'class="active"' : '';

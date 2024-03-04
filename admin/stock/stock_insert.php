@@ -1,6 +1,6 @@
 <?php /* get connection */
     header( "location: ./stock_index.php");
-    $conn = mysqli_connect("localhost", "root", "", "shopping");
+    include_once '../../dbConfig.php'; 
     // if(!isset($_POST['back'])){
 
     $a2 = $_POST['a2'];

@@ -196,10 +196,10 @@
 <?php include('./component/accessNavBar.php'); ?>
 <!-- <?php include('./component/backButton.php') ?> -->
 <?php
-$cx = mysqli_connect("localhost", "root", "", "shopping");
+include_once '../dbConfig.php'; 
 $code = $_POST['id_product'];
 $cur = "SELECT * FROM product WHERE ProID = $code ";
-$msresults = mysqli_query($cx, $cur);
+$msresults = mysqli_query($conn, $cur);
 $row = mysqli_fetch_array($msresults);
 $onHandStock = $row['StockQty'] - $row['OnHands'];
 echo " <div class='container-body'>

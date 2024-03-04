@@ -1,13 +1,13 @@
 <?php
-$cx = mysqli_connect("localhost", "root", "", "shopping");
+    include_once '../dbConfig.php'; 
 $productName = $pricePerUnit = "";
 $productID = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['productID'])) {
-    $productID = mysqli_real_escape_string($cx, $_POST['productID']);
+    $productID = mysqli_real_escape_string($conn, $_POST['productID']);
 
     $query = "SELECT ProName, PricePerUnit FROM product WHERE ProID = '$productID'";
-    $result = mysqli_query($cx, $query);
+    $result = mysqli_query($conn, $query);
 
     if ($result) {
         $row = mysqli_fetch_assoc($result);

@@ -110,8 +110,8 @@
                     <label for="RecID">RecID:</label>
                 <?php     
                     // Generate new RECEIVE ID
-                    $cx =  mysqli_connect("localhost", "root", "", "shopping");
-                    $result = mysqli_query($cx, "SELECT MAX(RecID) AS rec_id FROM receive");
+                    include_once '../../dbConfig.php'; 
+                    $result = mysqli_query($conn, "SELECT MAX(RecID) AS rec_id FROM receive");
                     $row = mysqli_fetch_assoc($result);
                     $lastID = $row['rec_id'];
                     $numericPart = intval(substr($lastID, 6));
@@ -138,7 +138,7 @@
                     <select id="customerName" name="customerName" required>
                         <?php
                             // Your PHP code to fetch products from the database
-                            $result = mysqli_query($cx, "SELECT * FROM Customer");
+                            $result = mysqli_query($conn, "SELECT * FROM Customer");
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<option value='{$row['CusID']}'>{$row['CusFName']} {$row['CusLName']}</option>";
                             }
@@ -175,7 +175,7 @@
                     <select id="productName" name="productName[]" >
                         <?php
                             // Your PHP code to fetch products from the database
-                            $result = mysqli_query($cx, "SELECT * FROM Product");
+                            $result = mysqli_query($conn, "SELECT * FROM Product");
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<option data-product-id='{$row['ProID']}' data-price='{$row['PricePerUnit']}' value='{$row['ProID']}'>{$row['ProName']}</option>";
                             }

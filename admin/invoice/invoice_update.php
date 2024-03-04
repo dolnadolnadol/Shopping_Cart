@@ -110,12 +110,12 @@
                     <label for="InvID">InvID:</label>
                 <?php     
 
-                    $cx =  mysqli_connect("localhost", "root", "", "shopping");
+                    include_once '../../dbConfig.php'; 
                     $InvID = $_POST['id_invoice'];
                     echo "<input type='text' id='InvID' name='InvID' value='$InvID' readonly>
                     </div>";
                     $cur = "SELECT Status FROM invoice WHERE InvID = '$InvID'";
-                    $msresults = mysqli_query($cx, $cur);
+                    $msresults = mysqli_query($conn, $cur);
                     $row = mysqli_fetch_array($msresults);
                     $status = $row['Status'];
 
@@ -141,7 +141,7 @@
                     <select id="customerName" name="customerName" required>
                         <?php
                             // Your PHP code to fetch products from the database
-                            $result = mysqli_query($cx, "SELECT * FROM Customer");
+                            $result = mysqli_query($conn, "SELECT * FROM Customer");
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<option value='{$row['CusID']}'>{$row['CusFName']} {$row['CusLName']}</option>";
                             }
@@ -171,7 +171,7 @@
                     <?php
                         $showTotal = 0.0;
                         $showVat = 0.0;
-                        $result = mysqli_query($cx, " SELECT invoice_detail.* , Product.*,
+                        $result = mysqli_query($conn, " SELECT invoice_detail.* , Product.*,
                             invoice_detail.Qty * Product.PricePerUnit AS TotalPrice
                             FROM invoice_detail 
                             INNER JOIN Product ON invoice_detail.ProID = Product.ProID WHERE invoice_detail.InvID = '$InvID'");

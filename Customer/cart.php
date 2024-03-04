@@ -182,7 +182,7 @@
         <?php
             $totalPriceAllItems = 0;
             $index = 0;
-            $cx =  mysqli_connect("localhost", "root", "", "shopping");
+            include_once '../dbConfig.php'; 
 
             /* สำหรับ User */
             if (isset($_SESSION['id_username']) && isset($_SESSION['status'])) {
@@ -190,7 +190,7 @@
                 //Find product.ProID , product.ProName  ,product.PricePerUnit , Qty
                 $cur = "SELECT product.ProID , product.ProName  ,product.PricePerUnit , Qty  FROM cart
                 INNER JOIN product ON cart.ProID = product.ProID";
-                $msresults = mysqli_query($cx, $cur);
+                $msresults = mysqli_query($conn, $cur);
            
 
                 if (mysqli_num_rows($msresults) > 0) {
@@ -243,7 +243,7 @@
             else if(isset($_SESSION['cart'])){
                 foreach ($_SESSION['cart'] as $product_id => $product) {
                     $cur = "SELECT product.ProID, product.ProName, product.PricePerUnit FROM product WHERE ProID = '$product_id'";
-                    $msresults = mysqli_query($cx, $cur);
+                    $msresults = mysqli_query($conn, $cur);
                     $row = mysqli_fetch_array($msresults);
                 
                     $totalPrice = $row['PricePerUnit'] * $product['quantity'];
@@ -292,7 +292,7 @@
                     </form>
                 </div>";
             }
-            mysqli_close($cx);
+             
         ?>
     </div>
   

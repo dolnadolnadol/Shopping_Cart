@@ -138,14 +138,6 @@ include('./component/getFunction/getName.php');?>
     padding: 20px;
 }
 
-/* .invoice-header {
-    color: #fff;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-    margin-bottom: 20px;
-} */
-
 .customer-details,
 .summary-details {
     margin-bottom: 20px;
@@ -194,11 +186,11 @@ input[type="submit"]:focus{
             $recv_id = $_POST['id_receiver'];
 
 
-            $cx =  mysqli_connect("localhost", "root", "", "shopping");
+            include_once '../dbConfig.php'; 
             $query_address = "SELECT * FROM receiver 
             INNER JOIN receiver_detail ON receiver.RecvID = receiver_detail.RecvID  
             WHERE receiver_detail.CusID = '$uid'";
-            $result_address = mysqli_query($cx, $query_address);
+            $result_address = mysqli_query($conn, $query_address);
             if (mysqli_num_rows($result_address) > 0) {
                 // Fetch a single row from the result set
                 $row = mysqli_fetch_assoc($result_address);
@@ -246,7 +238,7 @@ input[type="submit"]:focus{
                 <div class="checkout-sidebar">
                     <!-- Sidebar content -->
                     <?php
-                    $cx = mysqli_connect("localhost", "root", "", "shopping");
+                    $conn = mysqli_connect("localhost", "root", "", "shopping");
                     echo "<div class='invoice-container'>";
                     echo "<div class='body-container'>";
                     echo "<div class='invoice-header'>
@@ -254,7 +246,7 @@ input[type="submit"]:focus{
                     </div>";
 
                     if (isset($_POST['id_invoice'])) {
-                        $customerDetailsQuery = mysqli_query($cx, "SELECT * FROM receiver 
+                        $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM receiver 
                         INNER JOIN receiver_detail ON receiver.RecvID =  receiver_detail.RecvID WHERE receiver_detail.CusID = '$uid' AND receiver_detail.RecvID = '$recv_id'");
                         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
                         $customerId = $uid;
@@ -275,7 +267,7 @@ input[type="submit"]:focus{
                         
                         <h4><strong>สรุปการคำสั่งซื้อ</strong></h4>";      
                         $totalPriceAllItems = 0;
-                        $invoiceDetailsQuery = mysqli_query($cx, "SELECT * , product.ProName FROM invoice_detail
+                        $invoiceDetailsQuery = mysqli_query($conn, "SELECT * , product.ProName FROM invoice_detail
                         INNER JOIN product ON product.ProID =  invoice_detail.ProID 
                         INNER JOIN invoice ON invoice.InvID =  invoice_detail.InvID 
                         WHERE invoice.InvID  = '$inv'");

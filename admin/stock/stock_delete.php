@@ -1,14 +1,10 @@
 <?php /* get connection */
     header( "location: ./stock_index.php");
-    $conn = mysqli_connect("localhost", "root", "", "shopping");
+    include_once '../../dbConfig.php'; 
     if (isset($_POST['id_stock'])){
         $code = $_POST['id_stock'];
-        /* run delete */
-        // $stmt = odbc_prepra($conn, "DELETE FROM stock WHERE IDCust='$code'");
         $stmt = mysqli_query($conn,"DELETE FROM product WHERE ProID ='$code'");
-        /* check for errors */
         if (!$stmt) { 
-            /* error */
             echo "Error deleting data with IDCust = '$code'";
         } else {
             echo "Delete data = <font color=red> '$code' </font> is Successful. <br>";
