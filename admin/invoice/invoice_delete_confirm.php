@@ -81,20 +81,17 @@
         echo "</font><br>";
         echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
         echo "<input type='hidden' name='list_id_invoice' value={$_POST['list_id_invoice']}>";
-        echo "<a href='invoice_index.php'>ยกเลิก</a>"; 
+        echo "<a href='invoice_index.php' style='
+        padding: 9px 14px;
+        color: black;   
+        background-color: #F2F3F5;      
+        text-decoration: none;
+        margin-right: 5px;
+        '>ยกเลิก</a>"; 
         echo "<input type='submit' value='ยืนยัน'>";
         echo "</form>\n";
         echo "</center>";
 
-        echo "<a href='invoice_index.php' 
-        style='
-        padding: 9px 14px;
-        color: #ef476f;             
-        text-decoration: none;
-        margin-right: 5px;
-        '>ยกเลิก</a>";
-        echo "</form>\n"; 
-        echo "</center>";
     }
     else {
         $code = $_POST['total_id_invoice'];
@@ -111,7 +108,13 @@
             echo "<br></font><br>";
             echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
             echo "<input type='hidden' name='list_id_invoice' value={$code}>";
-            echo "<a href='invoice_index.php'>ยกเลิก</a>"; 
+            echo "<a href='invoice_index.php' style='
+            padding: 9px 14px;
+            color: black;   
+            background-color: #F2F3F5;      
+            text-decoration: none;
+            margin-right: 5px;
+            '>ยกเลิก</a>"; 
             echo "<input type='submit' value='ยืนยัน'>";
             echo "</form>\n";
             echo "</center>";

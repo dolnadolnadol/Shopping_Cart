@@ -13,14 +13,9 @@ $query_address = "SELECT * FROM receiver
     WHERE receiver_detail.CusID = '$uid'";
 $result_address = mysqli_query($cx, $query_address);
 
-
-
 if (!$result) {
     die("Error fetching user data: " . mysqli_error($cx));
 }
-
-
-
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
     $uid = $_POST['id_customer'];
@@ -37,9 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
     if (!$update_result) {
         die("Error updating user data: " . mysqli_error($cx));
     }
-
-    // $_SESSION['username'] = $new_username;
-    // $_SESSION['tel'] = $new_tel;
 
 }
 
@@ -64,7 +56,6 @@ mysqli_close($cx);
         }
 
         .body-container {
-            /* background-color:blue; */
             display: flex;
             align-items: center;
             justify-content: center;

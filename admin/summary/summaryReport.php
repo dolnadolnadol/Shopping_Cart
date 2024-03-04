@@ -9,12 +9,9 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #343a40;
+            background-color: black;
+            color:white;
         }
-
-        /* .navbar {
-            margin-bottom: 20px;
-        } */
         .container {
             margin-top: 100px;
         }
@@ -39,7 +36,7 @@
             flex-grow: 1;
             flex-basis: calc(50% - 20px);
             margin: 0 10px 20px;
-            background-color: #ffffff;
+            background-color: #4c4c4c;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -54,7 +51,7 @@
         .data-card h3,
         .data-card p {
             margin: 0;
-            color: #343a40;
+            color: white;
         }
 
         table {
@@ -70,7 +67,7 @@
         }
 
         th {
-            background-color: #f8f9fa;
+            background-color: #666666;
         }
 
         #card-4 h1 {

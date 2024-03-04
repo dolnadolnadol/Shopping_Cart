@@ -10,6 +10,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: black;
+            color:white;
         }
 
         h1 {
@@ -19,7 +21,7 @@
         .container {
             display: flex;
             justify-content: space-between;
-            background-color: #f3f6f9;
+            background-color: #4c4c4c;
             padding: 20px;
         }
 
@@ -65,17 +67,19 @@
             margin: auto;
             text-align: center;
             border-collapse: collapse;
-            border: 1px solid #ccc;
         }
 
         th {
-            background-color: #f5f6f6;
+            background-color: #666666;
             padding: 10px;
         }
 
         td {
             padding: 5px;
             border-bottom: 1px solid #ccc;
+        }
+        tr:hover{
+            background-color: rgba(255,0,0,0.2);
         }
 
         .action-buttons {
@@ -161,10 +165,7 @@
                     echo "<td>";
                     echo "<div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
 
-                    // เงื่อนไขตรวจสอบค่า Status และกำหนดสีให้กับ background-color
-                    if ($row['Status'] == 'Pickups') {
-                        echo '#0176FF;';
-                    } elseif ($row['Status'] == 'Pending' || $row['Status'] == 'pending') {
+                    if ($row['Status'] == 'Pending' || $row['Status'] == 'pending') {
                         echo '#FFA500;';
                     } elseif ($row['Status'] == 'Inprogress') {
                         echo '#7C6BFF;'; 
@@ -175,7 +176,8 @@
                     }
 
                     echo "'>";
-                    echo "<select id='select_$index' data-recid='{$row['RecID']}' style='background-color: inherit; color: #ffff;' required>";
+                    echo "<select id='select_$index' data-recid='{$row['RecID']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
+                    user-select: none; color: #ffff;' required>";
 
                     $statusCompare = ['Pending', 'Inprogress', 'Delivered', 'Canceled'];
 
@@ -222,7 +224,6 @@
 
         deleteButton.disabled = !enableDeleteButton;
 
-        // Update the hidden input field with the values of checked checkboxes
         var checkboxValues = checkedCheckboxes.map(checkbox => checkbox.value);
         selectedValuesInput.value = checkboxValues.join(',');
     }
@@ -230,13 +231,12 @@
     var individualCheckboxes = document.getElementsByName('checkbox[]');
     for (var i = 0; i < individualCheckboxes.length; i++) {
         individualCheckboxes[i].addEventListener('change', function () {
-            updateDeleteButtonStatus(); // Update deleteButton's status
+            updateDeleteButtonStatus();
         });
     }
 </script>
 <script>
    document.addEventListener('DOMContentLoaded', function () {
-    // Loop through all select elements and attach event listeners
     for (var i = 1; i <= <?php echo $index; ?>; i++) {
         var selectElement = document.getElementById('select_' + i);
 
@@ -261,7 +261,6 @@
                 }
 
                 console.log(recID , selectedValue )
-                // Update the status using AJAX
                 updateStatus(recID, selectedValue);
             });
         }
@@ -277,10 +276,8 @@
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
-                    // Handle successful response
                     console.log('Status updated successfully');
                 } else {
-                    // Handle error
                     console.error('Error updating status');
                 }
             }
@@ -304,7 +301,6 @@
             }
         }
 
-        // Join values into a comma-separated string
         document.getElementById('deleteForm').elements['selectedValues'].value = checkboxValues.join(',');
         var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
         var enableDeleteButton = checkedCheckboxes.length > 0;
@@ -319,27 +315,22 @@
             tableRows.forEach(function (row) {
                 var containsKeyword = false;
 
-                // Loop through all columns (td elements) in the current row
                 row.querySelectorAll('td').forEach(function (cell, index) {
                     var cellText = cell.innerText.toLowerCase();
 
-                    // Check if the cell contains the filter keyword (string comparison)
                     if (cellText.includes(filterKeyword.toLowerCase())) {
                         containsKeyword = true;
-                        return; // Break out of the loop if the keyword is found in any cell
                     }
 
-                    // Check if the cell contains the filter keyword as a number
                     var cellNumber = parseFloat(cellText);
                     var filterNumber = parseFloat(filterKeyword);
 
                     if (!isNaN(cellNumber) && !isNaN(filterNumber) && cellNumber === filterNumber) {
                         containsKeyword = true;
-                        return; // Break out of the loop if the numeric values match
+                        return;
                     }
                 });
 
-                // Display or hide the row based on the keyword presence
                 if (containsKeyword) {
                     row.style.display = 'table-row';
                 } else {
@@ -348,12 +339,9 @@
             });
         }
 
-        // Listen for input event on the filter input
         $('#filter').on('input', function() {
-            // Get the value of the filter input
             var filterKeyword = $(this).val();
 
-            // Update the table based on the filter keyword
             updateTable(filterKeyword);
         });
 </script>

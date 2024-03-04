@@ -10,6 +10,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: black;
+            color:white;
         }
 
         h1 {
@@ -19,7 +21,7 @@
         .container {
             display: flex;
             justify-content: space-between;
-            background-color: #f3f6f9;
+            background-color: #4c4c4c;
             padding: 20px;
         }
 
@@ -65,12 +67,14 @@
             margin: auto;
             text-align: center;
             border-collapse: collapse;
-            border: 1px solid #ccc;
         }
 
         th {
-            background-color: #f5f6f6;
+            background-color: #666666;
             padding: 10px;
+        }
+        tr:hover{
+            background-color: rgba(255,0,0,0.2);
         }
 
         td {
