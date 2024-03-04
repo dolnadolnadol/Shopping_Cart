@@ -89,8 +89,10 @@
         <label for="a7">รหัสผ่าน:</label>
         <input type="tel" id="a7" name="a7" maxlength="10" required>
 
-        <input type="submit" value="ยืนยัน">
-        <input type="reset" value="รีเซ็ต">
+        <div style="display:flex; justify-content: center;">
+            <input type='button' value='ยกเลิก' onclick='window.history.back();' style='background-color: red; color: #fff; padding: 10px 20px; border: none; cursor: pointer; margin-right:2rem; border-radius: 4px;'>
+            <input type='submit' value='ยืนยัน' style='background-color: blue; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; margin-right:1rem;'>
+        </div>
     </form>
 </body>
 </html>

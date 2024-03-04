@@ -149,52 +149,11 @@
                     </select>
                              
                 </div>
-                <!-- <div class="form-group" style="color: #007bff">
-                    <label style="color: #007bff" for="customerName">Customer Address:</label>
-
-                    <?php 
-                        // $cur = "SELECT * FROM invoice 
-                        // INNER JOIN customer ON customer.CusID = invoice.CusID
-                        // INNER JOIN receiver ON receiver.CusID = Customer.CusID
-                        // WHERE InvID = '$InvID'";
-                        // $msresults = mysqli_query($cx, $cur);
-                        // $recv_row = mysqli_fetch_array($msresults);
-                    ?>
-                    <input type='hidden' name='id_receiver' value='<?php echo $recv_row['RecvID']; ?>'>
-                    FirstName: <input type='text' name='recv_fname' value='<?php echo $recv_row['RecvFName']; ?>'>
-                    LastName: <input type='text' name='recv_lname' value='<?php echo $recv_row['RecvLName']; ?>'>
-                    Tel: <input type='text' name='recv_tel' value='<?php echo $recv_row['Tel']; ?>'>
-                    Address: <input type='text' name='recv_address' value='<?php echo $recv_row['Address']; ?>'>
-                </div> -->
             </div>
 
             <!-- Add Products Section -->
             <div class="form-block">
                 <!-- <h3 style="color: #007bff;">Add Products</h3> -->
-                <!-- <div class="form-group">
-                <label for="productName">Product Name:</label>
-                <select id="productName" name="productName[]">
-                        <?php
-                        // Your PHP code to fetch products from the database
-                        $result = mysqli_query($cx, "SELECT *
-                                                    FROM Product
-                                                    WHERE ProID NOT IN (SELECT DISTINCT ProID FROM invoice_detail WHERE InvID = '$InvID')");
-                        if ($result) {
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                echo "<option data-product-id='{$row['ProID']}' data-price='{$row['PricePerUnit']}' value='{$row['ProID']}'>{$row['ProName']}</option>";
-                            }
-                        } else {
-                            echo "Error: " . mysqli_error($cx);
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="quantity">Quantity:</label>
-                    <input type="text" id="quantity" name="quantity[]" >
-                </div>
-                <button type="button" id="addProductBtn">Add Product</button>
-            </div> -->
     
 
             <!-- Product Table -->
@@ -253,34 +212,27 @@
     </div>
 
     <script>
-    // Initialize an array to store selected product names
 
         $(document).ready(function() {
 
-        // Event listener for quantity input changes
         $('.quantity-input').on('input', function() {
                 updateTotalPrice($(this).closest('tr'));
             });
 
-            // Function to update total price based on quantity
             function updateTotalPrice(row) {
                 var quantity = parseInt(row.find('.quantity-input').val());
                 var pricePerUnit = parseFloat(row.find('td:eq(2)').text());
                 var totalPrice = quantity * pricePerUnit;
 
-                // Update the total price cell in the same row
                 row.find('.total-price').text(totalPrice.toFixed(2));
 
-                // Call a function to update the grand total if needed
                 updateGrandTotal();
             }
 
-            // Function to update the grand total
             function updateGrandTotal() {
                 var grandTotal = 0;
                 var vatPrice = 0;
 
-                // Iterate through each row and add up the total prices
                 $('.total-price').each(function() {
                     grandTotal += parseFloat($(this).text());
                     vatPrice += grandTotal*0.07;
@@ -290,7 +242,6 @@
 
                 $('#totalProductPrice').text((grandTotal + vatPrice).toFixed(2));
 
-                // Update hidden input value
                 $('#totalProductPriceInput').val((grandTotal + vatPrice).toFixed(2));
             }
     });

@@ -1,5 +1,4 @@
 <?php /* get connection */
-    // header( "location: ./customer_index.php");
     $conn = mysqli_connect("localhost", "root", "", "shopping");
    
     /*SELECT*/
@@ -8,8 +7,6 @@
 
     $msresults = mysqli_query($conn,$cur);
     $row = mysqli_fetch_array($msresults);
-    // date_default_timezone_set('Asia/Bangkok');
-    //Select
     if(mysqli_num_rows($msresults) > 0) {
   
         $cur = "SELECT Customer.CusFName , Customer.CusLName , Customer.Sex , Customer.Tel , receiver.* FROM Customer 
@@ -34,7 +31,7 @@
         echo "ที่อยู่ <textarea name='a5'>" . (isset($row_recv['Address']) ? $row_recv['Address'] : "") . "</textarea><br>";
         echo "⚠️โปรดให้เเน่ใจที่จะต้องการอัปเดตข้อมูล⚠️<br><br>";
         echo "<input type='submit' value='ยืนยัน'>";
-        echo "<input type='reset' value='รีเซ็ท'>";
+        echo "<input type='button' value='กลับ' onclick='window.history.back();'>";
     
         echo "</form>\n"; 
         echo "</center>";

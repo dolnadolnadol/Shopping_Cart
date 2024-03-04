@@ -22,7 +22,7 @@
     }
 </style>
 <body>
-    <a class="aBack" href='?aBack=1'> <- กลับไปหน้าหลัก </a>
+    <a class="aBack" href='?aBack=1'> กลับหน้าหลัก </a>
     <?php
         // เช็คว่ามีการคลิกลิงก์ aBack หรือไม่
         if (isset($_GET['aBack'])) {

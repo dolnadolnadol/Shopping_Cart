@@ -8,9 +8,9 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            background-color: black;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #343a40;
+            color: white;
         }
 
         .container {
@@ -18,7 +18,6 @@
             height: 90vh;
             margin: 0 auto;
             padding: 20px;
-            background-color: #ffffff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             margin-top: 20px;
@@ -64,19 +63,19 @@
             color: #343a40;
         }
         #card-1 {
-            background-color: rgb(229, 225, 255);
+            background-color: rgb(129, 125, 155);
         }
         #card-2 {
-            background-color: rgb(210, 237, 246);
+            background-color: rgb(110, 137, 146);
         }
         #card-3 {
-            background-color: rgb(252, 242, 218);
+            background-color: rgb(152, 142, 118);
         }
         #card-4 {
-            background-color: rgb(219, 233, 255);
+            background-color: rgb(119, 133, 155);
         }
         #card-5 {
-            background-color: rgb(205, 247, 236);
+            background-color: rgb(105, 147, 136);
         }
 
         table {
@@ -95,16 +94,16 @@
             background-color: #f8f9fa;
         }
         #PQ {
-            color:rgb(124, 107, 255) ;
+            color:rgb(224, 207, 255) ;
         }
         #PR {
-            color:rgb(30, 166, 211) ;
+            color:rgb(130, 266, 211) ;
         }
         #BSP {
             color:rgb(250, 190, 70) ;
         }
         #Re {
-            color: rgb(75, 147, 255);
+            color: rgb(175, 247, 255);
         }
 
         #card-4 h1 {
@@ -131,7 +130,7 @@
                 ?>
               
                 <table>
-                    <tr>
+                    <tr style="color:black;">
                         <th>ID</th>
                         <th>Name</th>
                         <th>Price Per Unit</th>
@@ -162,7 +161,7 @@
                 ?>
          
                 <table>
-                    <tr>
+                    <tr style="color:black;">
                         <th>ID</th>
                         <th>Name</th>
                         <th>Total Price</th>
@@ -186,7 +185,7 @@
             <div class="data-card" id='card-3'>
                 <h2 id='BSP'>Best Selling Products</h2>
                 <table>
-                    <tr>
+                    <tr style="color:black;">
                         <th>ID</th>
                         <th>Name</th>
                         <th>Sold Quantity</th>
@@ -217,29 +216,6 @@
                     }
                     echo "<h1>Total Income: ฿" . number_format($total_income, 2) . "</h1>";
                 ?>
-            
-                <!-- <table>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Price Per Unit</th>
-                        <th>Total Price</th>
-                        <th>Sold Quantity</th>
-                    </tr>
-                    <?php
-                        $income_Query = mysqli_query($cx, "SELECT * FROM product INNER JOIN receive_detail ON product.ProID = receive_detail.ProID");
-                        while($row = mysqli_fetch_assoc($income_Query)) {
-                            $total_pro = (double)$row['PricePerUnit'] * (double)$row['Qty'];
-                            echo "<tr>";
-                            echo "<td>" . $row['ProID'] . "</td>";
-                            echo "<td>" . $row['ProName'] . "</td>";
-                            echo "<td>" . number_format($row['PricePerUnit'], 2) . "</td>";
-                            echo "<td>" . number_format($total_pro, 2) . "</td>";
-                            echo "<td>" . $row['Qty'] . "</td>";
-                            echo "</tr>";
-                        }
-                    ?>
-                </table> -->
             </div>
         </div>
     </div>

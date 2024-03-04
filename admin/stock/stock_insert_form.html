@@ -86,10 +86,8 @@
         <input type="text" id="a4" name="a4" size="1" required>
 
         <div style="display:flex; justify-content: center;">
-            <a href="stock_index.php" style="text-decoration:none; margin-right: 2rem;">
-                <div id="back" type="back" value="ยกเลิก">ยกเลิก</div>
-            </a>
-            <input type="submit" value="ยืนยัน">
+            <input type='button' value='ยกเลิก' onclick='window.history.back();' style='background-color: red; color: #fff; padding: 10px 20px; border: none; cursor: pointer; margin-right:2rem; border-radius: 4px;'>
+            <input type='submit' value='ยืนยัน' style='background-color: blue; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; margin-right:1rem;'>
         </div>
     </form>
 </body>

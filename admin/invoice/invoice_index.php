@@ -10,6 +10,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: black;
+            color:white;
         }
 
         h1 {
@@ -19,7 +21,7 @@
         .container {
             display: flex;
             justify-content: space-between;
-            background-color: #f3f6f9;
+            background-color: #4c4c4c;
             padding: 20px;
         }
 
@@ -65,17 +67,19 @@
             margin: auto;
             text-align: center;
             border-collapse: collapse;
-            border: 1px solid #ccc;
         }
 
         th {
-            background-color: #f5f6f6;
+            background-color: #666666;
             padding: 10px;
         }
 
         td {
             padding: 5px;
             border-bottom: 1px solid #ccc;
+        }
+        tr:hover{
+            background-color: rgba(255,0,0,0.2);
         }
 
         .navbar {
@@ -154,23 +158,6 @@
                     <td>{$row['Period']}</td>
                     <td>{$row['TotalPrice']}</td>";
 
-
-                    // echo "<td><div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";                
-                    // if ($row['Status'] == 'Unpaid') {
-                    //     echo '#FFA500;';
-                    // } elseif ($row['Status'] == 'Paid') {
-                    //     echo '#06D6B1;';
-                    // } else if ($row['Status'] == 'Canceled'){
-                    //     echo '#FF0000;';
-                    // } else {
-                    //     echo '#06D6B1;'; 
-                    // }                 
-                    // echo "'><span style='color: #ffff;'>{$row['Status']}</span></div></td>";
-
-
-                    
-
-
                     echo "<td>";
                     echo "<div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
 
@@ -186,7 +173,8 @@
                     }       
 
                     echo "'>";
-                    echo "<select id='select_$index' data-recid='{$row['InvID']}' style='background-color: inherit; color: #ffff;' required>";
+                    echo "<select id='select_$index' data-recid='{$row['InvID']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
+                    user-select: none; color: #ffff;' required>";
 
                     $statusCompare = ['Unpaid', 'Paid', 'Canceled'];
 
@@ -199,11 +187,6 @@
 
                     echo "</select>";
                     echo "</div></td>";
-
-
-
-
-
 
                     echo "<td class='action-buttons'>
                         <form class='action-button' action='invoice_update.php' method='post'>  

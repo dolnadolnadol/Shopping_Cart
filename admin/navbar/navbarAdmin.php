@@ -12,14 +12,11 @@
         }
 
         nav {
-            background-color: rgba(255, 99, 71, 0.8);
+            background-color: rgba(27, 27, 27, 0.8);;
             padding: 10px;
             position: fixed;
             width: 100%;
             top: 0;
-            /* display: flex; */
-            /* justify-content: space-between; */
-            /* Added to align items to the left and right */
         }
 
         ul {
@@ -51,11 +48,12 @@
         }
 
         li a:hover {
-            background-color: rgba(255, 99, 71, 1);
+            background-color: rgba(50, 50, 50, 0.8);
+            border-radius:10%;
         }
 
-        li a.active {
-            background-color: #d9534f;
+        li a:focus {
+            background-color: rgba(70, 70, 70, 0.8);
         }
 
         li a.active::after {

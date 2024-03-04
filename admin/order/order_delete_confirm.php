@@ -81,19 +81,15 @@
         echo "</font><br>";
         echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
         echo "<input type='hidden' name='list_id_order' value={$_POST['list_id_order']}>";
-        echo "<a href='order_index.php'>ยกเลิก</a>"; 
-        echo "<input type='submit' value='ยืนยัน'>";
-        echo "</form>\n";
-        echo "</center>";
-
-        echo "<a href='order_index.php' 
-        style='
+        echo "<a href='order_index.php' style='
         padding: 9px 14px;
-        color: #ef476f;             
+        color: black;   
+        background-color: #F2F3F5;      
         text-decoration: none;
         margin-right: 5px;
-        '>ยกเลิก</a>";
-        echo "</form>\n"; 
+        '>ยกเลิก</a>"; 
+        echo "<input type='submit' value='ยืนยัน'>";
+        echo "</form>\n";
         echo "</center>";
     }
     else {
@@ -111,19 +107,16 @@
             echo "<br></font><br>";
             echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
             echo "<input type='hidden' name='list_id_order' value={$code}>";
-            echo "<a href='order_index.php'>ยกเลิก</a>"; 
+            echo "<a href='order_index.php'
+            style='
+                    padding: 9px 14px;
+                    color: black;   
+                    background-color: #F2F3F5;      
+                    text-decoration: none;
+                    margin-right: 5px;
+                    '>ยกเลิก</a>"; 
             echo "<input type='submit' value='ยืนยัน'>";
             echo "</form>\n";
-            echo "</center>";
-    
-            echo "<a href='order_index.php' 
-            style='
-            padding: 9px 14px;
-            color: #ef476f;             
-            text-decoration: none;
-            margin-right: 5px;
-            '>ยกเลิก</a>";
-            echo "</form>\n"; 
             echo "</center>";
         }
     }

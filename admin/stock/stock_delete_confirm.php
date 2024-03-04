@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: gray;
             margin: 0;
             padding: 0;
         }
@@ -81,19 +81,10 @@
         echo "</font><br>";
         echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
         echo "<input type='hidden' name='list_id_stock' value={$_POST['list_id_stock']}>";
-        echo "<a href='stock_index.php'>ยกเลิก</a>"; 
+        echo "<a href='stock_index.php' style='color: black;   
+        background-color: #F2F3F5;'>ยกเลิก</a>"; 
         echo "<input type='submit' value='ยืนยัน'>";
         echo "</form>\n";
-        echo "</center>";
-
-        echo "<a href='stock_index.php' 
-        style='
-        padding: 9px 14px;
-        color: #ef476f;             
-        text-decoration: none;
-        margin-right: 5px;
-        '>ยกเลิก</a>";
-        echo "</form>\n"; 
         echo "</center>";
     }
     else {
@@ -104,8 +95,7 @@
             $row = mysqli_fetch_array($msresults);
             echo "<center>";
             echo "<form method='post' action='stock_delete.php'>";
-            echo "<h1> Delete stock Form </h1>";
-            echo "<h2>รหัสลูกค้า ". $row['ProID'] ."</h2><br>";
+            echo "<h2>รหัสสินค้า ". $row['ProID'] ."</h2><br>";
             echo "<input type='hidden' name='id_stock' value='" . $row['ProID'] . "'>";
             echo "ชื่อ : {$row['ProName']}<br>";
             echo "ราคา/ชิ้น : {$row['PricePerUnit']}<br>";
@@ -114,7 +104,8 @@
             echo "<a href='stock_index.php' 
                     style='
                     padding: 9px 14px;
-                    color: #ef476f;             
+                    color: black;   
+                    background-color: #F2F3F5;      
                     text-decoration: none;
                     margin-right: 5px;
                     '>ยกเลิก</a>";
