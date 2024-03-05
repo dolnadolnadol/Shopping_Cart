@@ -202,19 +202,20 @@ $cur = "SELECT * FROM product WHERE ProID = $code ";
 $msresults = mysqli_query($conn, $cur);
 $row = mysqli_fetch_array($msresults);
 $onHandStock = $row['StockQty'] - $row['OnHands'];
+$imageURL = '../admin/UploadImg/'.$row["Photo"];
 echo " <div class='container-body'>
             <div class='container-1'>
                 <div class='product-image'>
-                    <img src='./image/cart.png' alt='Product Image'>
+                    <img src='$imageURL' style='height:20rem; width:100%;' alt='Product Image'>
                 </div>
                 <div class='product-image'>
-                    <img src='./image/cart.png' alt='Product Image'>
+                    <img src='$imageURL' style='height:20rem; width:100%;' alt='Product Image'>
                 </div>
                 <div class='product-image'>
-                    <img src='./image/cart.png' alt='Product Image'>
+                    <img src='$imageURL' style='height:20rem; width:100%;' alt='Product Image'>
                 </div>
                 <div class='product-image'>
-                    <img src='./image/cart.png' alt='Product Image'>
+                    <img src='$imageURL' style='height:20rem; width:100%;' alt='Product Image'>
                 </div>
             </div>
             <div class='container-2'>

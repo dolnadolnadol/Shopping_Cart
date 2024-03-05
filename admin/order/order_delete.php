@@ -88,5 +88,6 @@ if (isset($_POST['total_id_order'])) {
 }
 
 // close connection
+header("location: ./order_index.php");
 mysqli_close($conn);
 ?>

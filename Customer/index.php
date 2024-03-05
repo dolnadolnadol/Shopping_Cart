@@ -80,8 +80,9 @@
                 $msresults = mysqli_query($conn, $cur);
                 if(mysqli_num_rows($msresults) > 0){
                     while ($row = mysqli_fetch_array($msresults)) {
-                    echo "<div class='product-card'>
-                                <img class='product-image' src='./image/cart.png'>
+                    echo "<div class='product-card'>";
+                    include('./component/showPhotos.php');
+                                echo "
                                 <p class='product-name'>{$row['ProName']}</p>
                                 <p class='product-price'>ราคา {$row['PricePerUnit']}</p>
                                 <form method='post' action='detailProduct.php'>

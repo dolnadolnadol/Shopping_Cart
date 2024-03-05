@@ -24,6 +24,7 @@
             width: 100%;
             max-width: 400px;
             box-sizing: border-box;
+            /* height:100%; */
         }
 
         h1 {
@@ -40,6 +41,7 @@
         input[type="text"],
         input[type="number"],
         input[type="tel"],
+        input[type="file"],
         textarea {
             resize:none;
             width: 100%;
@@ -71,7 +73,7 @@
     </style>
 </head>
 <body>
-    <form method="post" action="stock_insert.php">
+    <form method="post" action="stock_insert.php" enctype="multipart/form-data">
         <h1>ใส่ข้อมูลสินค้าที่ต้องการ</h1>
         <label for="a2">ชื่อสินค้า:</label>
         <input type="text" id="a2" name="a2" maxlength="20" required>
@@ -84,11 +86,17 @@
 
         <label for="a4">จำนวนสินค้า:</label>
         <input type="text" id="a4" name="a4" size="1" required>
-
-        <div style="display:flex; justify-content: center;">
-            <input type='button' value='ยกเลิก' onclick='window.history.back();' style='background-color: red; color: #fff; padding: 10px 20px; border: none; cursor: pointer; margin-right:2rem; border-radius: 4px;'>
-            <input type='submit' value='ยืนยัน' style='background-color: blue; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; margin-right:1rem;'>
+        
+        <label for="files[]">อัพโหลดรูปภาพสินค้า:</label>
+        <input type='file' name='files[]' required>
+        
+        <div >
+            <center>
+                <input type='button' value='ยกเลิก' onclick='window.history.back();' style='background-color: gray; color: #fff; padding: 10px 20px; border: none; cursor: pointer; margin-right:2rem; border-radius: 4px;'>
+                <input type='submit' value='ยืนยัน' style='background-color: blue; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; margin-right:1rem;'>
+            </center>
         </div>
+
     </form>
 </body>
 </html>

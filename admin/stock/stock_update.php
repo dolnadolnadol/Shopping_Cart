@@ -18,6 +18,7 @@ if (mysqli_num_rows($msresults) > 0) {
     echo "<h2>สินค้า ID" . $row['ProID'] . "</h2><br>";
     echo "<input type='hidden' name='a1' value='" . $row['ProID'] . "'>";
     echo "ชื่อสินค้า <input type='text' name='a2' value='" . $row['ProName'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
+    echo "คำอธิบายสินค้า <input type='text' name='a15' value='" . $row['Description'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
     echo "ราคาต่อหน่วย (บาท) <input type='text' name='a3' value='" . $row['PricePerUnit'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
     echo "จำนวน <input type='text' name='a4' value='" . $row['StockQty'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
     echo "onHand <input disabled type='text' name='a5' value='" . $row['OnHands'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";

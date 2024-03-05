@@ -119,7 +119,7 @@
             <label for="filter">Filter by Name:</label>
             <input type="text" name="filter" id="filter" placeholder="Enter name to filter">
             <!------------------------------------------>
-            <form class="add-user-form" action='stock_insert_form.html' method='post'>
+            <form class="add-user-form" action='stock_insert_form.php' method='post'>
                 <input type='submit' id="addUserButton" value='Add Product'/>
             </form>
             <br>

@@ -130,7 +130,6 @@
         
     </style>
 </head>
-<!-- <?php include('./component/backButton.php'); ?> -->
 <body>
     <?php include('./component/accessNavbar.php')?>
     <div class="container">
@@ -175,8 +174,8 @@
 
 <?php
 function includeInvoice($query) {
-    include_once '../dbConfig.php';
-    $msresults = mysqli_query($conn, $query);
+    $cx =  mysqli_connect("localhost", "root", "", "shopping");
+    $msresults = mysqli_query($cx, $query);
     while ($row = mysqli_fetch_array($msresults)) {
     
         if($row['Status'] == 'Unpaid') {
@@ -205,9 +204,9 @@ function includeInvoice($query) {
 }
 
 function includeOrders($query) {
-    include_once '../dbConfig.php'; 
+    $cx =  mysqli_connect("localhost", "root", "", "shopping");
 
-    $msresults = mysqli_query($conn, $query);
+    $msresults = mysqli_query($cx, $query);
     while ($row = mysqli_fetch_array($msresults)) {
         echo '<div class="order">';
         echo "<div class='icon-container'>
