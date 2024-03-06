@@ -40,8 +40,8 @@
         input[type="text"],
         input[type="number"],
         input[type="tel"],
-        select,
         textarea {
+            resize:none;
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -51,55 +51,46 @@
         }
 
         input[type="submit"],
-        input[type="reset"] {
+        input[type="reset"],
+        #back {
             background-color: #3498db;
             color: #fff;
             padding: 10px 20px;
             border: none;
             cursor: pointer;
             border-radius: 4px;
+            font-size: 12px;
         }
 
         input[type="submit"]:hover,
-        input[type="reset"]:hover {
+        input[type="reset"]:hover,
+        #back:hover {
             background-color: #2980b9;
         }
+        
     </style>
 </head>
 <body>
-    <form method="post" action="customer_insert.php">
-        <h1>ใส่ข้อมูลลูกค้าที่ต้องการ</h1>
-        <label for="a1">ชื่อ:</label>
-        <input type="text" id="a1" name="a1" maxlength="20" required>
-
-        <label for="a2">นามสกุล:</label>
+    <form method="post" action="stock_insert.php">
+        <h1>ใส่ข้อมูลสินค้าที่ต้องการ</h1>
+        <label for="a2">ชื่อสินค้า:</label>
         <input type="text" id="a2" name="a2" maxlength="20" required>
 
-        <label for="a3">เพศ:</label>
-        <select id="a3" name="a3" required>
-            <option selected hidden>select Sex</option>
-            <option value="F">F</option>
-            <option value="M">M</option>
-            <option value="N">None</option>
-        </select>
+        <label for="a5">รายละเอียดสินค้า:</label>
+        <textarea id="a5" name="a5" rows="4" cols="50" required></textarea>
 
-        <label for="a4">ที่อยู่:</label>
-        <textarea id="a4" name="a4" rows="a4" required></textarea>
+        <label for="a3">ราคาต่อหน่วย:</label>
+        <input type="text" id="a3" name="a3" size="1" required>
 
-        <label for="a5">เบอร์โทรศัพท์:</label>
-        <input type="tel" id="a5" name="a5" maxlength="10" required>
-
-        <label for="a6">ชื่อผู้ใช้:</label>
-        <input type="tel" id="a6" name="a6" maxlength="10" required>
-
-        <label for="a7">รหัสผ่าน:</label>
-        <input type="tel" id="a7" name="a7" maxlength="10" required>
+        <label for="a4">จำนวนสินค้า:</label>
+        <input type="text" id="a4" name="a4" size="1" required>
 
         <div style="display:flex; justify-content: center;">
-            <input type='button' value='ยกเลิก' onclick='window.history.back();' style='background-color: red; color: #fff; padding: 10px 20px; border: none; cursor: pointer; margin-right:2rem; border-radius: 4px;'>
-            <input type='submit' value='ยืนยัน' style='background-color: blue; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; margin-right:1rem;'>
+            <a href="stock_index.php" style="text-decoration:none; margin-right: 2rem;">
+                <div id="back" type="back" value="ยกเลิก">ยกเลิก</div>
+            </a>
+            <input type="submit" value="ยืนยัน">
         </div>
     </form>
 </body>
 </html>
-
