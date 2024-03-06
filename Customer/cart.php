@@ -233,8 +233,13 @@
 
                 echo "<div class='buy-button-container'>
                 <form method='post' action='addressForm.php'>
-                    <input type='hidden' name='id_customer' value='$uid'>
-                    <input class='buy-button' type='submit' value='ซื้อสินค้า'>
+                    <input type='hidden' name='id_customer' value='$uid'>";
+                        if ($totalPriceAllItems <= 0){
+                            echo "<input class='buy-button' style='background-color:gray;' type='submit' value='ซื้อสินค้า' disabled>";
+                        }else{
+                            echo "<input class='buy-button' type='submit' value='ซื้อสินค้า'>";
+                        }
+                    "
                 </form>
                 </div>";
             }
@@ -288,8 +293,13 @@
                 echo "<div class='buy-button-container'>
                     <form method='post' action='addressForm.php'>
                         <input type='hidden' name='cart' value='" . json_encode($_SESSION['cart']) . "'>
-                        <input class='buy-button' type='submit' value='ซื้อสินค้า'>
-                    </form>
+                        ";
+                        if ($totalPriceAllItems <= 0){
+                            echo "<input class='buy-button' style='background-color:gray;' type='submit' value='ซื้อสินค้า' disabled>";
+                        }else{
+                            echo "<input class='buy-button' type='submit' value='ซื้อสินค้า'>";
+                        }
+                    "</form>
                 </div>";
             }
              
