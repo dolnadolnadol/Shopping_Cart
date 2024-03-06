@@ -18,10 +18,8 @@ if ($recvID == '') {
         VALUES('$a1', '$a2', '$a3', '$a4', '$a5')");
 
     if ($stmt_receiver_head) {
-        // Get the last inserted ID from the receiver table
         $recvID = mysqli_insert_id($conn);
 
-        // Generate a new NumID for receiver_detail
         $resultDetail = mysqli_query($conn, "SELECT MAX(NumID) AS num_id FROM receiver_detail WHERE RecvID = '$recvID'");
         $row2 = mysqli_fetch_assoc($resultDetail);
         $lastID = $row2['num_id'];
@@ -33,23 +31,48 @@ if ($recvID == '') {
             VALUES('$cusID', '$recvID', '$NumID')");
 
         if (!$stmt_receiver_detail) {
-            echo "มีข้อผิดพลาดในการเพิ่มข้อมูลใน receiver_detail: " . mysqli_error($conn);
+            echo "<script type='text/javascript'>
+                    setTimeout(function(){
+                        alert('Update Fail !');
+                        window.location.href = './customer_index.php';
+                    }, 100);
+                  </script>";
         }
     } else {
-        echo "มีข้อผิดพลาดในการเพิ่มข้อมูลใน receiver: " . mysqli_error($conn);
+        echo "<script type='text/javascript'>
+                    setTimeout(function(){
+                        alert('Update Fail !');
+                        window.location.href = './customer_index.php';
+                    }, 100);
+                  </script>";
     }
 } else {
     $stmt_receiver = mysqli_query($conn, "UPDATE receiver SET Address = '$a5' WHERE RecvID = '$recvID'");
     if (!$stmt_receiver) {
-        echo "มีข้อผิดพลาดในการอัปเดตข้อมูลใน receiver: " . mysqli_error($conn);
+        echo "<script type='text/javascript'>
+                    setTimeout(function(){
+                        alert('Update Fail !');
+                        window.location.href = './customer_index.php';
+                    }, 100);
+                  </script>";
     }
 }
 
 /* check for errors */
 if (!$stmt) {
-    echo "Error";
+    echo "<script type='text/javascript'>
+                    setTimeout(function(){
+                        alert('Update Fail !');
+                        window.location.href = './customer_index.php';
+                    }, 100);
+                  </script>";
 } else {
-    echo "Update data = <font color=red> '$a1' </font> is Successful.";
+    echo "<script type='text/javascript'>
+                    setTimeout(function(){
+                        alert('Update Successfully');
+                        window.location.href = './customer_index.php';
+                    }, 100);
+                  </script>";
 }
 
 /* close connection */

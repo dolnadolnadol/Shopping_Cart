@@ -54,13 +54,5 @@ else {
     }
 }
 
-// echo "<a href='customer_index.php' 
-//     style='
-//     padding: 9px 14px;
-//     color: #ef476f;             
-//     text-decoration: none;
-//     margin-right: 5px;
-//     '>กลับหน้าหลัก</a>";
-
 mysqli_close($conn);
 ?>

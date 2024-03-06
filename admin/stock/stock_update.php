@@ -25,7 +25,7 @@ if (mysqli_num_rows($msresults) > 0) {
 
     echo "<div style='text-align: center;'>";
     echo "⚠️ โปรดตรวจสอบให้แน่ใจว่าคุณต้องการอัปเดตข้อมูล ⚠️<br><br>";
-    echo "<input type='button' value='กลับ' onclick='window.history.back();' style='background-color: red; color: #fff; padding: 10px 20px; border: none; cursor: pointer; margin-right:2rem; border-radius: 4px;'>";
+    echo "<input type='button' value='กลับ' onclick='window.history.back();' style='background-color: gray; color: #fff; padding: 10px 20px; border: none; cursor: pointer; margin-right:2rem; border-radius: 4px;'>";
     echo "<input type='submit' value='ยืนยัน' style='background-color: blue; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px;'>";
     echo "</div>";
     echo "</div>";
