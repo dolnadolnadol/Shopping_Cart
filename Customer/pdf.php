@@ -4,8 +4,6 @@ require_once('./vendor/autoload.php');
 session_start();
 include_once '../dbConfig.php'; 
 
-
-
 if (empty($_POST["id_receive"])) {
     // $receiptCode = $_SESSION['ReceiptCode'];
     $receiptCode = $_POST['id_receive'];
@@ -61,7 +59,7 @@ $pdf->SetAutoPageBreak(true, 20);
 
 $pdf->SetXY(20, 10);
 
-$pdf->Cell(60, 10, 'บริษัท เอสมิติช้อป จำกัด(สำนักงานใหญ่)', 0, 0, 'L');
+$pdf->Cell(60, 10, 'บริษัท พูม่า ฟาสท์เวิร์ค จำกัด(สำนักงานใหญ่)', 0, 0, 'L');
 
 $pdf->SetXY(130, 10);
 
@@ -73,7 +71,7 @@ $pdf->SetFont('sarabun', '', 9);
 
 $pdf->SetXY(20, 15);
 
-$pdf->Cell(60, 10, '999 หมู่ 999 ถ.ฉลองกรุง 9999 แขวงลาดกระบัง', 0, 0, 'L');
+$pdf->Cell(60, 10, '999 หมู่ 999 ถ.ฉลองกรุง 5214 แขวงลาดกระบัง', 0, 0, 'L');
 
 $pdf->SetXY(130, 15);
 
@@ -89,11 +87,11 @@ $pdf->Cell(60, 10, 'ต้นฉบับ', 0, 0, 'C');
 
 $pdf->SetXY(20, 25);
 
-$pdf->Cell(60, 10, 'เลขประจำตัวผู้เสียภาษี 12345678909999', 0, 1, 'L');
+$pdf->Cell(60, 10, 'เลขประจำตัวผู้เสียภาษี 2222222222222', 0, 1, 'L');
 
 $pdf->SetXY(20, 30);
 
-$pdf->Cell(60, 10, 'โทร. 0123456789 อีเมล smiti@test.com', 0, 0, 'L');
+$pdf->Cell(60, 10, 'โทร. 0123456789 อีเมล PUMA@FASTWORK.com', 0, 0, 'L');
 
 $pdf->SetFont('sarabun', '', 10);
 
