@@ -187,9 +187,9 @@ input[type="submit"]:focus{
 
 
             include_once '../dbConfig.php'; 
-            $query_address = "SELECT * FROM receiver 
-            INNER JOIN receiver_detail ON receiver.RecvID = receiver_detail.RecvID  
-            WHERE receiver_detail.CusID = '$uid'";
+            $query_address = "SELECT * FROM address 
+            INNER JOIN customer ON customer.cusId = address.cusId  
+            WHERE address.CusID = '$uid'";
             $result_address = mysqli_query($conn, $query_address);
             if (mysqli_num_rows($result_address) > 0) {
                 // Fetch a single row from the result set
@@ -215,12 +215,12 @@ input[type="submit"]:focus{
                         <!-- Payment form content -->
                         <div class="form-group">
                             <label for="firstname">Reciever First Name: </label>
-                            <input type="text" id="fname" name="fname" value="<?php echo $row['RecvFName'] ?? ''; ?>" required>
+                            <input type="text" id="fname" name="fname" value="<?php echo $row['fname'] ?? ''; ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label for="lasttname">Reciever Last Name: </label>
-                            <input type="text" id="lname" name="lname" value="<?php echo $row['RecvLName'] ?? ''; ?>" required>
+                            <input type="text" id="lname" name="lname" value="<?php echo $row['lname'] ?? ''; ?>" required>
                         </div>
 
                         <div class="form-group">
@@ -246,8 +246,9 @@ input[type="submit"]:focus{
                     </div>";
 
                     if (isset($_POST['id_invoice'])) {
-                        $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM receiver 
-                        INNER JOIN receiver_detail ON receiver.RecvID =  receiver_detail.RecvID WHERE receiver_detail.CusID = '$uid' AND receiver_detail.RecvID = '$recv_id'");
+                        $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM address 
+                        INNER JOIN customer ON customer.cusId = address.cusId  
+                        WHERE address.CusID = '$uid'");
                         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
                         $customerId = $uid;
                         $invoiceId = $_POST['id_invoice'];
@@ -258,7 +259,7 @@ input[type="submit"]:focus{
                     
                         <div class='text-container'>
                             <p><strong>Shipping Address</strong></p>
-                            <p><strong>Name:</strong> {$customerDetails['RecvFName']} {$customerDetails['RecvLName']} </p>
+                            <p><strong>Name:</strong> {$customerDetails['fname']} {$customerDetails['lname']} </p>
                             <p><strong>Tel:</strong> {$customerDetails['Tel']}</p>
                             <div class='address-container'>
                                 <p><strong>Address:</strong> {$customerDetails['Address']}</p>
@@ -267,18 +268,19 @@ input[type="submit"]:focus{
                         
                         <h4><strong>สรุปการคำสั่งซื้อ</strong></h4>";      
                         $totalPriceAllItems = 0;
-                        $invoiceDetailsQuery = mysqli_query($conn, "SELECT * , product.ProName FROM invoice_detail
-                        INNER JOIN product ON product.ProID =  invoice_detail.ProID 
-                        INNER JOIN invoice ON invoice.InvID =  invoice_detail.InvID 
-                        WHERE invoice.InvID  = '$inv'");
+                        $invoiceDetailsQuery = mysqli_query($conn, "SELECT * FROM orderkey
+                        INNER JOIN ordervalue ON ordervalue.orderId =  orderkey.orderId 
+                        INNER JOIN product ON product.proId =  ordervalue.proId 
+                        INNER JOIN customer ON customer.cusId =  orderkey.cusId 
+                        WHERE orderkey.cusId  = '$customerId'");
                      
                         while ($invoiceDetails = mysqli_fetch_array($invoiceDetailsQuery)) {
-                            $totalPrice = $invoiceDetails['PricePerUnit'] * $invoiceDetails['Qty'];
+                            $totalPrice = $invoiceDetails['Price'] * $invoiceDetails['Qty'];
                             $totalPriceAllItems += $totalPrice;
 
                             echo "<div class='text-container'>
-                                <p><strong {$invoiceDetails['ProName']}</strong></p>
-                                <p><strong>฿{$invoiceDetails['PricePerUnit']}</strong>     จำนวน {$invoiceDetails['Qty']} ชิ้น</p>
+                                <p><strong {$invoiceDetails['ProductName']}</strong></p>
+                                <p><strong>฿{$invoiceDetails['Price']}</strong>     จำนวน {$invoiceDetails['Qty']} ชิ้น</p>
                             </div>";                         
                         }
                         

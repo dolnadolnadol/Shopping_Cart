@@ -174,7 +174,7 @@
         $invoiceQuery = mysqli_query($conn, "SELECT invoice.* , invoice_detail.*, product.*
                                            FROM invoice
                                            INNER JOIN invoice_detail ON invoice.InvID = invoice_detail.InvID
-                                           INNER JOIN Product ON invoice_detail.ProID = Product.ProID
+                                           INNER JOIN Product ON invoice_detail.proId = Product.proId
                                            WHERE invoice.CusID = '$customerId' AND invoice_detail.InvID = '$invoiceId'");
     
         $totalPriceAllItems = 0; 
@@ -182,7 +182,7 @@
         $detailsDisplayed = false;
 
         while ($row = mysqli_fetch_array($invoiceQuery)) {
-            $totalPrice = $row['PricePerUnit'] * $row['Qty'];
+            $totalPrice = $row['Price'] * $row['Qty'];
             $totalPriceAllItems += $totalPrice;
 
             $stt = $row['Status'];
@@ -208,9 +208,9 @@
             }
 
             echo "<tr>
-                    <td>{$row['ProName']}</td>
+                    <td>{$row['ProductName']}</td>
                     <td>{$row['Qty']}</td>
-                    <td>{$row['PricePerUnit']} ฿</td>
+                    <td>{$row['Price']} ฿</td>
                     <td>$totalPrice</td>
                   </tr>";
         }

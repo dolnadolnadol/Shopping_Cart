@@ -103,18 +103,18 @@
                         <th>Total Price</th>
                     </tr>
                     <?php
-                        $bestSell_Query = mysqli_query($conn, "SELECT product.ProID, product.ProName, product.Description, product.PricePerUnit, SUM(receive_detail.Qty) AS TotalQty
+                        $bestSell_Query = mysqli_query($conn, "SELECT product.proId, product.ProductName, product.Description, product.Price, SUM(receive_detail.Qty) AS TotalQty
                         FROM product
-                        INNER JOIN receive_detail ON product.ProID = receive_detail.ProID
+                        INNER JOIN receive_detail ON product.proId = receive_detail.proId
                         INNER JOIN receive ON receive_detail.RecID = receive.RecID
                         WHERE DATE(receive.OrderDate) = CURDATE()
-                        GROUP BY product.ProID");
+                        GROUP BY product.proId");
                         while($row = mysqli_fetch_assoc($bestSell_Query)) {
-                            $totalSum = $row['PricePerUnit'] * $row['TotalQty'];
+                            $totalSum = $row['Price'] * $row['TotalQty'];
                             echo "<tr>";
-                            echo "<td>" . $row['ProID'] . "</td>";
-                            echo "<td>" . $row['ProName'] . "</td>";
-                            echo "<td>" . $row['PricePerUnit'] . "</td>";
+                            echo "<td>" . $row['proId'] . "</td>";
+                            echo "<td>" . $row['ProductName'] . "</td>";
+                            echo "<td>" . $row['Price'] . "</td>";
                             echo "<td>" . $row['TotalQty'] . "</td>";
                             echo "<td>" . $totalSum . "</td>";
                             echo "</tr>";
@@ -123,9 +123,9 @@
                 </table>
                 <h1 id='Re'>Revenue</h1>
                     <?php 
-                        $income_Query = mysqli_query($conn, "SELECT SUM(product.PricePerUnit * receive_detail.Qty) AS TotalIncome
+                        $income_Query = mysqli_query($conn, "SELECT SUM(product.Price * receive_detail.Qty) AS TotalIncome
                         FROM product 
-                        INNER JOIN receive_detail ON product.ProID = receive_detail.ProID
+                        INNER JOIN receive_detail ON product.proId = receive_detail.proId
                         INNER JOIN receive ON receive_detail.RecID = receive.RecID
                         WHERE DATE(receive.OrderDate) = CURDATE()");
                         $total_income_row = mysqli_fetch_assoc($income_Query);

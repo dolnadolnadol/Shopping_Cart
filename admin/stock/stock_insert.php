@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }, $uploadedFiles));
 
         
-        $insertQuery = "INSERT INTO product(ProName, Description ,PricePerUnit, StockQty, Photo) 
+        $insertQuery = "INSERT INTO product(ProductName, Description ,Price, Qty, Photo) 
                         VALUES ('$a2', '$a5', '$a3', '$a4', $insertValuesSQL)";
 
         $insertResult = mysqli_query($conn, $insertQuery);

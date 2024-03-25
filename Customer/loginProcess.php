@@ -6,7 +6,8 @@
 
         include_once '../dbConfig.php'; 
 
-        $select_user = "SELECT * FROM customer_account WHERE Username = '$username'";
+        $select_user = "SELECT * FROM account join customer on account.CusID = customer.CusID 
+        where account.Username = '$username';";
         $run_qry = mysqli_query($conn, $select_user);
         if (mysqli_num_rows($run_qry) > 0) {
             while ($row = mysqli_fetch_assoc($run_qry)) {
@@ -16,12 +17,19 @@
                     $uid = $row['CusID'];
                     $_SESSION['status'] = true;
                     $_SESSION['id_username'] = $uid;
+                    $_SESSION['uid'] = $uid;
                     unset($_SESSION['cart']);
-                    header("Location: index.php");
+                    if($row['authority'] == 'admin'){
+                        $_SESSION['auth'] = 'admin';
+                    }
+                    header("Location: ./");
                     exit(); 
 
                 } else {
-                    echo "Password Not match!";
+                    echo "<script>setTimeout(function(){
+                        alert('password does not match.');
+                        window.location.href = './login.php';
+                    }, 100);</script>";
                 }
             }
         }

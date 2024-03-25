@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     if (isset($_SESSION['id_username'])){
-        $updateQuery = "UPDATE cart SET Qty = $newQuantity WHERE CusID = $uid  AND ProID = $productId";
+        $updateQuery = "UPDATE cart SET Qty = $newQuantity WHERE CusID = $uid  AND proId = $productId";
         mysqli_query($conn, $updateQuery);
     }
      /* Process the update logic, for example, update $_SESSION['cart'] */

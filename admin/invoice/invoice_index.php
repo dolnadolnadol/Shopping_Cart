@@ -124,15 +124,15 @@
     
     <?php
     include_once '../../dbConfig.php'; 
-    $cur = "SELECT invoice.* , customer.CusFName , customer.CusLName
+    $cur = "SELECT invoice.* , customer.fname, customer.lname
     FROM 
         invoice
     JOIN
         customer ON invoice.CusID = customer.CusID
     JOIN 
-        invoice_detail ON invoice.InvID = invoice_detail.InvID
+        ordervalue ON invoice.orderId = ordervalue.orderId
     JOIN
-        product ON invoice_detail.ProID = product.proID";
+        product ON ordervalue.proId = product.proId";
 
     $msresults = mysqli_query($conn, $cur);
     echo "<center>";

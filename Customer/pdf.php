@@ -173,7 +173,7 @@ $pdf->Cell(170, 10, "", 'T', 1, 'L');
 
 $sql = "SELECT *
 FROM receive_detail
-JOIN product ON receive_detail.ProID = product.ProID 
+JOIN product ON receive_detail.proId = product.proId 
 WHERE receive_detail.RecID = '$receiptCode'";
 $result = mysqli_query($conn, $sql);
 
@@ -196,20 +196,20 @@ $html = "
 </tr>";
 
 foreach ($orderProducts as $orderProductRow) {
-    $productName = $orderProductRow['ProName'];
+    $productName = $orderProductRow['ProductName'];
     $qty = $orderProductRow['Qty'];
-    $pricePerUnit = $orderProductRow['PricePerUnit'];
-    $total = $orderProductRow['PricePerUnit'] * $orderProductRow['Qty'];
+    $Price = $orderProductRow['Price'];
+    $total = $orderProductRow['Price'] * $orderProductRow['Qty'];
 
     $html .= "<tr>
     <td style='padding-top: 50px'>" . $id . "</td>
     <td style='padding-top: 50px'>" . $productName . "</td>
     <td style='padding-top: 50px'>" . $qty . "</td>
-    <td style='padding-top: 50px'>฿" . $pricePerUnit . "</td>
+    <td style='padding-top: 50px'>฿" . $Price . "</td>
     <td style='padding-top: 50px'>" . $total . " บาท</td>
     </tr>";
 
-    $totalPrice += $orderProductRow['PricePerUnit'] * $orderProductRow['Qty'];
+    $totalPrice += $orderProductRow['Price'] * $orderProductRow['Qty'];
     $id++;
 }
 

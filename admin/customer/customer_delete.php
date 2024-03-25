@@ -7,7 +7,7 @@
         try{
         $stmt_receiver_detail = mysqli_query($conn, "DELETE FROM receiver_detail WHERE CusID='$code'");
         $stmt_receiver = mysqli_query($conn, "DELETE FROM receiver WHERE RecvID='$recvID'");
-        $stmt_account_customer = mysqli_query($conn, "DELETE FROM customer_account WHERE CusID='$code'");
+        $stmt_account_customer = mysqli_query($conn, "DELETE FROM account WHERE CusID='$code'");
         $stmt_customer = mysqli_query($conn, "DELETE FROM customer WHERE CusID='$code'");
         /* check for errors */
         if (!$stmt_receiver_detail || !$stmt_receiver || !$stmt_customer) {

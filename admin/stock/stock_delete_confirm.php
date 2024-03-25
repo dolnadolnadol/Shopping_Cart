@@ -89,17 +89,17 @@
     }
     else {
         $code = $_POST['id_stock'];
-        $cur = "SELECT * FROM product WHERE ProID = '$code'";
+        $cur = "SELECT * FROM product WHERE proId = '$code'";
         $msresults = mysqli_query($conn,$cur);
         if(mysqli_num_rows($msresults) > 0) {
             $row = mysqli_fetch_array($msresults);
             echo "<center>";
             echo "<form method='post' action='stock_delete.php'>";
-            echo "<h2>รหัสสินค้า ". $row['ProID'] ."</h2><br>";
-            echo "<input type='hidden' name='id_stock' value='" . $row['ProID'] . "'>";
-            echo "ชื่อ : {$row['ProName']}<br>";
-            echo "ราคา/ชิ้น : {$row['PricePerUnit']}<br>";
-            echo "จำนวนสินค้า : {$row['StockQty']}<br><br>";
+            echo "<h2>รหัสสินค้า ". $row['proId'] ."</h2><br>";
+            echo "<input type='hidden' name='id_stock' value='" . $row['proId'] . "'>";
+            echo "ชื่อ : {$row['ProductName']}<br>";
+            echo "ราคา/ชิ้น : {$row['Price']}<br>";
+            echo "จำนวนสินค้า : {$row['Qty']}<br><br>";
             echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
             echo "<a href='stock_index.php' 
                     style='

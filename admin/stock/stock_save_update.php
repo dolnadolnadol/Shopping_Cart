@@ -7,8 +7,8 @@
     $a15 = $_POST['a15'];
     $a4 = $_POST['a4'];
 
-    $stmt = mysqli_query($conn, "UPDATE product SET ProName = '$a2', Description = '$a15', PricePerUnit ='$a3', StockQty ='$a4'
-        WHERE ProID ='$a1'");
+    $stmt = mysqli_query($conn, "UPDATE product SET ProductName = '$a2', Description = '$a15', Price ='$a3', Qty ='$a4'
+        WHERE proId ='$a1'");
 
     if (!$stmt) {
         echo "<script type='text/javascript'>

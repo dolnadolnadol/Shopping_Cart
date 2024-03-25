@@ -108,31 +108,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 echo $NumID;
 
-                $resultDetail = mysqli_query($conn, "SELECT invID , ProID , Qty FROM invoice_detail WHERE invID = '$invID' AND NumID = '$NumID'");
+                $resultDetail = mysqli_query($conn, "SELECT invID , proId , Qty FROM invoice_detail WHERE invID = '$invID' AND NumID = '$NumID'");
                 
                 echo mysqli_num_rows($resultDetail);
                
                 if ($resultDetail && mysqli_num_rows($resultDetail) > 0) {
                     $invoice_detail = mysqli_fetch_assoc($resultDetail);
-                    $proID = $invoice_detail['ProID'];
+                    $proId = $invoice_detail['proId'];
                     $Qty = $invoice_detail['Qty'];
                     $invID = $invoice_detail['invID'];
 
                     // Insert invoice_detail record
-                    $stmt = mysqli_query($conn, "INSERT INTO receive_detail (RecID, NumID, ProID, Qty) VALUES ('$RecID', '$NumID', '$proID', '$Qty')");
+                    $stmt = mysqli_query($conn, "INSERT INTO receive_detail (RecID, NumID, proId, Qty) VALUES ('$RecID', '$NumID', '$proId', '$Qty')");
 
                     // Update Status
                     $stmt = mysqli_query($conn, "UPDATE invoice SET Status = 'Paid' WHERE invID ='$invID'");
 
-                    $stmt2 = mysqli_query($conn,"SELECT StockQty from product where ProID = '$proID'");
-                    $stockQtyRow = mysqli_fetch_assoc($stmt2);
-                    $stockQty = $stockQtyRow['StockQty'];
+                    $stmt2 = mysqli_query($conn,"SELECT Qty from product where proId = '$proId'");
+                    $QtyRow = mysqli_fetch_assoc($stmt2);
+                    $Qty = $QtyRow['Qty'];
 
-                    // Update Stock and OnHands
-                    if(isset($_SESSION['guest']) && ($stockQty-$Qty) >= 0 ){
-                        $stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty - '$Qty', OnHands = OnHands WHERE ProID ='$proID'");
-                    } else if(($stockQty-$Qty) >= 0) {
-                        $stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty - '$Qty', OnHands = OnHands - '$Qty' WHERE ProID ='$proID'");
+                    // Update Stock and OnHand
+                    if(isset($_SESSION['guest']) && ($Qty-$Qty) >= 0 ){
+                        $stmt = mysqli_query($conn, "UPDATE product SET Qty = Qty - '$Qty', OnHand = OnHand WHERE proId ='$proId'");
+                    } else if(($Qty-$Qty) >= 0) {
+                        $stmt = mysqli_query($conn, "UPDATE product SET Qty = Qty - '$Qty', OnHand = OnHand - '$Qty' WHERE proId ='$proId'");
                     }
                 } else {
                     // No more matching records found, break the loop

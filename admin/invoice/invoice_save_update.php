@@ -6,7 +6,7 @@
         $InvID = $_POST['InvID'];
         $RecvID = $_POST['id_receiver'];
         $Qty = $_POST['Qty'];
-        $ProID = $_POST['ProID'];
+        $proId = $_POST['proId'];
      
         $totalPrice = $_POST['totalProductPrice'];
         $cusID = $_POST['customerName'];
@@ -16,7 +16,7 @@
         echo $totalPrice;
         echo $cusID;
         echo $status;
-        print_r($ProID);
+        print_r($proId);
         echo $InvID;
 
         /* Receiver */
@@ -44,30 +44,30 @@
         
         }
 
-        if (count($ProID) == count($Qty)) {
-                $totalItems = count($ProID);
+        if (count($proId) == count($Qty)) {
+                $totalItems = count($proId);
             
                 for ($i = 0; $i < $totalItems; $i++) {
-                    $proID = $ProID[$i];
+                    $proId = $proId[$i];
                     $qty = $Qty[$i];
 
-                    $cur = "SELECT * FROM invoice_detail WHERE InvID = '$InvID' AND ProID ='$proID'";
+                    $cur = "SELECT * FROM invoice_detail WHERE InvID = '$InvID' AND proId ='$proId'";
                     $msresults = mysqli_query($conn, $cur);
                     $row = mysqli_fetch_assoc($msresults);
                     $oldQty = $row['Qty'];
-                    $stmt = mysqli_query($conn, "UPDATE product SET OnHands = OnHands - '$oldQty' WHERE ProID ='$proID'");
+                    $stmt = mysqli_query($conn, "UPDATE product SET OnHand = OnHand - '$oldQty' WHERE proId ='$proId'");
 
-                    // Update Stock and OnHands
-                    $stmt = mysqli_query($conn, "UPDATE product SET OnHands = OnHands + '$qty' WHERE ProID ='$proID'");
+                    // Update Stock and OnHand
+                    $stmt = mysqli_query($conn, "UPDATE product SET OnHand = OnHand + '$qty' WHERE proId ='$proId'");
 
                     $stmt = mysqli_query($conn, "UPDATE invoice_detail SET Qty = '$qty'
-                    WHERE ProID ='$proID' AND InvID ='$InvID'");
+                    WHERE proId ='$proId' AND InvID ='$InvID'");
 
 
-                    echo "ProID: $proID, Qty: $qty<br>";
+                    echo "proId: $proId, Qty: $qty<br>";
                 }
         } else {
-            echo "ขนาดของอาร์เรย์ ProID และ Qty ไม่เท่ากัน";
+            echo "ขนาดของอาร์เรย์ proId และ Qty ไม่เท่ากัน";
         }             
         }
         

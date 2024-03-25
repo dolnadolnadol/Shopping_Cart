@@ -5,26 +5,24 @@
         $username = $_POST['username'];
         $password = $_POST['password'];
 
-        $select_user = "SELECT * FROM customer_account WHERE Username = '$username'";
-        $run_qry = mysqli_query($conn, $select_user);
-        if (mysqli_num_rows($run_qry) > 0) {
-            while ($row = mysqli_fetch_assoc($run_qry)) {
-                if (password_verify($password, $row['Password'])) {
-                    echo "Password match!";
-                    $user = $row['Username'];
-                    $uid = $row['CusID'];
-                    $_SESSION['status'] = true;
-                    $_SESSION['id_username'] = $uid;
-                    unset($_SESSION['cart']);
-                    header("Location: index.php");
-                    exit(); 
+        // $select_user = "SELECT * FROM account WHERE Username = '$username'";
+        // $run_qry = mysqli_query($conn, $select_user);
+        // if (mysqli_num_rows($run_qry) > 0) {
+        //     while ($row = mysqli_fetch_assoc($run_qry)) {
+        //         if (password_verify($password, $row['Password'])) {
+        //             echo "Password match!";
+        //             $user = $row['Username'];
+        //             $uid = $row['CusID'];
+        //             $_SESSION['status'] = true;
+        //             $_SESSION['id_username'] = $uid;
+        //             unset($_SESSION['cart']);
+        //             header("Location: ./index.php");
 
-                } else {
-                    echo "Password Not match!";
-                }
-            }
-        }
-        else if($username == 'admin' && $password == '123456'){
+        //         } 
+        //     }
+        // }
+        // else 
+        if($username == 'admin' && $password == '123456'){
             $_SESSION['status'] = true;
             header("Location: ../admin/dashboard/dashboard.php");
         }

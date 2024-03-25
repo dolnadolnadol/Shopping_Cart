@@ -172,15 +172,15 @@
                         $showTotal = 0.0;
                         $showVat = 0.0;
                         $result = mysqli_query($conn, " SELECT invoice_detail.* , Product.*,
-                            invoice_detail.Qty * Product.PricePerUnit AS TotalPrice
+                            invoice_detail.Qty * Product.Price AS TotalPrice
                             FROM invoice_detail 
-                            INNER JOIN Product ON invoice_detail.ProID = Product.ProID WHERE invoice_detail.InvID = '$InvID'");
+                            INNER JOIN Product ON invoice_detail.proId = Product.proId WHERE invoice_detail.InvID = '$InvID'");
                         while ($row = mysqli_fetch_assoc($result)) {
-                            echo "<input type='hidden' name='ProID[]' value={$row['ProID']}";
+                            echo "<input type='hidden' name='proId[]' value={$row['proId']}";
                             echo "<tr>
-                                    <td>{$row['ProName']}</td>
+                                    <td>{$row['ProductName']}</td>
                                     <td><input type='text' name='Qty[]' value='{$row['Qty']}' class='quantity-input'></td>
-                                    <td>{$row['PricePerUnit']}</td>
+                                    <td>{$row['Price']}</td>
                                     <td class='total-price'>{$row['TotalPrice']}</td>
                                   </tr>
                                   ";
@@ -221,8 +221,8 @@
 
             function updateTotalPrice(row) {
                 var quantity = parseInt(row.find('.quantity-input').val());
-                var pricePerUnit = parseFloat(row.find('td:eq(2)').text());
-                var totalPrice = quantity * pricePerUnit;
+                var Price = parseFloat(row.find('td:eq(2)').text());
+                var totalPrice = quantity * Price;
 
                 row.find('.total-price').text(totalPrice.toFixed(2));
 

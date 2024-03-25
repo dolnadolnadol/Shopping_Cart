@@ -146,7 +146,7 @@
             echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['CusID']}'></td>
                     <td>{$row['CusID']}</td>
-                    <td>{$row['CusFName']} {$row['CusLName']}</td>
+                    <td>{$row['fname']} {$row['lname']} </td>
                     <td>{$row['Sex']}</td>
                     <td>{$row['Tel']}</td>
                     <td class='action-buttons'>

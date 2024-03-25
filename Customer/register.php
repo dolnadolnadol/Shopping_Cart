@@ -5,123 +5,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-        *{
-            font-family: Sans-serif;
-        }
-        .font-login {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 50px;
-            color: #333;
-            margin-bottom: -10px;
+        * {
+            font-family: Arial, sans-serif;
+            box-sizing: border-box;
         }
 
-        .body-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        body {
             margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
         }
 
         .container {
-            background-color: #f4f4f4;
-            padding: 50px 150px;
+            background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
         }
 
         form {
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
         label {
             margin-bottom: 8px;
-            color: #333;
-            align-self: flex-start;
+            color: #555;
         }
 
         input {
-            margin-bottom: 16px;
-            padding: 8px;
-            width: 250px;
-            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
             border-radius: 4px;
+            transition: border-color 0.3s;
         }
 
         input[type="submit"] {
             background-color: #3498db;
             color: #fff;
             cursor: pointer;
-            width: 150px;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 0;
+            transition: background-color 0.3s;
         }
 
-        /* Add styles for radio buttons and labels */
-        /* input[type="radio"] {
-            display: none;
-        } */
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        /* Styles for radio buttons and labels */
+        .radio-group {
+            margin-bottom: 20px;
+            display: flex !important;
+        }
 
         .radio-label {
-            display: flex;
-            align-items: center;
+            display: inline-block;
+            margin-right: 20px;
+            color: #555;
             cursor: pointer;
         }
 
         .radio-input {
-            margin-right: 10px;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #333;
-            border-radius: 50%;
-            outline: none;
-            cursor: pointer;
+            margin-right: 5px;
+            background-color: blue;
         }
 
-        .radio-input:checked {
-            background-color: #06D6B1;
-            border-color: #06D6B1;
+        .radio-input:checked + .radio-label {
+            color: #333;
         }
 
-        .main-container {
-            margin-top:-50px;
+        /* Responsive styles */
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <?php include('./component/backLogin.php')?>
-    <div class="main-container">
-        <div class="body-container">
-            <div class="container">
-            <div class="font-login">
-                <p>Register</p>
-            </div>
-            <form method="post" action="registerProcess.php">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-                
-                <label for="first name">Frist name</label>
-                <input type="text" id="frist name" name="fname" required>
-                <label for="last name">Last name</label>
-                <input type="text" id="last name" name="lname" required>
+    <div class="container">
+        <h2>Register</h2>
+        <form method="post" action="registerProcess.php">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" required>
 
-                <label for="tel">Tel</label>
-                <input type="tel" id="tel" name="tel" required>
-                
-                <label class="radio-label">
-                    <input type="radio" class="radio-input" name="sex" value="M"> Male
-                </label>   
-                <label class="radio-label">
-                    <input type="radio" class="radio-input" name="sex" value="F"> Female
-                </label>
-                <input type="submit" value="ลงทะเบียน">
-            </form>          
-        </div>
-    </div>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="fname">First Name</label>
+            <input type="text" id="fname" name="fname" required>
+
+            <label for="lname">Last Name</label>
+            <input type="text" id="lname" name="lname" required>
+
+            <label for="tel">Tel</label>
+            <input type="text" id="tel" name="tel" required>
+
+            <label>Gender</label>
+            <div class="radio-group">
+                <input type="radio" id="male" class="radio-input" name="sex" value="M" required>
+                <label for="male" class="radio-label">Male</label>
+
+                <input type="radio" id="female" class="radio-input" name="sex" value="F">
+                <label for="female" class="radio-label">Female</label>
+            </div>
+            
+            <input type="submit" value="Register">
+        </form>
     </div>
 </body>
 </html>

@@ -83,18 +83,18 @@
             echo $lastID."    ".$numericPart."    ".$newNumericPart."    ".$NumID;
             echo "SELECT MAX(NumID) AS num_id FROM invoice_detail WHERE InvID = '$InvID'";
             
-            $proID = $product['productId'];
+            $proId = $product['productId'];
             $Qty = $product['quantity'];
             
         
             // Insert invoice_detail record
-            $stmt = mysqli_query($conn, "INSERT INTO invoice_detail (InvID, NumID, ProID, Qty) VALUES ('$InvID', '$NumID', '$proID', '$Qty')");
+            $stmt = mysqli_query($conn, "INSERT INTO invoice_detail (InvID, NumID, proId, Qty) VALUES ('$InvID', '$NumID', '$proId', '$Qty')");
 
             // Update Status
             // $stmt = mysqli_query($conn, "UPDATE invoice_detail SET Status = 'Paid' WHERE invID ='$invID'");
 
-            // Update Stock and OnHands
-            $stmt = mysqli_query($conn, "UPDATE product SET OnHands = OnHands + '$Qty' WHERE ProID ='$proID'");
+            // Update Stock and OnHand
+            $stmt = mysqli_query($conn, "UPDATE product SET OnHand = OnHand + '$Qty' WHERE proId ='$proId'");
                
         }
         header( "location: ./invoice_index.php");  

@@ -122,9 +122,9 @@ include('./component/getFunction/getName.php'); ?>
             $uid = $_SESSION['id_username'];
 
             include_once '../dbConfig.php'; 
-            $query_address = "SELECT * FROM receiver 
-            INNER JOIN receiver_detail ON receiver.RecvID = receiver_detail.RecvID  
-            WHERE receiver_detail.CusID = '$uid'";
+            $query_address = "SELECT * FROM address 
+            INNER JOIN customer ON customer.CusId = address.CusId  
+            WHERE address.CusID = '$uid'";
             $result_address = mysqli_query($conn, $query_address);
             if (mysqli_num_rows($result_address) > 0) {
                 // Fetch a single row from the result set
@@ -147,16 +147,16 @@ include('./component/getFunction/getName.php'); ?>
                 <!-- Shipping form content -->
                 <div class="form-group">
                     <label for="fullname">First Name</label>
-                    <input type="text" id="fullname" name="fname" value="<?php echo $row['RecvFName'] ?? ''; ?>"
+                    <input type="text" id="fullname" name="fname" value="<?php echo $row['fname'] ?? ''; ?>"
                         required>
                     <label for="lastname">Last Name</label>
-                    <input type="text" id="lastname" name="lname" value="<?php echo $row['RecvLName'] ?? ''; ?>"
+                    <input type="text" id="lastname" name="lname" value="<?php echo $row['lname'] ?? ''; ?>"
                         required>
-                    <label for="tel">Tel<span>*</span></label>
+                    <label for="tel">Tel</label>
                     <input required type="tel" name="tel" value="<?php echo $row['Tel'] ?? ''; ?>">
                     <label for="address">Address</label>
                     <textarea style="resize:none;" name="address" id="address" rows="3"
-                        required><?php echo $row['Address'] ?? ''; ?></textarea>
+                        required><?php echo ($row['Address'] ?? '') .' ' . ($row['Province'] ?? '') . ' ' . ($row['City'] ?? '') . ' ' . ($row['PostalCode'] ?? '') ; ?></textarea>
                 </div>
 
                 <!-- <button class="checkout-button" onclick="submit()">Next to Payment</button> -->

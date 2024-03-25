@@ -7,48 +7,53 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f8f9fa;
             margin: 0;
             padding: 20px;
         }
 
-        center {
-            display: flex;
-            justify-content: center;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            padding-top: 5rem;
         }
 
         .product-container {
-            width: 100%;
-            max-width: 1550px;
+            /* background-color: red; */
             display: flex;
             flex-wrap: wrap;
+            /* justify-content: space-between; */
             margin-top: 35px;
         }
 
         .product-card {
-            border: 1px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 10px;
-            flex: 0 1 calc(18% - 20px);
-            padding: 10px;
-            text-align: center;
+            width: 15%;
+            margin-bottom: 20px;
+            margin-right: 5rem;
+            padding: 20px;
             background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
+            border-radius: 8px;
         }
 
         .product-card:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         .product-image {
-            width: 60px;
-            height: 60px;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
             margin-bottom: 10px;
         }
 
         .product-name {
             font-weight: bold;
             margin-bottom: 5px;
+            color: #333;
         }
 
         .product-price {
@@ -62,6 +67,8 @@
             padding: 8px 16px;
             border: none;
             cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
         }
 
         .buy-button:hover {
@@ -72,7 +79,7 @@
 <body>
     <?php include('./component/session.php');?>
     <?php include('./component/accessNavbar.php');?>
-    <center>
+    <div class="container">
         <div class="product-container">
             <?php
                 include_once '../dbConfig.php';
@@ -83,10 +90,10 @@
                     echo "<div class='product-card'>";
                     include('./component/showPhotos.php');
                                 echo "
-                                <p class='product-name'>{$row['ProName']}</p>
-                                <p class='product-price'>ราคา {$row['PricePerUnit']}</p>
+                                <p class='product-name'>{$row['ProductName']}</p>
+                                <p class='product-price'>ราคา {$row['Price']}</p>
                                 <form method='post' action='detailProduct.php'>
-                                    <input type='hidden' name='id_product' value='{$row['ProID']}'>
+                                    <input type='hidden' name='id_product' value='{$row['proId']}'>
                                     <input class='buy-button' type='submit' value='ซื้อสินค้า'>
                                 </form>
                         </div>";
@@ -97,7 +104,6 @@
                 }
             ?>
         </div>
-    </center>
+    </div>
 </body>
 </html>
-

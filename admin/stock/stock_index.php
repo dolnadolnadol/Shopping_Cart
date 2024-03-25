@@ -139,7 +139,7 @@
                 <th>ID</th>
                 <th>ProductName</th>
                 <th>ProductPerUnit</th>
-                <th>StockQty</th>
+                <th>Qty</th>
                 <th>Action</th>
             </tr>";
 
@@ -147,18 +147,18 @@
         while ($row = mysqli_fetch_array($msresults)) {
             /* class='user-row' */
             echo "<tr class='user-row'>
-                    <td><input type='checkbox' name='checkbox[]' value='{$row['ProID']}'></td>
-                    <td>{$row['ProID']}</td>
-                    <td>{$row['ProName']}</td>
-                    <td>{$row['PricePerUnit']}</td>
-                    <td>{$row['StockQty']}</td>
+                    <td><input type='checkbox' name='checkbox[]' value='{$row['proId']}'></td>
+                    <td>{$row['proId']}</td>
+                    <td>{$row['ProductName']}</td>
+                    <td>{$row['Price']}</td>
+                    <td>{$row['Qty']}</td>
                     <td>
                         <form class='action-button' action='stock_update.php' method='post' style='display: inline-block;'>  
-                            <input type='hidden' name='id_stock' value={$row['ProID']}>
+                            <input type='hidden' name='id_stock' value={$row['proId']}>
                             <input type='image' alt='update' src='../img/pencil.png'/>
                         </form>
                         <form class='action-button' action='stock_delete_confirm.php' method='post' style='display: inline-block;'>
-                            <input type='hidden' name='id_stock' value={$row['ProID']}>
+                            <input type='hidden' name='id_stock' value={$row['proId']}>
                             <input type='image' alt='delete' src='../img/trash.png'/>
                         </form>
                     </td>

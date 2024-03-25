@@ -130,9 +130,9 @@
 
     <?php
     include_once '../../dbConfig.php'; 
-    $cur = "SELECT * FROM receive 
-    INNER JOIN customer ON customer.CusID = receive.CusID
-    INNER JOIN receive_detail ON receive_detail.RecID = receive.RecID";
+    $cur = "SELECT * FROM orderkey 
+    INNER JOIN customer ON customer.cusID = orderkey.CusID
+    INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId";
     $msresults = mysqli_query($conn, $cur);
 
     echo "<center>";
@@ -152,14 +152,13 @@
     $index = 1;
     if (mysqli_num_rows($msresults) > 0) {
         while ($row = mysqli_fetch_array($msresults)) {
-
             echo "<tr class='user-row'>
-                    <td><input type='checkbox' name='checkbox[]' value='{$row['RecID']}'></td>
-                    <td>{$row['RecID']}</td>
-                    <td>{$row['CusFName']} {$row['CusLName']}</td>
+                    <td><input type='checkbox' name='checkbox[]' value='{$row['orderId']}'></td>
+                    <td>{$row['cusID']}</td>
+                    <td>{$row['Name']}</td>
                     <td>{$row['TotalPrice']}</td>
-                    <td>{$row['OrderDate']}</td>
-                    <td>{$row['DeliveryDate']}</td>";
+                    <td>{$row['orderCreate']}</td>
+                    <td>{$row['DeliDate']}</td>";
 
 
                     echo "<td>";

@@ -4,7 +4,7 @@
     if (isset($_POST['id_stock'])){
         try{
         $code = $_POST['id_stock'];
-        $stmt = mysqli_query($conn,"DELETE FROM product WHERE ProID ='$code'");
+        $stmt = mysqli_query($conn,"DELETE FROM product WHERE proId ='$code'");
         if (!$stmt) { 
             echo "<script type='text/javascript'>
                     setTimeout(function(){
@@ -31,7 +31,7 @@
         foreach ($codesArray as $code) {
             try{
             $code = mysqli_real_escape_string($conn, $code);
-            $stmt = mysqli_query($conn, "DELETE FROM product WHERE ProID ='$code'");
+            $stmt = mysqli_query($conn, "DELETE FROM product WHERE proId ='$code'");
     
             /* check for errors */
             if (!$stmt) {

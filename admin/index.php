@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    if(isset($_SESSION['auth'])){
+        echo $_SESSION['auth'];
+        header('Location: ./dashboard/dashboard.php');
+        exit();
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

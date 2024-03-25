@@ -161,6 +161,7 @@
         .close-button:hover {
             background-color: #2980b9;
         }
+        
     </style>
 </head>
 <script>
@@ -198,10 +199,10 @@
 <?php
 include_once '../dbConfig.php'; 
 $code = $_POST['id_product'];
-$cur = "SELECT * FROM product WHERE ProID = $code ";
+$cur = "SELECT * FROM product WHERE proId = $code ";
 $msresults = mysqli_query($conn, $cur);
 $row = mysqli_fetch_array($msresults);
-$onHandStock = $row['StockQty'] - $row['OnHands'];
+$OnHandtock = $row['Qty'] - $row['OnHand'];
 $imageURL = '../admin/UploadImg/'.$row["Photo"];
 echo " <div class='container-body'>
             <div class='container-1'>
@@ -219,14 +220,14 @@ echo " <div class='container-body'>
                 </div>
             </div>
             <div class='container-2'>
-                <p><strong>{$row['ProName']}</strong></p>
+                <p><strong>{$row['ProductName']}</strong></p>
                 <p style='font-size:20px;'>
                     {$row['Description']}
                 </p>
-                <p style='font-size:30px;'>ราคา: {$row['PricePerUnit']} บาท</p>
-                <p style='font-size:20px; color:red;'>จำนวนในสต็อก: {$onHandStock}</p>
+                <p style='font-size:30px;'>ราคา: {$row['Price']} บาท</p>
+                <p style='font-size:20px; color:red;'>จำนวนในสต็อก: {$OnHandtock}</p>
                 <form method='post' action='accessCart.php' classname='buy-button'>
-                    <input type='hidden' name='id_product' value='{$row['ProID']}'>  
+                    <input type='hidden' name='id_product' value='{$row['proId']}'> 
                     <div class='button-increase'>
                         <button type='button' id='change-amount' onclick='decrementAmount()'>-</button>    
                         <input type='text' name='amount' id='amount' value='1' readonly>
@@ -234,7 +235,7 @@ echo " <div class='container-body'>
                     </div>
                     <br><br>
                     ";
-                    if ($onHandStock <= 0) {
+                    if ($OnHandtock <= 0) {
                         echo "<input class='buy-button' type='submit' style='background-color:gray;' name='add_to_cart' value='เพิ่มลงตะกร้า' disabled>";
                     }else {
                         echo "<input class='buy-button' type='submit' name='add_to_cart' value='เพิ่มลงตะกร้า'>";
