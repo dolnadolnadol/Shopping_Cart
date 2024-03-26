@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    if(!isset($_SESSION['auth']) || ($_SESSION['auth'] !== 'product-admin' && $_SESSION['auth'] !== 'permissions-admin' && $_SESSION['auth'] !== 'super-admin')) {
+        header("Location: ../notHavePage.php");
+        exit;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,7 +46,7 @@
         }
 
         li a {
-            display: block;
+            display: none;
             color: white;
             text-align: center;
             padding: 14px 16px;
@@ -92,16 +100,29 @@
 <body>
     <nav>
         <ul>
-            <li><a class="a" href="../dashboard/dashboard.php">Dashboard</a></li>
-            <li><a class="a" href="../customer/customer_index.php">Customer</a></li>
-            <li><a class="a" href="../stock/stock_index.php">Stock</a></li>
-            <li><a class="a" href="../invoice/invoice_index.php">Invoice</a></li>
-            <li><a class="a" href="../order/order_index.php">Order</a></li>
-            <li><a class="a" href="../summary/summaryReport.php">Summary</a></li>
-            <li><a class="a" href="../log/log_index.php?page=1">AccessLog</a></li>
-            <li class="nav-right"><a class="a" href="../login.php">Logout</a></li>
+            <li><a class="a" id="dashboard" href="../dashboard/dashboard.php">Dashboard</a></li>
+            <li><a class="a" id="customer" href="../customer/customer_index.php">Customer</a></li>
+            <li><a class="a" id="stock" href="../stock/stock_index.php">Stock</a></li>
+            <li><a class="a" id="invoice" href="../invoice/invoice_index.php">Invoice</a></li>
+            <li><a class="a" id="order" href="../order/order_index.php">Order</a></li>
+            <li><a class="a" id="summary" href="../summary/summaryReport.php">Summary</a></li>
+            <li><a class="a" id="log" href="../log/log_index.php?page=1">AccessLog</a></li>
+            <li class="nav-right"><a class="a" id="logout" href="../login.php">Logout</a></li>
         </ul>
     </nav>
 </body>
-
 </html>
+<script>
+    <?php if ($_SESSION['auth'] == 'product-admin') : ?>
+        document.getElementById("stock").style.display = "inline-block";
+        document.getElementById("invoice").style.display = "inline-block";
+        document.getElementById("order").style.display = "inline-block";
+    <?php elseif ($_SESSION['auth'] == 'permissions-admin') : ?>
+        document.getElementById("customer").style.display = "inline-block";
+    <?php elseif ($_SESSION['auth'] == 'super-admin') : ?>
+        document.getElementById("dashboard").style.display = "inline-block";
+        document.getElementById("summary").style.display = "inline-block";
+        document.getElementById("log").style.display = "inline-block";
+    <?php endif; ?>
+    document.getElementById("logout").style.display = "inline-block"; // This should be outside any condition
+</script>

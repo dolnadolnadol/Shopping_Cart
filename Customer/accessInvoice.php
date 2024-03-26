@@ -33,9 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //Manage user for receive
         $new_fname = $_POST['fname'];
         $new_lname = $_POST['lname'];
-        $new_tel = $_POST['tel'];
+        $new_tel = $_POST['Tel'];
         $new_address = $_POST['address'];
-        //kuy
+
         $select_query_head = "SELECT * FROM receiver 
         INNER JOIN receiver_detail ON receiver_detail.RecvID = receiver.RecvID 
         WHERE receiver_detail.CusID = '$uid' 

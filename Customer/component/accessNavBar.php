@@ -138,7 +138,7 @@
     }
 </style>
 <script>
-    <?php if (isset($_SESSION['auth']) && $_SESSION['auth'] == 'admin') : ?>
+    <?php if (isset($_SESSION['auth']) && ($_SESSION['auth'] == 'product-admin' || $_SESSION['auth'] == 'permissions-admin' || $_SESSION['auth'] == 'super-admin')) : ?>
         document.getElementById("admin").style.display = "inline-block";
     <?php endif; ?>
 </script>

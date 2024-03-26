@@ -19,8 +19,14 @@
                     $_SESSION['id_username'] = $uid;
                     $_SESSION['uid'] = $uid;
                     unset($_SESSION['cart']);
-                    if($row['authority'] == 'admin'){
-                        $_SESSION['auth'] = 'admin';
+                    if($row['authority'] == 'product-admin'){
+                        $_SESSION['auth'] = 'product-admin';
+                    }
+                    if($row['authority'] == 'permissions-admin'){
+                        $_SESSION['auth'] = 'permissions-admin';
+                    }
+                    if($row['authority'] == 'super-admin'){
+                        $_SESSION['auth'] = 'super-admin';
                     }
                     header("Location: ./");
                     exit(); 
@@ -32,11 +38,7 @@
                     }, 100);</script>";
                 }
             }
-        }
-        // else if($username == 'admin' && $password == '123456'){
-        //     header("Location: ../admin/dashboard/dashboard.php");
-        // }
-        else {
+        } else {
             header("Location: ./login.php");
         }
          
