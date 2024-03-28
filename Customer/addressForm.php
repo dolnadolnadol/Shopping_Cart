@@ -116,7 +116,7 @@ include('./component/getFunction/getName.php'); ?>
 </head>
 
 <body>
-    <form id="profileForm" method="post" action="accessInvoice.php">
+    <form id="profileForm" method="post" action="addOrder.php">
         <?php
         if (isset($_SESSION['id_username'])) {
             $uid = $_SESSION['id_username'];
@@ -152,13 +152,25 @@ include('./component/getFunction/getName.php'); ?>
                         required>
                     <label for="tel">Tel</label>
                     <input required type="tel" name="tel" value="<?php echo $row['Tel'] ?? ''; ?>">
+                    <p>
+                        Address For Song Kong AHHH
+                    </p>
                     <label for="address">Address</label>
+                    <input required type="text" name="address" value="<?php echo $row['Address'] ?? ''; ?>">
+                    <label for="province">Province</label>
+                    <input required type="text" name="province" value="<?php echo $row['Province'] ?? ''; ?>">
+                    <label for="city">City</label>
+                    <input required type="text" name="city" value="<?php echo $row['City'] ?? ''; ?>">
+                    <label for="postalcode">PostalCode</label>
+                    <input required type="text" name="postalcode" value="<?php echo $row['PostalCode'] ?? ''; ?>">
+
+                    <!-- <label for="address">Address</label>
                     <textarea style="resize:none;" name="address" id="address" rows="3"
-                        required><?php echo ($row['Address'] ?? '') .' ' . ($row['Province'] ?? '') . ' ' . ($row['City'] ?? '') . ' ' . ($row['PostalCode'] ?? '') ; ?></textarea>
+                        required><?php echo ($row['Address'] ?? '') .' ' . ($row['Province'] ?? '') . ' ' . ($row['City'] ?? '') . ' ' . ($row['PostalCode'] ?? '') ; ?></textarea> -->
                 </div>
 
                 <!-- <button class="checkout-button" onclick="submit()">Next to Payment</button> -->
-                <input type='submit'>
+                <input type='submit' value="Place your order">
 
                 <!-- ตรวจสอบว่าเป็น Guest หรือ User และแสดงปุ่ม 'ชำระเงิน' ตามเงื่อนไข -->
                 <?php if (isset($_SESSION['cart'])): ?>
