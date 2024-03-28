@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2024 at 07:44 PM
+-- Generation Time: Mar 28, 2024 at 10:17 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -65,7 +65,20 @@ CREATE TABLE `address` (
 --
 
 INSERT INTO `address` (`AddrId`, `Address`, `Province`, `City`, `PostalCode`, `CusId`) VALUES
-(4, 'hel', 'province', 'city', '121587', 22);
+(4, 'hel', 'province', 'city', '121587', 22),
+(5, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24),
+(6, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24),
+(7, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24),
+(8, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24),
+(9, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24),
+(10, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24),
+(11, 'addressTest', 'Provincetest', 'CityBanckok', '13455', 22),
+(12, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24),
+(13, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24),
+(14, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24),
+(15, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24),
+(16, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24),
+(17, 'heladmin', 'provinceadmin', 'cityadmin', '121587', 24);
 
 -- --------------------------------------------------------
 
@@ -78,6 +91,13 @@ CREATE TABLE `cart` (
   `ProId` int(10) NOT NULL,
   `Qty` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`cusId`, `ProId`, `Qty`) VALUES
+(22, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -127,8 +147,19 @@ CREATE TABLE `orderdelivery` (
   `statusDeli` varchar(255) NOT NULL,
   `addrId` int(10) NOT NULL,
   `Name` varchar(255) NOT NULL,
-  `Tel` varchar(25) NOT NULL
+  `Tel` varchar(25) NOT NULL,
+  `TotalPrice` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orderdelivery`
+--
+
+INSERT INTO `orderdelivery` (`DeliId`, `DeliDate`, `statusDeli`, `addrId`, `Name`, `Tel`, `TotalPrice`) VALUES
+(8, NULL, 'PREPARE', 14, 'admin  admin', '00000', 535),
+(9, NULL, 'PREPARE', 15, 'admin  admin', '00000', 535),
+(10, NULL, 'PREPARE', 16, 'admin  admin', '00000', 535),
+(11, NULL, 'PREPARE', 17, 'admin  admin', '00000', 214);
 
 -- --------------------------------------------------------
 
@@ -149,7 +180,10 @@ CREATE TABLE `orderkey` (
 --
 
 INSERT INTO `orderkey` (`orderId`, `orderCreate`, `PaymentStatus`, `cusId`, `DeliId`) VALUES
-(1, '2024-03-23 03:27:40', 'Unpaid', 22, NULL);
+(17, '2024-03-28 00:48:05', 'Pending', 24, 8),
+(18, '2024-03-28 00:52:58', 'Pending', 24, 9),
+(19, '2024-03-28 01:10:25', 'Pending', 24, 10),
+(20, '2024-03-28 01:13:09', 'Pending', 24, 11);
 
 -- --------------------------------------------------------
 
@@ -160,9 +194,21 @@ INSERT INTO `orderkey` (`orderId`, `orderCreate`, `PaymentStatus`, `cusId`, `Del
 CREATE TABLE `ordervalue` (
   `orderId` int(10) NOT NULL,
   `ProId` int(10) NOT NULL,
-  `Qty` int(255) NOT NULL,
-  `TotalPrice` int(255) NOT NULL
+  `Qty` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ordervalue`
+--
+
+INSERT INTO `ordervalue` (`orderId`, `ProId`, `Qty`) VALUES
+(17, 1, 3),
+(17, 3, 1),
+(18, 1, 3),
+(18, 3, 1),
+(19, 1, 3),
+(19, 3, 1),
+(20, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -188,8 +234,8 @@ CREATE TABLE `product` (
 
 INSERT INTO `product` (`proId`, `ProductName`, `Description`, `cost`, `Price`, `Qty`, `onHand`, `typeId`, `Photo`) VALUES
 (1, 'เครื่องนวดเท้า', 'นวดวันนี้สบายวันหน้า', 50, 100, 100, 5, 1, '../UploadImg/uploads/423036594_1095115421802957_7894252630182466833_n.jpg'),
-(2, 'เครื่องนวดเท้า', 'นวดวันนี้สบายวันหน้า', 50, 100, 100, 29, 1, '../UploadImg/uploads/423036594_1095115421802957_7894252630182466833_n.jpg'),
-(3, 'ทดสอบๆ', 'rr', 0, 200, 20, 14, NULL, '../UploadImg/uploads/423036594_1095115421802957_7894252630182466833_n.jpg');
+(2, 'เครื่องนวดเท้า', 'นวดวันนี้สบายวันหน้า', 50, 100, 100, 32, 1, '../UploadImg/uploads/423036594_1095115421802957_7894252630182466833_n.jpg'),
+(3, 'ทดสอบๆ', 'rr', 0, 200, 20, 20, NULL, '../UploadImg/uploads/423036594_1095115421802957_7894252630182466833_n.jpg');
 
 -- --------------------------------------------------------
 
@@ -272,12 +318,14 @@ ALTER TABLE `orderdelivery`
 -- Indexes for table `orderkey`
 --
 ALTER TABLE `orderkey`
-  ADD PRIMARY KEY (`orderId`);
+  ADD PRIMARY KEY (`orderId`),
+  ADD KEY `orderkey_ibfk_1` (`cusId`);
 
 --
 -- Indexes for table `ordervalue`
 --
 ALTER TABLE `ordervalue`
+  ADD PRIMARY KEY (`orderId`,`ProId`),
   ADD KEY `orderId` (`orderId`),
   ADD KEY `ProId` (`ProId`);
 
@@ -315,7 +363,7 @@ ALTER TABLE `account`
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-  MODIFY `AddrId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `AddrId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `customer`
@@ -333,13 +381,13 @@ ALTER TABLE `invoice`
 -- AUTO_INCREMENT for table `orderdelivery`
 --
 ALTER TABLE `orderdelivery`
-  MODIFY `DeliId` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `DeliId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `orderkey`
 --
 ALTER TABLE `orderkey`
-  MODIFY `orderId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `orderId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -387,7 +435,7 @@ ALTER TABLE `orderdelivery`
 -- Constraints for table `orderkey`
 --
 ALTER TABLE `orderkey`
-  ADD CONSTRAINT `orderkey_ibfk_1` FOREIGN KEY (`cusId`) REFERENCES `account` (`AccId`);
+  ADD CONSTRAINT `orderkey_ibfk_1` FOREIGN KEY (`cusId`) REFERENCES `customer` (`CusID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `ordervalue`

@@ -186,10 +186,10 @@
 
             /* สำหรับ User */
             if (isset($_SESSION['id_username']) && isset($_SESSION['status'])) {
-
+                $uid = $_SESSION['id_username'];
                 //Find product.proId , product.ProductName  ,product.Price , Qty
                 $cur = "SELECT *, cart.Qty AS cartq FROM cart
-                INNER JOIN product ON cart.ProId = product.proId";
+                INNER JOIN product ON cart.ProId = product.proId where cart.cusId = '$uid'" ;
                 $msresults = mysqli_query($conn, $cur);
            
 

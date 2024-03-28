@@ -39,17 +39,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // echo $amount . " ";
                 $stmt = "INSERT INTO cart(cusId, ProId, Qty) VALUES('$uid', '$productId', '$amount')";
 
-                // ACCESS LOG
-                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else {
-                    $ipAddress = $_SERVER['REMOTE_ADDR'];
-                }
-                $callingFile = __FILE__;
-                $action = 'INSERT'; // Static Change Action
-                CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-                //END LOG
-
                 $msresults = mysqli_query($conn, $stmt);
                 $stmt2 = mysqli_query($conn, "UPDATE product SET onHand = onHand + '$amount' WHERE proId = '$productId'");
 
@@ -61,32 +50,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_SESSION['cart'][$productId])) {
                 $_SESSION['cart'][$productId]['quantity'] = $amount;
 
-                // ACCESS LOG
-                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else {
-                    $ipAddress = $_SERVER['REMOTE_ADDR'];
-                }
-                $callingFile = __FILE__;
-                $action = 'UPDATE'; // Static Change Action
-                CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-                //END LOG
-
             } else {
                 $_SESSION['cart'][$productId] = [
                     'quantity' => $amount
                 ];
-                // ACCESS LOG
-                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else {
-                    $ipAddress = $_SERVER['REMOTE_ADDR'];
-                }
-                $callingFile = __FILE__;
-                $action = 'INSERT'; // Static Change Action
-                CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-                //END LOG
-
             }
             // header("Location: ./index.php");
         }
@@ -104,31 +71,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $OnHand_update = mysqli_query($conn, "UPDATE product SET OnHand = OnHand - '$cart_qty' WHERE proId = '$productId'");
 
                 $check_query = mysqli_query($conn, "DELETE FROM cart WHERE cusID = '$cusID' AND ProId = '$productId'");
-
-                // ACCESS LOG
-                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else {
-                    $ipAddress = $_SERVER['REMOTE_ADDR'];
-                }
-                $callingFile = __FILE__;
-                $action = 'DELETE'; // Static Change Action
-                CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-                //END LOG
-
             }
         } else if (isset($_SESSION['cart'][$productId])) {
-
-            // ACCESS LOG
-            if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            } else {
-                $ipAddress = $_SERVER['REMOTE_ADDR'];
-            }
-            $callingFile = __FILE__;
-            $action = 'DELETE'; // Static Change Action
-            CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-            //END LOG
 
             unset($_SESSION['cart'][$productId]);
         }
