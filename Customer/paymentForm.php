@@ -182,11 +182,12 @@ input[type="submit"]:focus{
         <?php
         if (isset($_SESSION['id_username'])) {
             $uid = $_SESSION['id_username'];
-            $inv = $_POST['id_invoice'];
-            $recv_id = $_POST['id_receiver'];
+            // $inv = $_POST['id_invoice'];
+            // $recv_id = $_POST['id_receiver'];
+            $lastId = $_POST['id_order'];
+            $addrId = $_POST['id_address'];
 
-
-            include_once '../dbConfig.php'; 
+            include_once '../dbConfig.php';
             $query_address = "SELECT * FROM address 
             INNER JOIN customer ON customer.cusId = address.cusId  
             WHERE address.CusID = '$uid'";
@@ -203,7 +204,11 @@ input[type="submit"]:focus{
             </div>
 
             <div class="checkout-steps">
-                <div class="checkout-step">Step 1: Shipping</div>
+                <div class="checkout-step">
+                <a style="outline:none;" href="./addressForm.php" >
+                    Step 1: Shipping
+                </a>
+                </div>
                 <div class="checkout-step active">Step 2: Payment</div>
                 <div class="checkout-step">Step 3: Success</div>
             </div>
@@ -227,10 +232,12 @@ input[type="submit"]:focus{
                             <label for="tel">Tel :</label>
                             <input type="text" id="tel" name="tel" value="<?php echo $row['Tel'] ?? ''; ?>" required>
                         </div>
-                        <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
+                        <!-- <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
                         <input type='hidden' name='id_receiver' value='<?php echo $row['RecvID']; ?>'>
-                        <input type='hidden' name='id_invoice' value='<?php echo $inv; ?>'>
+                        <input type='hidden' name='id_invoice' value='<?php echo $inv; ?>'> -->
                         <!-- <button class="checkout-button" onclick="submit()">ชำระเงิน</button> -->
+                        <input type="checkbox" value="Want invoice Ja">
+                        <label for="invoice">Invoice</label>
                         <input type="submit">
                     </div>
                 </div>
@@ -238,17 +245,17 @@ input[type="submit"]:focus{
                 <div class="checkout-sidebar">
                     <!-- Sidebar content -->
                     <?php
-                    $conn = mysqli_connect("localhost", "root", "", "shopping");
+                    // $conn = mysqli_connect("localhost", "root", "", "shopping");
                     echo "<div class='invoice-container'>";
                     echo "<div class='body-container'>";
                     echo "<div class='invoice-header'>
                     <h4></h4>
                     </div>";
 
-                    if (isset($_POST['id_invoice'])) {
+                    if (isset($_POST['id_order'])) {
                         $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM address 
-                        INNER JOIN customer ON customer.cusId = address.cusId  
-                        WHERE address.CusID = '$uid'");
+                        INNER JOIN customer ON customer.cusId = address.cusId
+                        WHERE address.addrId = '$addrId'");
                         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
                         $customerId = $uid;
                         $invoiceId = $_POST['id_invoice'];
@@ -268,19 +275,18 @@ input[type="submit"]:focus{
                         
                         <h4><strong>สรุปการคำสั่งซื้อ</strong></h4>";      
                         $totalPriceAllItems = 0;
-                        $invoiceDetailsQuery = mysqli_query($conn, "SELECT * FROM orderkey
-                        INNER JOIN ordervalue ON ordervalue.orderId =  orderkey.orderId 
-                        INNER JOIN product ON product.proId =  ordervalue.proId 
-                        INNER JOIN customer ON customer.cusId =  orderkey.cusId 
-                        WHERE orderkey.cusId  = '$customerId'");
+                        $Orderquery = mysqli_query($conn, "SELECT *,ordervalue.Qty AS qtyordervalue,product.ProductName AS PRONAME FROM orderkey
+                        INNER JOIN ordervalue ON ordervalue.orderId =  orderkey.orderId
+                        INNER JOIN product ON ordervalue.ProId =  product.proId
+                        WHERE orderkey.orderId  = '$lastId'");
                      
-                        while ($invoiceDetails = mysqli_fetch_array($invoiceDetailsQuery)) {
-                            $totalPrice = $invoiceDetails['Price'] * $invoiceDetails['Qty'];
+                        while ($invoiceDetails = mysqli_fetch_array($Orderquery)) {
+                            $totalPrice = $invoiceDetails['Price'] * $invoiceDetails['qtyordervalue'];
                             $totalPriceAllItems += $totalPrice;
 
                             echo "<div class='text-container'>
-                                <p><strong {$invoiceDetails['ProductName']}</strong></p>
-                                <p><strong>฿{$invoiceDetails['Price']}</strong>     จำนวน {$invoiceDetails['Qty']} ชิ้น</p>
+                                <p><strong> {$invoiceDetails['PRONAME']}</strong></p>
+                                <p><strong>฿{$invoiceDetails['Price']}</strong> จำนวน {$invoiceDetails['qtyordervalue']} ชิ้น</p>
                             </div>";                         
                         }
                         
@@ -291,11 +297,11 @@ input[type="submit"]:focus{
                        <h4>สรุปยอดชำระเงิน</h4>
                             <div class='text-container'>
                                 <p><strong>VAT:</strong>{$tax}</p>
-                                <p><strong>ราคารวม:</strong>{$totalPriceAllItems}</p>                     
+                                <p><strong>ราคารวม: </strong>  {$totalPriceAllItems}</p>                     
                             </div>
                         <hr> 
                             <div class='text-container'>
-                                <p><strong>ยอดชำระสุทธิ:</strong>{$totalAmount}</p>                              
+                                <p><strong>ยอดชำระสุทธิ: </strong>  {$totalAmount}</p>                              
                             </div>
                         <hr>                        
                     </div>";

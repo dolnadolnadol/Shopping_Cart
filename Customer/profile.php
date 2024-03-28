@@ -233,8 +233,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
                     $user_address = mysqli_fetch_array($result_address);
                     while ($user_address) {
                         echo '<div class="user-card">
-                                <p>' . $user_address['fname'] ." ". $user_address['lname'] . '</p>
-                                <p>' . $user_address['Tel'] . '</p>
                                 <p>' . $user_address['Address'] ." ". $user_address['Province'] . '</p>
                                 <p>' . $user_address['City'] . " ". $user_address['PostalCode'] . '</p>
                             </div>';
