@@ -1,7 +1,14 @@
 <?php
     session_start();
-    if(isset($_SESSION['auth'])){
-        echo $_SESSION['auth'];
+    if($_SESSION['auth'] == 'product-admin'){
+        header('Location: ./stock/stock_index.php');
+        exit();
+    }
+    if($_SESSION['auth'] == 'permissions-admin'){
+        header('Location: ./customer/customer_index.php');
+        exit();
+    }
+    if($_SESSION['auth'] == 'super-admin'){
         header('Location: ./dashboard/dashboard.php');
         exit();
     }

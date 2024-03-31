@@ -100,11 +100,11 @@
 <body>
     <nav>
         <ul>
-            <li><a class="a" id="dashboard" href="../dashboard/dashboard.php">Dashboard</a></li>
-            <li><a class="a" id="customer" href="../customer/customer_index.php">Customer</a></li>
             <li><a class="a" id="stock" href="../stock/stock_index.php">Stock</a></li>
             <li><a class="a" id="invoice" href="../invoice/invoice_index.php">Invoice</a></li>
             <li><a class="a" id="order" href="../order/order_index.php">Order</a></li>
+            <li><a class="a" id="customer" href="../customer/customer_index.php">Customer</a></li>
+            <li><a class="a" id="dashboard" href="../dashboard/dashboard.php">Dashboard</a></li>
             <li><a class="a" id="summary" href="../summary/summaryReport.php">Summary</a></li>
             <li><a class="a" id="log" href="../log/log_index.php?page=1">AccessLog</a></li>
             <li class="nav-right"><a class="a" id="logout" href="../login.php">Logout</a></li>
