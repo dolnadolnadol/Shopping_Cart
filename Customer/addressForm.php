@@ -122,7 +122,7 @@ include('./component/getFunction/getName.php'); ?>
             $uid = $_SESSION['id_username'];
 
             include_once '../dbConfig.php'; 
-            $query_address = "select *, customer.fname AS fnamecus, customer.lname AS lnamecus, customer.tel AS telcus from customer left join address on customer.CusId = address.cusID where customer.CusID = '$uid'";
+            $query_address = "select * from address where address.CusID = '$uid' LIMIT 1";
             $result_address = mysqli_query($conn, $query_address);
             if (mysqli_num_rows($result_address) > 0) {
                 // Fetch a single row from the result set
