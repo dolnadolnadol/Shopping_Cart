@@ -17,40 +17,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $recv_id = $_POST['id_receiver'];
         $uid = $_POST['id_customer'];
 
-        //ทำไรวะ
-        if ($recv_id !== null && $recv_id !== '' && !isset($_POST['delete_id_customer'])) {
-            $uid = $_POST['id_customer'];
-            $new_fname = $_POST['fname'];
-            $new_lname = $_POST['lname'];
-            $new_tel = $_POST['tel'];
-            $new_address = $_POST['addr'];
+        $get_cus = mysqli_query($conn, "select * FROM customer WHERE CusID = '$uid'");
+        $get_cusone = mysqli_fetch_assoc($get_cus);
+        $fname = $get_cusone['fname'];
+        $lname = $get_cusone['lname'];
+        $tel = $get_cusone['Tel'];
 
-            $query_address = "SELECT * FROM receiver 
-                INNER JOIN receiver_detail ON receiver.RecvID = receiver_detail.RecvID  
-                WHERE receiver_detail.CusID = '$uid' AND receiver.RecvID = '$recv_id'";
-            $result_address = mysqli_query($conn, $query_address);
-
-            if (mysqli_num_rows($result_address) > 0) {
-                $update_query = "UPDATE receiver SET RecvFName = '$new_fname', RecvLName = '$new_lname' ,Tel = '$new_tel' , Address = '$new_address' WHERE RecvID = '$recv_id'";
-                $update_result = mysqli_query($conn, $update_query);
-
-                $update_query = "UPDATE  receiver_detail SET CusID = '$uid' , RecvID = '$recv_id' WHERE CusID = '$uid'";
-                $update_result = mysqli_query($conn, $update_query);
-
-                header("Location: ./profile.php");
-            } else {
-                // Handle the case where $recv_id is not found
-                echo "RecvID not found.";
-            }
-        } else if ($recv_id === null || $recv_id === '' && !isset($_POST['delete_id_customer'])) {
-            $uid = $_POST['id_customer'];
+        if ($recv_id === null || $recv_id === '' && !isset($_POST['delete_id_customer'])) {
+            // $uid = $_POST['id_customer'];
             $province = $_POST['province'];
             $city = $_POST['city'];
             $postalCode = $_POST['postal'];
             $new_address = $_POST['addr'];
 
-            $insert_query_head = "INSERT INTO address (Address , Province  , City , PostalCode, CusId) 
-                VALUES('$new_address', '$province', '$city' , '$postalCode' , '$uid')";
+            $insert_query_head = "INSERT INTO address (Address ,fname,lname,tel, Province  , City , PostalCode, CusId) 
+                VALUES('$new_address', '$fname', '$lname', '$tel','$province', '$city' , '$postalCode' , '$uid')";
             $insert_result_head = mysqli_query($conn, $insert_query_head);
 
             if ($insert_result_head) {
