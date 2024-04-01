@@ -122,7 +122,7 @@ include('./component/getFunction/getName.php'); ?>
             $uid = $_SESSION['id_username'];
 
             include_once '../dbConfig.php'; 
-            $query_address = "select * from customer left join address on customer.CusId = address.cusID where customer.CusID = '$uid'";
+            $query_address = "select *, customer.fname AS fnamecus, customer.lname AS lnamecus, customer.tel AS telcus from customer left join address on customer.CusId = address.cusID where customer.CusID = '$uid'";
             $result_address = mysqli_query($conn, $query_address);
             if (mysqli_num_rows($result_address) > 0) {
                 // Fetch a single row from the result set
@@ -145,28 +145,30 @@ include('./component/getFunction/getName.php'); ?>
                 <!-- Shipping form content -->
                 <div class="form-group">
                     <label for="fullname">First Name</label>
-                    <input type="text" id="fullname" name="fname" value="<?php echo $row['fname'] ?? ''; ?>"
-                        required>
+                    <input type="text" id="fname" name="fname" value="<?php echo $row['fnamecus'] ?? ''; ?>" readonly required>
                     <label for="lastname">Last Name</label>
-                    <input type="text" id="lastname" name="lname" value="<?php echo $row['lname'] ?? ''; ?>"
-                        required>
+                    <input type="text" id="lastname" name="lname" value="<?php echo $row['lnamecus'] ?? ''; ?>" readonly required>
                     <label for="tel">Tel</label>
-                    <input required type="tel" name="tel" value="<?php echo $row['Tel'] ?? ''; ?>">
+                    <input required type="tel" id="tel" name="tel" value="<?php echo $row['telcus'] ?? ''; ?>" readonly>
+                    <input type="hidden" name="changeInfo">
+                    <input type="hidden" name="addrId" value="<?php echo $row['AddrId'] ?? '' ; ?>">
+                    <button type="button" onclick="editInfo()">edit info</button>
+                    <button type="button" id="saveInfo" onclick="saveInfobutton()" style="display:none;">save</button>
                     <p>
                         Address For Song Kong AHHH
                     </p>
+                    
                     <label for="address">Address</label>
-                    <input required type="text" name="address" value="<?php echo $row['Address'] ?? ''; ?>">
+                    <input required type="text" name="address" id="address" value="<?php echo $row['Address'] ?? ''; ?>" readonly>
                     <label for="province">Province</label>
-                    <input required type="text" name="province" value="<?php echo $row['Province'] ?? ''; ?>">
+                    <input required type="text" name="province" id="province" value="<?php echo $row['Province'] ?? ''; ?>" readonly>
                     <label for="city">City</label>
-                    <input required type="text" name="city" value="<?php echo $row['City'] ?? ''; ?>">
+                    <input required type="text" name="city" id="city" value="<?php echo $row['City'] ?? ''; ?>" readonly>
                     <label for="postalcode">PostalCode</label>
-                    <input required type="text" name="postalcode" value="<?php echo $row['PostalCode'] ?? ''; ?>">
-
-                    <!-- <label for="address">Address</label>
-                    <textarea style="resize:none;" name="address" id="address" rows="3"
-                        required><?php echo ($row['Address'] ?? '') .' ' . ($row['Province'] ?? '') . ' ' . ($row['City'] ?? '') . ' ' . ($row['PostalCode'] ?? '') ; ?></textarea> -->
+                    <input required type="text" name="postalcode" id="postalcode" value="<?php echo $row['PostalCode'] ?? ''; ?>" readonly>
+                    <input type="hidden" name="changeaddress">
+                    <button type="button" onclick="editAddress()">edit address</button>
+                    <button type="button" id="saveaddr" onclick="saveAddressbutton()" style="display:none;">save</button>
                 </div>
 
                 <!-- <button class="checkout-button" onclick="submit()">Next to Payment</button> -->
@@ -186,10 +188,36 @@ include('./component/getFunction/getName.php'); ?>
     </form>
 
     <script>
-
-        // function submit() {
-        //     document.querySelector('form').submit();
-        // }
+        function editInfo() {
+            document.getElementById("saveInfo").style.display = "block";
+            document.getElementById("fname").readOnly = false;
+            document.getElementById("lastname").readOnly = false;
+            document.getElementById("tel").readOnly = false;
+        }
+        function saveInfobutton() {
+            document.getElementById("saveInfo").style.display = "none";
+            document.getElementById("fname").readOnly = true;
+            document.getElementById("lastname").readOnly = true;
+            document.getElementById("tel").readOnly = true;
+            document.getElementById("changeinfo").value= "true";
+            alert("saved");
+        }
+        function editAddress() {
+            document.getElementById("saveaddr").style.display = "block";
+            document.getElementById("address").readOnly = false;
+            document.getElementById("province").readOnly = false;
+            document.getElementById("city").readOnly = false;
+            document.getElementById("postalcode").readOnly = false;
+        }
+        function saveAddressbutton() {
+            document.getElementById("saveaddr").style.display = "none";
+            document.getElementById("address").readOnly = true;
+            document.getElementById("province").readOnly = true;
+            document.getElementById("city").readOnly = true;
+            document.getElementById("postalcode").readOnly = true;
+            document.getElementById("changeaddress").value= "true";
+            alert("saved");
+        }
     </script>
 </body>
 

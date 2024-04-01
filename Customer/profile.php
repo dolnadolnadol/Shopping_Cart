@@ -218,7 +218,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
 
                 <label for="tel">Tel:</label>
                 <input type="tel" name="tel" id="tel" value="<?php echo $user_data['Tel']?>" readOnly>
-                <!-- <div style="display:flex;"> -->
                     <button type="button" id="savebio"
                     onclick="saveAlready()"
                     style="display: none; background-color:green; margin-right:1rem;">บันทึก</button>
@@ -240,8 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
                                     <input type="hidden" name="delete_id_customer" value="' . $uid . '">
                                     <input type="hidden" name="addrId" value="' . $user_address['AddrId'] . '">
                                     <button type="submit">ลบ</button>
-                            </form>'; 
-
+                            </form>';
                         $user_address = mysqli_fetch_array($result_address); // Update $user_address
                     }
                 ?>
@@ -314,7 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
         document.getElementById('FirstName').readOnly = false;
         document.getElementById('LastName').readOnly = false;
         document.getElementById('tel').readOnly = false;
-        setTimeout(hideOverlay, 1000); 
+        setTimeout(hideOverlay, 1000);
         // Adjust the time (in milliseconds) as needed
     }
     function hideOverlay() {

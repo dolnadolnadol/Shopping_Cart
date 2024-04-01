@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header('Location: ./login.php');
     }
     /* Add product in cart */
-    if (isset($_POST['id_product']) && isset($_POST['amount'])) {
+    else if (isset($_POST['id_product']) && isset($_POST['amount'])) {
         $productId = $_POST['id_product'];
         $amount = $_POST['amount'];
         $uid = $_SESSION['uid'];

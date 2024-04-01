@@ -91,7 +91,7 @@
                     include('./component/showPhotos.php');
                                 echo "
                                 <p class='product-name'>{$row['ProductName']}</p>
-                                <p class='product-price'>ราคา {$row['Price']}</p>
+                                <p class='product-price'>ราคา {$row['Price']} บาท</p>
                                 <form method='post' action='detailProduct.php'>
                                     <input type='hidden' name='id_product' value='{$row['proId']}'>
                                     <input class='buy-button' type='submit' value='ซื้อสินค้า'>

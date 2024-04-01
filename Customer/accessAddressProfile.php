@@ -17,13 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $recv_id = $_POST['id_receiver'];
         $uid = $_POST['id_customer'];
 
-        //ทำไรวะ
         if ($recv_id !== null && $recv_id !== '' && !isset($_POST['delete_id_customer'])) {
             $uid = $_POST['id_customer'];
+            $new_address = $_POST['addr'];
             $new_fname = $_POST['fname'];
             $new_lname = $_POST['lname'];
             $new_tel = $_POST['tel'];
-            $new_address = $_POST['addr'];
 
             $query_address = "SELECT * FROM receiver 
                 INNER JOIN receiver_detail ON receiver.RecvID = receiver_detail.RecvID  
@@ -49,8 +48,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $postalCode = $_POST['postal'];
             $new_address = $_POST['addr'];
 
-            $insert_query_head = "INSERT INTO address (Address , Province  , City , PostalCode, CusId) 
-                VALUES('$new_address', '$province', '$city' , '$postalCode' , '$uid')";
+            $cusIdquery = "Select * from customer where cusId = '$uid'";
+            $cus = mysqli_query($conn, $cusIdquery);
+            while($row = mysqli_fetch_assoc($cus)){
+                // $cusId = $row['cusId'];
+                $fname = $row['fname'];
+                $lname = $row['lname'];
+                $tel = $row['tel'];
+            }
+
+            $insert_query_head = "INSERT INTO address (fname, lname, tel, Address , Province  , City , PostalCode, CusId) 
+                VALUES('$fname','$lname','$tel','$new_address', '$province', '$city' , '$postalCode' , '$uid')";
             $insert_result_head = mysqli_query($conn, $insert_query_head);
 
             if ($insert_result_head) {

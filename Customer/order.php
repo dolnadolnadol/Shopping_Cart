@@ -148,27 +148,29 @@
 
     
     $RecId = $_POST['id_order'];
-    $payerQuery = mysqli_query($conn, "SELECT * FROM receive
-        INNER JOIN payer ON receive.TaxID = payer.TaxID
-        WHERE receive.RecID = '$RecId '");
+    $payerQuery = mysqli_query($conn, "SELECT * FROM invoice
+    INNER JOIN orderkey ON orderkey.orderId = invoice.orderId
+        INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId
+        inner join customer on customer.cusId = invoice.cusId
+        WHERE invoice.orderId = '$RecId '");
     $payerResult = mysqli_fetch_array($payerQuery);
 
 
-    $recevierQuery = mysqli_query($conn, "SELECT * FROM receive
-        INNER JOIN receiver ON receive.RecvID = receiver.RecvID
-        WHERE receive.RecID = '$RecId '");
-    $recevierResult = mysqli_fetch_array($recevierQuery);
+    // $recevierQuery = mysqli_query($conn, "SELECT * FROM receive
+    //     INNER JOIN receiver ON receive.RecvID = receiver.RecvID
+    //     WHERE receive.RecID = '$RecId '");
+    $recevierResult = mysqli_fetch_array($payerQuery);
 
 
-    $recQuery = mysqli_query($conn, "SELECT * FROM receive
-    WHERE receive.RecID = '$RecId '");
+    $recQuery = mysqli_query($conn, "SELECT * FROM orderkey
+    WHERE orderkey.orderId = '$RecId '");
     $recResult = mysqli_fetch_array($recQuery);
 
 
     echo "<div class='container_order'>";
     echo "<div  id='row-rev' class='invoice-container'>
         <div class='invoice-header'>
-            <h1>เลขใบเสร็จของท่านคือ :{$recResult['RecID']} </h1>
+            <h1>เลขใบเสร็จของท่านคือ :{$recResult['orderId']} </h1>
         </div>";
 
     echo "<div class='item_order'>
@@ -181,14 +183,14 @@
     echo '<div class="grid-container">
             <div class="grid-item">';
     echo "<div class='item_order2'>
-                    <p>ชื่อผู้จ่าย: {$payerResult['PayerFName']} {$payerResult['PayerLName']}</p>
+                    <p>ชื่อผู้จ่าย: {$payerResult['fname']} {$payerResult['lname']}</p>
                     <p>ที่อยู่จัดส่ง : {$payerResult['Tel']}</p>
                 </div>";
     echo "</div>
                     <div class='grid-item'>
                         <div class='item_order2'>
                             <p id='Status'>สถานที่จัดส่ง</p>
-                            <p>ชื่อผู้รับ : {$recevierResult['RecvFName']} {$recevierResult['RecvLName']}</p>
+                            <p>ชื่อผู้รับ : {$recevierResult['fname']} {$recevierResult['lname']}</p>
                             <p>ที่อยู่จัดส่ง : {$recevierResult['Address']}</p>
                             <p>เบอร์โทร : {$recevierResult['Tel']}</p>
                         </div>";
@@ -196,14 +198,12 @@
     echo "</div>
                     <div class='grid-item'>
                         <div class='item_order2'>
-                            <p id='Status'>สถานะ : {$recResult['Status']}</p>
-                            <p>วันที่สั่งซื้อ : {$recResult['OrderDate']}</p>
-                            <p>วันที่ส่ง : {$recResult['DeliveryDate']}</p>
+                            <p id='Status'>สถานะ : {$recResult['PaymentStatus']}</p>
+                            <p>วันที่สั่งซื้อ : {$recResult['orderCreate']}</p>
+                            <p>วันที่ส่ง : {$payerResult['DeliDate']}</p>
                         </div>
                     </div>
                 </div>";
-
-
     echo "</div>";
 
 

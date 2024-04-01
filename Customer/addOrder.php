@@ -42,11 +42,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_param("si", $pending, $cusID);
             $stmt->execute();
             $lastId = mysqli_insert_id($conn);
-
-            $stmt = $conn->prepare("INSERT INTO address (Address, Province, City, PostalCode, CusId) VALUES (?,?,?,?,?)");
-            $stmt->bind_param("sssii", $address, $province, $city, $postalcode, $cusID);
-            $stmt->execute();
-            $addrId = mysqli_insert_id($conn);
+            if($_POST['changeInfo'] == "value" || $_POST['changeaddress'] == "value"){
+                echo $_POST['changeInfo'] . "wtfman ";
+                echo $_POST['changeaddress'];
+                $stmt = $conn->prepare("INSERT INTO address (fname, lname, tel, Address, Province, City, PostalCode, CusId) VALUES (?,?,?,?,?,?,?,?)");
+                $stmt->bind_param("sssssssi", $fname, $lname, $tel, $address, $province, $city, $postalcode, $cusID);
+                $stmt->execute();
+                $addrId = mysqli_insert_id($conn);
+            }else{
+                $addrId = $_POST['addrId'];
+                echo $addrId . "wtfman2gg ";
+            }
+            
 
             // ACCESS LOG
             $productId = "";

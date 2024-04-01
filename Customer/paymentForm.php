@@ -204,11 +204,7 @@ input[type="submit"]:focus{
             </div>
 
             <div class="checkout-steps">
-                <div class="checkout-step">
-                <a style="outline:none;" href="./addressForm.php" >
-                    Step 1: Shipping
-                </a>
-                </div>
+                <div class="checkout-step"> Step 1: Shipping</div>
                 <div class="checkout-step active">Step 2: Payment</div>
                 <div class="checkout-step">Step 3: Success</div>
             </div>
@@ -218,7 +214,7 @@ input[type="submit"]:focus{
                 <div class="checkout-content">
                     <div id="paymentForm" class="checkout-form" style="display: block;">
                         <!-- Payment form content -->
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="firstname">Reciever First Name: </label>
                             <input type="text" id="fname" name="fname" value="<?php echo $row['fname'] ?? ''; ?>" required>
                         </div>
@@ -231,7 +227,9 @@ input[type="submit"]:focus{
                         <div class="form-group">
                             <label for="tel">Tel :</label>
                             <input type="text" id="tel" name="tel" value="<?php echo $row['Tel'] ?? ''; ?>" required>
-                        </div>
+                        </div> -->
+
+                        <input type="file"></input>
                         <!-- <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
                         <input type='hidden' name='id_receiver' value='<?php echo $row['RecvID']; ?>'>
                         <input type='hidden' name='id_invoice' value='<?php echo $inv; ?>'> -->
@@ -253,8 +251,7 @@ input[type="submit"]:focus{
                     </div>";
 
                     if (isset($_POST['id_order'])) {
-                        $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM address 
-                        INNER JOIN customer ON customer.cusId = address.cusId
+                        $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM address
                         WHERE address.addrId = '$addrId'");
                         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
                         $customerId = $uid;
@@ -267,7 +264,7 @@ input[type="submit"]:focus{
                         <div class='text-container'>
                             <p><strong>Shipping Address</strong></p>
                             <p><strong>Name:</strong> {$customerDetails['fname']} {$customerDetails['lname']} </p>
-                            <p><strong>Tel:</strong> {$customerDetails['Tel']}</p>
+                            <p><strong>Tel:</strong> {$customerDetails['tel']}</p>
                             <div class='address-container'>
                                 <p><strong>Address:</strong> {$customerDetails['Address']}</p>
                             </div>

@@ -19,6 +19,7 @@
                     $_SESSION['id_username'] = $uid;
                     $_SESSION['uid'] = $uid;
                     unset($_SESSION['cart']);
+                        $_SESSION['auth'] = 'users';
                     if($row['authority'] == 'product-admin'){
                         $_SESSION['auth'] = 'product-admin';
                     }

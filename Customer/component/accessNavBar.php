@@ -1,5 +1,5 @@
 <?php
-    include_once '../dbConfig.php'; 
+    include_once '../dbConfig.php';
 ?>
 
 <style>
@@ -48,9 +48,9 @@
         background-color: #ddd;
     }
 
-    .active {
-        background-color: #34495e;
-    }
+    /* .active {
+        background-color: #eef;
+    } */
 
     .cart-icon {
         width: 30px;
@@ -81,14 +81,17 @@
 
     <div class="nav-right">
         <ul>
+            <!-- <li>
+                <?php echo $_SESSION['auth']; ?>
+            </li> -->
             <li>
                 <a href='../admin/' id="admin" style='display:none;'>
                     admin
                 </a>
             </li>
             <li class="cart-icon-container">
-                <a href="cart.php" class="cart-link">
-                    <img class="cart-icon" src="./image/shopping-cart.png" alt="Cart">
+                <a href="cart.php" style="display:none;" id="cart" class="cart-link">
+                    <img class="cart-icon"  src="./image/shopping-cart.png" alt="Cart">
                 </a>
                 <?php if (isset($_SESSION['cart']) || (isset($_SESSION['id_username']) && isset($_SESSION['status']) === true)) : ?>
                     <?php
@@ -138,9 +141,12 @@
     }
 </style>
 <script>
-    <?php if (isset($_SESSION['auth']) && ($_SESSION['auth'] == 'product-admin' || $_SESSION['auth'] == 'permissions-admin' || $_SESSION['auth'] == 'super-admin')) : ?>
+    <?php if (isset($_SESSION['auth'])) : ?>
+        document.getElementById("cart").style.display = "inline-block";
+    <?php endif ?>
+    <?php if (($_SESSION['auth'] == 'product-admin' || $_SESSION['auth'] == 'permissions-admin' || $_SESSION['auth'] == 'super-admin')) : ?>
         document.getElementById("admin").style.display = "inline-block";
-    <?php endif; ?>
+        <?php endif ?>
 </script>
 
 
