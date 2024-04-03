@@ -33,30 +33,31 @@
             overflow: hidden;
             display: flex;
             width: 100%;
+            gap: 72%;
         }
 
         li {
             width: 150px;
             height: 50px;
-        }
-
-        li:last-child {
-            margin-left: auto;
+            display: flex;
         }
 
         li a {
             display: none;
+            align-items: center;
+            justify-content: center;
             color: white;
-            text-align: center;
-            padding: 14px 16px;
+            padding: 15px 40px;
             text-decoration: none;
             transition: background-color 0.25s ease;
             position: relative;
+            border-radius: 10px;
+            width: 40px;
         }
 
         li a:hover {
             background-color: rgba(50, 50, 50, 0.8);
-            border-radius:10%;
+            border-radius:10px;
         }
 
         li a:focus {
@@ -64,6 +65,10 @@
         }
 
         li a.active::after {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
             content: '';
             position: absolute;
             left: 0;
@@ -77,41 +82,45 @@
             margin-top: 50px;
         }
 
-        .nav-right {
+        .left {
+            width: 5%;
+            display: flex;
+            flex-direction: row;
+            gap:20%;
+        }
+
+        .right {
+            width: 20%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+        }
+
+        .nav-text {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            width: 20%;
-            margin-right: 5%;
-            margin-left: 65%;
-        }
-        .nav-right a {
-            padding-left: 40px;
-            padding-right: 40px;
+            justify-content: center;
+            text-align: center;
         }
 
-        .cart-icon {
-            width: 50%;
-            height: 50%;
-        }
     </style>
 </head>
-
+        
 <body>
-    <nav>
+<nav>
         <ul>
-            <!-- <div class="nav-left"> -->
-                <li><a class="a" id="stock" href="../stock/stock_index.php">Stock</a></li>
-                <li><a class="a" id="invoice" href="../invoice/invoice_index.php">Invoice</a></li>
-                <li><a class="a" id="order" href="../order/order_index.php">Order</a></li>
-                <li><a class="a" id="customer" href="../customer/customer_index.php">Customer</a></li>
-                <li><a class="a" id="dashboard" href="../dashboard/dashboard.php">Dashboard</a></li>
-                <li><a class="a" id="summary" href="../summary/summaryReport.php">Summary</a></li>
-                <li><a class="a" id="log" href="../log/log_index.php?page=1">AccessLog</a></li>
-            <!-- </div> -->
-            <div class="nav-right">
-                <li><a class="a" id="home" href="../../Customer/index.php">Home</a></li>
-                <li><a class="a" id="logout" href="../logoutProcess.php">Logout</a></li>
+            <div class="left">
+                <li><a class="a" id="stock" href="../stock/stock_index.php"><span class="nav-text">Stock</span></a></li>
+                <li><a class="a" id="invoice" href="../invoice/invoice_index.php"><span class="nav-text">Invoice</span></a></li>
+                <li><a class="a" id="order" href="../order/order_index.php"><span class="nav-text">Order</span></a></li>
+                <li><a class="a" id="customer" href="../customer/customer_index.php"><span class="nav-text">Customer</span></a></li>
+                <li><a class="a" id="dashboard" href="../dashboard/dashboard.php"><span class="nav-text">Dashboard</span></a></li>
+                <li><a class="a" id="summary" href="../summary/summaryReport.php"><span class="nav-text">Summary</span></a></li>
+                <li><a class="a" id="log" href="../log/log_index.php?page=1"><span class="nav-text">AccessLog</span></a></li>
+            </div>
+            <div class="right">
+                <li><a class="a" id="home" href="../../Customer/index.php"><span class="nav-text">Home</span></a></li>
+                <li><a class="a" id="logout" href="../logoutProcess.php"><span class="nav-text">Logout</span></a></li>
             </div> 
         </ul>
     </nav>
