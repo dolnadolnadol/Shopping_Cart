@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    if($_SESSION['auth'] !== 'product-admin') {
+        header("Location: ../notHavePage.php");
+        exit;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

@@ -1,5 +1,4 @@
 <?php
-    session_start();
     if(!isset($_SESSION['auth']) || ($_SESSION['auth'] !== 'product-admin' && $_SESSION['auth'] !== 'permissions-admin' && $_SESSION['auth'] !== 'super-admin')) {
         header("Location: ../notHavePage.php");
         exit;
@@ -33,7 +32,7 @@
             padding: 0;
             overflow: hidden;
             display: flex;
-            /* Add this line to make the navigation items flex containers */
+            width: 100%;
         }
 
         li {
@@ -81,11 +80,12 @@
         .nav-right {
             display: flex;
             align-items: center;
-            justify-content: flex-end; /* Change this line to align items to the end */
-            width: 80%;
-            margin-right: 60px;
+            justify-content: flex-end;
+            width: 20%;
+            margin-right: 5%;
+            margin-left: 65%;
         }
-        .nav-right a{
+        .nav-right a {
             padding-left: 40px;
             padding-right: 40px;
         }
@@ -100,14 +100,19 @@
 <body>
     <nav>
         <ul>
-            <li><a class="a" id="stock" href="../stock/stock_index.php">Stock</a></li>
-            <li><a class="a" id="invoice" href="../invoice/invoice_index.php">Invoice</a></li>
-            <li><a class="a" id="order" href="../order/order_index.php">Order</a></li>
-            <li><a class="a" id="customer" href="../customer/customer_index.php">Customer</a></li>
-            <li><a class="a" id="dashboard" href="../dashboard/dashboard.php">Dashboard</a></li>
-            <li><a class="a" id="summary" href="../summary/summaryReport.php">Summary</a></li>
-            <li><a class="a" id="log" href="../log/log_index.php?page=1">AccessLog</a></li>
-            <li class="nav-right"><a class="a" id="logout" href="../login.php">Logout</a></li>
+            <!-- <div class="nav-left"> -->
+                <li><a class="a" id="stock" href="../stock/stock_index.php">Stock</a></li>
+                <li><a class="a" id="invoice" href="../invoice/invoice_index.php">Invoice</a></li>
+                <li><a class="a" id="order" href="../order/order_index.php">Order</a></li>
+                <li><a class="a" id="customer" href="../customer/customer_index.php">Customer</a></li>
+                <li><a class="a" id="dashboard" href="../dashboard/dashboard.php">Dashboard</a></li>
+                <li><a class="a" id="summary" href="../summary/summaryReport.php">Summary</a></li>
+                <li><a class="a" id="log" href="../log/log_index.php?page=1">AccessLog</a></li>
+            <!-- </div> -->
+            <div class="nav-right">
+                <li><a class="a" id="home" href="../../Customer/index.php">Home</a></li>
+                <li><a class="a" id="logout" href="../logoutProcess.php">Logout</a></li>
+            </div> 
         </ul>
     </nav>
 </body>
@@ -124,5 +129,6 @@
         document.getElementById("summary").style.display = "inline-block";
         document.getElementById("log").style.display = "inline-block";
     <?php endif; ?>
-    document.getElementById("logout").style.display = "inline-block"; // This should be outside any condition
+    document.getElementById("home").style.display = "inline-block";
+    document.getElementById("logout").style.display = "inline-block";
 </script>

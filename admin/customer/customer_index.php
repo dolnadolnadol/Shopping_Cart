@@ -1,3 +1,10 @@
+<?php
+    session_start();
+    if($_SESSION['auth'] !== 'permissions-admin') {
+        header("Location: ../notHavePage.php");
+        exit;
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
