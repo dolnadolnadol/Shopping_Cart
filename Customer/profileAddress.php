@@ -98,6 +98,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <form id="profileForm" method="post" action="./accessAddressProfile.php">
         <input type="hidden" name="id_customer" value="<?php echo $uid ?>">
 
+        <label for="fname">First Name:<span>*</span></label>
+        <input type="text" name="fname" value="">
+        <label for="lname">Last Name:<span>*</span></label>
+        <input type="text" name="lname" value="">
+        <label for="tel">Tel:<span>*</span></label>
+        <input type="text" name="tel" value="">
+
         <label for="addr">Address:<span>*</span></label>
         <input type="text" name="addr" value="">
 
@@ -111,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="tel" name="postal" value="">
 
         <button type="submit">save</button>
-        <button type="button" onclick=""> ยกเลิก </button>
+        <button type="button" onclick="href:'./profile.php'"> ยกเลิก </button>
     </form>
 </body>
 </html>

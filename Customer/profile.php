@@ -3,13 +3,13 @@ include('./component/session.php');
 
 include_once '../dbConfig.php'; 
 
-$query = "SELECT * FROM customer INNER JOIN account ON account.CusID = customer.CusID WHERE customer.CusID = '$uid'";
+$query = "SELECT * FROM customer WHERE customer.CusID = '$uid'";
 $result = mysqli_query($conn, $query);
 $user_data = mysqli_fetch_assoc($result);
 $uid = $user_data['CusID'];
 
-$query_address = "SELECT * FROM address 
-    INNER JOIN customer ON customer.CusID = address.CusId  
+$query_address = "SELECT *,address.fname AS fnamea, address.lname AS lnamea, address.tel AS tela FROM address
+    INNER JOIN customer ON customer.CusID = address.CusId
     WHERE address.CusId = '$uid'";
 $result_address = mysqli_query($conn, $query_address);
 
@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
     if (!$update_result) {
         die("Error updating user data: " . mysqli_error($conn));
     }
-
 }
 
  
@@ -232,7 +231,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
                     $user_address = mysqli_fetch_array($result_address);
                     while ($user_address) {
                         echo '<div class="user-card">
-                                <p>' . $user_address['Address'] ." ". $user_address['Province'] . '</p>
+                            <p>' . $user_address['fnamea'] ." ". $user_address['lnamea'] . '</p>
+                            <p>' . $user_address['tela'] . '</p>
+                                    <p>' . $user_address['Address'] ." ". $user_address['Province'] . '</p>
                                 <p>' . $user_address['City'] . " ". $user_address['PostalCode'] . '</p>
                             </div>';
                         echo   '<form method="post" action="./accessAddressProfile.php">

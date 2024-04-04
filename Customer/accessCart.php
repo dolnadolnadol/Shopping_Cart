@@ -60,9 +60,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     /* Delete product in cart */ 
     else if (isset($_POST['deleteID'])) {
-        $conn =  mysqli_connect("localhost", "root", "", "shopping");
         $productId = $_POST['deleteID'];
         if (isset($_POST['CusID'])) {
+            include_once '../dbConfig.php'; 
             $cusID = $_POST['CusID'];
             $cart_query = mysqli_query($conn, "SELECT * FROM cart WHERE cusID = '$cusID' AND ProId = '$productId'");
             $cart_row = mysqli_fetch_assoc($cart_query);
