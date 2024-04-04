@@ -147,11 +147,11 @@ include('./component/getFunction/getName.php'); ?>
                     <!-- Shipping form content -->
                     <div class="form-group">
                         <label for="fullname">First Name</label>
-                        <input type="text" id="fname" name="fname" value="<?php echo $row['fnamecus'] ?? ''; ?>" readonly required>
+                        <input type="text" id="fname" name="fname" value="<?php echo $row['fname'] ?? ''; ?>" readonly required>
                         <label for="lastname">Last Name</label>
-                        <input type="text" id="lastname" name="lname" value="<?php echo $row['lnamecus'] ?? ''; ?>" readonly required>
+                        <input type="text" id="lastname" name="lname" value="<?php echo $row['lname'] ?? ''; ?>" readonly required>
                         <label for="tel">Tel</label>
-                        <input required type="tel" id="tel" name="tel" value="<?php echo $row['telcus'] ?? ''; ?>" readonly>
+                        <input required type="tel" id="tel" name="tel" value="<?php echo $row['tel'] ?? ''; ?>" readonly>
                         <input type="hidden" name="changeInfo">
                         <input type="hidden" name="addrId" value="<?php echo $row['AddrId'] ?? ''; ?>">
                         <button type="button" onclick="editInfo()">edit info</button>

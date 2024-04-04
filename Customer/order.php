@@ -138,12 +138,12 @@
         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
         $customerId = $customerDetails['CusID'];
     } else {
-        $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer INNER JOIN account ON account.CusID = customer.CusID WHERE customer.CusID = '$uid'");
+        $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer  WHERE customer.CusID = '$uid'");
         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
         $customerId = $customerDetails['CusID'];
     }
 
-    $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer INNER JOIN account ON account.CusID = customer.CusID WHERE customer.CusID = '$uid'");
+    $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer  WHERE customer.CusID = '$uid'");
     $customerDetails = mysqli_fetch_array($customerDetailsQuery);
 
     

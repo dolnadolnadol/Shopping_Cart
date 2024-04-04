@@ -208,8 +208,8 @@ GROUP BY
 <?php
 function includeInvoice($query)
 {
-    $cx = mysqli_connect("localhost", "root", "", "shopping");
-    $msresults = mysqli_query($cx, $query);
+    include '../dbConfig.php'; 
+    $msresults = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_array($msresults)) {
 
         if ($row['Status'] == 'Unpaid') {
@@ -238,9 +238,8 @@ function includeInvoice($query)
 
 function includeOrders($query)
 {
-    $cx = mysqli_connect("localhost", "root", "", "shopping");
-
-    $msresults = mysqli_query($cx, $query);
+    include '../dbConfig.php';
+    $msresults = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_array($msresults)) {
         echo '<div class="order">';
         echo "<div class='icon-container'>

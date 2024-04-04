@@ -26,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
     $update_query = "UPDATE customer SET UserName = '$new_username' ,Tel = '$new_tel' WHERE CusID = '$uid'";
     $update_result = mysqli_query($conn, $update_query);
 
-    $update_query = "UPDATE account SET Username = '$new_username' WHERE CusID = '$uid'";
-    $update_result = mysqli_query($conn, $update_query);
+    // $update_query = "UPDATE account SET Username = '$new_username' WHERE CusID = '$uid'";
+    // $update_result = mysqli_query($conn, $update_query);
 
     if (!$update_result) {
         die("Error updating user data: " . mysqli_error($conn));

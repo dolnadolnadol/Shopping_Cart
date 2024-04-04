@@ -1,8 +1,8 @@
 <?php
 // Include session file for session management
 include('./component/session.php');
-include('../logFolder/AccessLog.php');
-include('../logFolder/CallLog.php');
+// include('../logFolder/AccessLog.php');
+// include('../logFolder/CallLog.php');
 include('./component/getFunction/getName.php');
 
 // Check if the request method is POST
@@ -56,15 +56,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
 
             // ACCESS LOG
-            $productId = "";
-            if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            } else {
-                $ipAddress = $_SERVER['REMOTE_ADDR'];
-            }
-            $callingFile = __FILE__;
-            $action = 'INSERT'; // Static Change Action
-            CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
+            // $productId = "";
+            // if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            //     $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            // } else {
+            //     $ipAddress = $_SERVER['REMOTE_ADDR'];
+            // }
+            // $callingFile = __FILE__;
+            // $action = 'INSERT'; // Static Change Action
+            // CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
             //END LOG
 
             // Iterate through each item in the cart
