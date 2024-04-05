@@ -14,8 +14,8 @@ include_once '../dbConfig.php';
         $select_user = "SELECT * FROM account WHERE Username = '$username'";
         $run_qry = mysqli_query($conn, $select_user);
         if (mysqli_num_rows($run_qry) == 0) {
-            $stmt_1 = mysqli_query($conn, "INSERT INTO customer(fname, lname, Sex ,Tel)
-            VALUES('$fname','$lname', '$sex','$tel');");
+            $stmt_1 = mysqli_query($conn, "INSERT INTO customer(fname, lname, Sex ,Tel, deleteStatus)
+            VALUES('$fname','$lname', '$sex','$tel', '1');");
 
 
             // $findByID = mysqli_query($conn, "SELECT CusID FROM customer WHERE Email = '$email'");
@@ -23,8 +23,8 @@ include_once '../dbConfig.php';
             // $cusID = $row['CusID'];
             $cusID = mysqli_insert_id($conn);
 
-            $stmt_2 = mysqli_query($conn, "INSERT INTO account (Email, Username , Password ,authority, CusID)
-            VALUES('$email', '$username' , '$password', 'users' , ' $cusID' );");
+            $stmt_2 = mysqli_query($conn, "INSERT INTO account (Email, Username , Password ,authority, CusID, deleteStatus)
+            VALUES('$email', '$username' , '$password', 'users' , ' $cusID', '1' );");
 
             if (!$stmt_1 && !$stmt_2) {
                 echo "<script>
