@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    if($_SESSION['auth'] !== 'product-admin') {
+        header("Location: ../notHavePage.php");
+        exit;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -139,7 +147,7 @@
     echo "<div>
         <table>
             <tr>
-                <th><img src='http://localhost/phpmyadmin/themes/pmahomme/img/arrow_ltr.png'></th>
+                <th></th>
                 <th>ID</th>
                 <th>Customer</th>
                 <th>Date</th>

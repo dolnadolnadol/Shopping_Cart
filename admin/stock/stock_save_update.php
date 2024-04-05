@@ -6,8 +6,10 @@
     $a3 = $_POST['a3'];
     $a15 = $_POST['a15'];
     $a4 = $_POST['a4'];
+    $a6 = $_POST['a6'];
+    $a7 = $_POST['a7'];
 
-    $stmt = mysqli_query($conn, "UPDATE product SET ProductName = '$a2', Description = '$a15', Price ='$a3', Qty ='$a4'
+    $stmt = mysqli_query($conn, "UPDATE product SET ProductName = '$a2', Description = '$a15', Price ='$a3', Qty ='$a4', typeId ='$a6', cost ='$a7'
         WHERE proId ='$a1'");
 
     if (!$stmt) {

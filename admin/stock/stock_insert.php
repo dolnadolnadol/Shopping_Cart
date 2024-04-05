@@ -11,6 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $a3 = $_POST['a3'];
         $a4 = $_POST['a4'];
         $a5 = $_POST['a5'];
+        $a6 = $_POST['a6'];
+        $a7 = $_POST['a7'];
         
         $targetDir = "../UploadImg/uploads/"; 
         $allowTypes = array('jpg','png','jpeg','gif'); 
@@ -35,8 +37,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }, $uploadedFiles));
 
         
-        $insertQuery = "INSERT INTO product(ProductName, Description ,Price, Qty, Photo) 
-                        VALUES ('$a2', '$a5', '$a3', '$a4', $insertValuesSQL)";
+        $insertQuery = "INSERT INTO product(ProductName, Description ,Price, Qty, Photo, cost, typeId, deleteStatus) 
+                        VALUES ('$a2', '$a5', '$a3', '$a4', $insertValuesSQL, '$a6', '$a7', '1')";
 
         $insertResult = mysqli_query($conn, $insertQuery);
 

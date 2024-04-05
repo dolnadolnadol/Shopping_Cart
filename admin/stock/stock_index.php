@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    if($_SESSION['auth'] !== 'product-admin') {
+        header("Location: ../notHavePage.php");
+        exit;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -128,7 +136,7 @@
 
     <?php
     include_once '../../dbConfig.php'; 
-    $cur = "SELECT * FROM product";
+    $cur = "SELECT * FROM product WHERE deleteStatus = '1'";
     $msresults = mysqli_query($conn, $cur);
 
     echo "<center>";

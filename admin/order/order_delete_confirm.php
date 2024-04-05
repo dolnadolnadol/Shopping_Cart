@@ -76,8 +76,8 @@
         $codesArray = explode(',', $code);
         echo "<center>";
         echo "<form method='POST' action='order_delete.php'>";
-        echo "<h4>จำนวนชุดข้อมูลที่จะลบ</h4><font size='8'>";
-        echo count($codesArray);
+        echo "<h4>รหัสข้อมูลที่จะลบ</h4><font size='8'>";
+        echo implode(', ', $codesArray);
         echo "</font><br>";
         echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
         echo "<input type='hidden' name='list_id_order' value={$_POST['list_id_order']}>";
@@ -95,7 +95,7 @@
     else {
         $code = $_POST['total_id_order'];
         echo $code;
-        $cur = "SELECT * FROM receive WHERE RecID = '$code'";
+        $cur = "SELECT * FROM orderKey WHERE orderId = '$code'";
         $msresults = mysqli_query($conn,$cur);
     
         if(mysqli_num_rows($msresults) > 0) {

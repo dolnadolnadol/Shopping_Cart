@@ -106,7 +106,7 @@
 
 <body>
     <div class="navbar"> <?php include('../navbar/navbarAdmin.php') ?></div>
-    <h1>User List</h1>
+    <h1>Admin List</h1>
     <div class="container">
         <div>
 

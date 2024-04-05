@@ -94,47 +94,60 @@
             background-color: #007bff;
             color: white;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
     </style>
 </head>
 
 <body>
-
+    <?php  include_once '../../dbConfig.php';
+        $orderId = $_POST['id_order'];
+        $cur = "SELECT * FROM orderkey 
+        INNER JOIN customer ON customer.CusID = orderkey.cusId 
+        INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId 
+        WHERE orderId = '$orderId'";
+        $msresults = mysqli_query($conn, $cur);
+        $row = mysqli_fetch_array($msresults);
+    ?>
     <div class="invoice-form">
         <form action="order_save_update.php" method="post">
-            <h2 style="color: #007bff;">Update Order</h2>
+            <h2 style="color: #007bff; text-align: center;">Order Information</h2>
     
-            <!-- Invoice Information Section -->
             <div class="form-block">
-                <h3 style="color: #007bff;">Order Information</h3>
                 <div class="form-group">
                     <label for="RecID">RecID:</label>
-                <?php     
-
-                    include_once '../../dbConfig.php'; 
-                    $orderId = $_POST['id_order'];
-                    echo "<input type='text' id='orderId' name='orderId' value='$orderId' readonly>
-                    </div>";
-                    $cur = "SELECT * FROM orderkey 
-                    INNER JOIN customer ON customer.CusID = orderkey.cusId 
-                    INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId 
-                    WHERE orderId = '$orderId'";
-                    $msresults = mysqli_query($conn, $cur);
-                    $row = mysqli_fetch_array($msresults);
-                    $status = $row['PaymentStatus'];
-
-
-                ?>
-                <div class="form-group">
-                    <label for="status">Status:</label>
-                    <select id="status" name="status" required>
-                        <?php
-                            $statusCompare = ['Pending', 'Inprogress', 'Delivered' , 'Canceled'];
-                            foreach ($statusCompare as $value) {
-                                echo "<option value='$value'".($value == $status ? ' selected' : '').">$value</option>";
-                            }
-                        ?>
-                    </select>
+                    <?php echo"<input type='text' id='orderId' name='orderId' value='$orderId' readonly>"?>
                 </div>
+                <table>
+                    <tr style="color:black;">
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>  
+                    </tr>
+                    <?php
+                        $cur = "SELECT * FROM ordervalue
+                                INNER JOIN product ON product.proId = ordervalue.ProId
+                                WHERE orderId = '$orderId'";
+                        $msresults = mysqli_query($conn, $cur);
+                        while ($row = mysqli_fetch_assoc($msresults)) {
+                            $total = (double)$row['Price'] * (double)$row['QtyO'];
+                            echo "<tr>";
+                            echo "<td>" . $row['proId'] . "</td>";
+                            echo "<td>" . $row['ProductName'] . "</td>";
+                            echo "<td>" . $row['Price'] . "</td>";
+                            echo "<td>" . $row['QtyO'] . "</td>";
+                            echo "<td>" . $total . "</td>";
+                            echo "</tr>";
+                        }
+                    ?>
+                </table>
             </div>
             
             <h3 style="color: #007bff;">Customer Information</h3>

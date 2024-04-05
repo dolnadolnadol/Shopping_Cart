@@ -67,48 +67,57 @@
 </head>
 
 <body>
-<?php /* get connection */
+    <?php 
+    /* POST connection */
     include_once '../../dbConfig.php';
-
     /*SELECT*/
-    if (isset($_POST['list_id_stock'])){
-        $code = $_POST['list_id_stock'];
+    if (isset($_POST['list_id_customer'])){
+
+        $code = $_POST['list_id_customer'];
         $codesArray = explode(',', $code);
         echo "<center>";
-        echo "<form method='POST' action='stock_delete.php'>";
+        echo "<form method='POST' action='customer_delete.php'>";
         echo "<h4>จำนวนชุดข้อมูลที่จะลบ</h4><font size='8'>";
         echo count($codesArray);
         echo "</font><br>";
         echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
-        echo "<input type='hidden' name='list_id_stock' value={$_POST['list_id_stock']}>";
-        echo "<a href='stock_index.php' style='color: black;   
+        echo "<input type='hidden' name='list_id_customer' value={$_POST['list_id_customer']}>";
+        echo "<a href='customer_index.php' style='color: black;   
         background-color: #F2F3F5;'>ยกเลิก</a>"; 
         echo "<input type='submit' value='ยืนยัน'>";
         echo "</form>\n";
         echo "</center>";
     }
     else {
-        $code = $_POST['id_stock'];
-        $cur = "SELECT * FROM product WHERE proId = '$code'";
+        $code = $_POST['id_customer'];
+        $cur = "SELECT * FROM Customer WHERE CusID = '$code'";
+      
         $msresults = mysqli_query($conn,$cur);
         if(mysqli_num_rows($msresults) > 0) {
+
+            $cur = "SELECT Customer.CusFName , Customer.CusLName , Customer.Sex , Customer.Tel , receiver.* FROM Customer 
+            INNER JOIN receiver_detail ON receiver_detail.CusID = customer.CusID
+            INNER JOIN receiver ON receiver_detail.RecvID = receiver.RecvID
+            WHERE receiver_detail.CusID = '$code'";
+
+            $msresults_receiver = mysqli_query($conn,$cur);
+            $row_recv = mysqli_fetch_array($msresults_receiver);
+
+
             $row = mysqli_fetch_array($msresults);
             echo "<center>";
-            echo "<form method='post' action='stock_delete.php'>";
-            echo "<h2>รหัสสินค้า ". $row['proId'] ."</h2><br>";
-            echo "<input type='hidden' name='id_stock' value='" . $row['proId'] . "'>";
-            echo "ชื่อ : {$row['ProductName']}<br>";
-            echo "<br>";
-            echo "<br><br>";
+            echo "<form method='POST' action='customer_delete.php'>";
+            echo "<h1>Delete Customer</h1>";
+            echo "<h2>รหัสลูกค้า ". $row['CusID'] ."</h2><br>";
+            echo "<input type='hidden' name='id_customer' value='" . $row['CusID'] . "'>";
+            echo "<input type='hidden' name='id_receiver' value='" . (isset($row_recv['RecvID']) ? $row_recv['RecvID'] : "") . "'>";
+            echo "ชื่อ : {$row['CusFName']} {$row['CusLName']}<br>";
+            echo "เพศ : {$row['Sex']}<br>";
+            echo "ที่อยู่ : " . (isset($row_recv['Address']) ? $row_recv['Address'] : "-") . "<br>";
+            echo "เบอร์โทรศัพท์ : {$row['Tel']}<br><br>";
             echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
-            echo "<a href='stock_index.php' 
-                    style='
-                    padding: 9px 14px;
-                    color: black;   
-                    background-color: #F2F3F5;      
-                    text-decoration: none;
-                    margin-right: 5px;
-                    '>ยกเลิก</a>";
+            echo "<a href='customer_index.php' style='color: black;   
+            background-color: #F2F3F5;'>ยกเลิก</a>";
             echo "<input type='submit' value='ยืนยัน'>";
             echo "</form>\n"; 
             echo "</center>";
@@ -117,9 +126,9 @@
 
     /* close connection */
     mysqli_close($conn);
-?>
-
+    ?>
 </body>
 
+</html>
 
 

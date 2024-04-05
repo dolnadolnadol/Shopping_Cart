@@ -19,9 +19,11 @@ if (mysqli_num_rows($msresults) > 0) {
     echo "<input type='hidden' name='a1' value='" . $row['proId'] . "'>";
     echo "ชื่อสินค้า <input type='text' name='a2' value='" . $row['ProductName'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
     echo "คำอธิบายสินค้า <input type='text' name='a15' value='" . $row['Description'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
+    echo "ประเภทสินค้า <input type='text' name='a6' value='" . $row['typeId'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
+    echo "ต้นทุน <input type='text' name='a7' value='" . $row['cost'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
     echo "ราคาต่อหน่วย (บาท) <input type='text' name='a3' value='" . $row['Price'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
     echo "จำนวน <input type='text' name='a4' value='" . $row['Qty'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
-    echo "onHand <input disabled type='text' name='a5' value='" . $row['OnHand'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
+    echo "onHand <input disabled type='text' name='a5' value='" . $row['onHand'] . "' style='width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'><br>";
 
     echo "<div style='text-align: center;'>";
     echo "⚠️ โปรดตรวจสอบให้แน่ใจว่าคุณต้องการอัปเดตข้อมูล ⚠️<br><br>";

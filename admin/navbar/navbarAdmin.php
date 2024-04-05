@@ -1,5 +1,4 @@
 <?php
-    session_start();
     if(!isset($_SESSION['auth']) || ($_SESSION['auth'] !== 'product-admin' && $_SESSION['auth'] !== 'permissions-admin' && $_SESSION['auth'] !== 'super-admin')) {
         header("Location: ../notHavePage.php");
         exit;
@@ -33,31 +32,32 @@
             padding: 0;
             overflow: hidden;
             display: flex;
-            /* Add this line to make the navigation items flex containers */
+            width: 100%;
+            gap: 72%;
         }
 
         li {
             width: 150px;
             height: 50px;
-        }
-
-        li:last-child {
-            margin-left: auto;
+            display: flex;
         }
 
         li a {
             display: none;
+            align-items: center;
+            justify-content: center;
             color: white;
-            text-align: center;
-            padding: 14px 16px;
+            padding: 15px 40px;
             text-decoration: none;
             transition: background-color 0.25s ease;
             position: relative;
+            border-radius: 10px;
+            width: 40px;
         }
 
         li a:hover {
             background-color: rgba(50, 50, 50, 0.8);
-            border-radius:10%;
+            border-radius:10px;
         }
 
         li a:focus {
@@ -65,6 +65,10 @@
         }
 
         li a.active::after {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
             content: '';
             position: absolute;
             left: 0;
@@ -78,36 +82,47 @@
             margin-top: 50px;
         }
 
-        .nav-right {
+        .left {
+            width: 5%;
+            display: flex;
+            flex-direction: row;
+            gap:20%;
+        }
+
+        .right {
+            width: 20%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+        }
+
+        .nav-text {
             display: flex;
             align-items: center;
-            justify-content: flex-end; /* Change this line to align items to the end */
-            width: 80%;
-            margin-right: 60px;
-        }
-        .nav-right a{
-            padding-left: 40px;
-            padding-right: 40px;
+            justify-content: center;
+            text-align: center;
         }
 
-        .cart-icon {
-            width: 50%;
-            height: 50%;
-        }
     </style>
 </head>
-
+        
 <body>
-    <nav>
+<nav>
         <ul>
-            <li><a class="a" id="stock" href="../stock/stock_index.php">Stock</a></li>
-            <li><a class="a" id="invoice" href="../invoice/invoice_index.php">Invoice</a></li>
-            <li><a class="a" id="order" href="../order/order_index.php">Order</a></li>
-            <li><a class="a" id="customer" href="../customer/customer_index.php">Customer</a></li>
-            <li><a class="a" id="dashboard" href="../dashboard/dashboard.php">Dashboard</a></li>
-            <li><a class="a" id="summary" href="../summary/summaryReport.php">Summary</a></li>
-            <li><a class="a" id="log" href="../log/log_index.php?page=1">AccessLog</a></li>
-            <li class="nav-right"><a class="a" id="logout" href="../login.php">Logout</a></li>
+            <div class="left">
+                <li><a class="a" id="stock" href="../stock/stock_index.php"><span class="nav-text">Stock</span></a></li>
+                <li><a class="a" id="invoice" href="../invoice/invoice_index.php"><span class="nav-text">Invoice</span></a></li>
+                <li><a class="a" id="order" href="../order/order_index.php"><span class="nav-text">Order</span></a></li>
+                <li><a class="a" id="customer" href="../customer/customer_index.php"><span class="nav-text">Customer</span></a></li>
+                <li><a class="a" id="admin" href="../admin/admin_index.php"><span class="nav-text">Admin</span></a></li>
+                <li><a class="a" id="log" href="../log/log_index.php?page=1"><span class="nav-text">AccessLog</span></a></li>
+                <li><a class="a" id="dashboard" href="../dashboard/dashboard.php"><span class="nav-text">Dashboard</span></a></li>
+                <li><a class="a" id="summary" href="../summary/summaryReport.php"><span class="nav-text">Summary</span></a></li>
+            </div>
+            <div class="right">
+                <li><a class="a" id="home" href="../../Customer/index.php"><span class="nav-text">Home</span></a></li>
+                <li><a class="a" id="logout" href="../logoutProcess.php"><span class="nav-text">Logout</span></a></li>
+            </div> 
         </ul>
     </nav>
 </body>
@@ -119,10 +134,12 @@
         document.getElementById("order").style.display = "inline-block";
     <?php elseif ($_SESSION['auth'] == 'permissions-admin') : ?>
         document.getElementById("customer").style.display = "inline-block";
+        document.getElementById("admin").style.display = "inline-block";
+        document.getElementById("log").style.display = "inline-block";
     <?php elseif ($_SESSION['auth'] == 'super-admin') : ?>
         document.getElementById("dashboard").style.display = "inline-block";
         document.getElementById("summary").style.display = "inline-block";
-        document.getElementById("log").style.display = "inline-block";
     <?php endif; ?>
-    document.getElementById("logout").style.display = "inline-block"; // This should be outside any condition
+    document.getElementById("home").style.display = "inline-block";
+    document.getElementById("logout").style.display = "inline-block";
 </script>
