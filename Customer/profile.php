@@ -3,13 +3,13 @@ include('./component/session.php');
 
 include_once '../dbConfig.php'; 
 
-$query = "SELECT * FROM customer INNER JOIN account ON account.CusID = customer.CusID WHERE customer.CusID = '$uid'";
+$query = "SELECT * FROM customer WHERE customer.CusID = '$uid'";
 $result = mysqli_query($conn, $query);
 $user_data = mysqli_fetch_assoc($result);
 $uid = $user_data['CusID'];
 
-$query_address = "SELECT * FROM address 
-    INNER JOIN customer ON customer.CusID = address.CusId  
+$query_address = "SELECT *,address.fname AS fnamea, address.lname AS lnamea, address.tel AS tela FROM address
+    INNER JOIN customer ON customer.CusID = address.CusId
     WHERE address.CusId = '$uid'";
 $result_address = mysqli_query($conn, $query_address);
 
@@ -26,13 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
     $update_query = "UPDATE customer SET UserName = '$new_username' ,Tel = '$new_tel' WHERE CusID = '$uid'";
     $update_result = mysqli_query($conn, $update_query);
 
-    $update_query = "UPDATE account SET Username = '$new_username' WHERE CusID = '$uid'";
-    $update_result = mysqli_query($conn, $update_query);
+    // $update_query = "UPDATE account SET Username = '$new_username' WHERE CusID = '$uid'";
+    // $update_result = mysqli_query($conn, $update_query);
 
     if (!$update_result) {
         die("Error updating user data: " . mysqli_error($conn));
     }
-
 }
 
  
@@ -218,7 +217,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
 
                 <label for="tel">Tel:</label>
                 <input type="tel" name="tel" id="tel" value="<?php echo $user_data['Tel']?>" readOnly>
-                <!-- <div style="display:flex;"> -->
                     <button type="button" id="savebio"
                     onclick="saveAlready()"
                     style="display: none; background-color:green; margin-right:1rem;">บันทึก</button>
@@ -233,15 +231,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
                     $user_address = mysqli_fetch_array($result_address);
                     while ($user_address) {
                         echo '<div class="user-card">
-                                <p>' . $user_address['Address'] ." ". $user_address['Province'] . '</p>
+                            <p>' . $user_address['fnamea'] ." ". $user_address['lnamea'] . '</p>
+                            <p>' . $user_address['tela'] . '</p>
+                                    <p>' . $user_address['Address'] ." ". $user_address['Province'] . '</p>
                                 <p>' . $user_address['City'] . " ". $user_address['PostalCode'] . '</p>
                             </div>';
                         echo   '<form method="post" action="./accessAddressProfile.php">
                                     <input type="hidden" name="delete_id_customer" value="' . $uid . '">
                                     <input type="hidden" name="addrId" value="' . $user_address['AddrId'] . '">
                                     <button type="submit">ลบ</button>
-                            </form>'; 
-
+                            </form>';
                         $user_address = mysqli_fetch_array($result_address); // Update $user_address
                     }
                 ?>
@@ -314,7 +313,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
         document.getElementById('FirstName').readOnly = false;
         document.getElementById('LastName').readOnly = false;
         document.getElementById('tel').readOnly = false;
-        setTimeout(hideOverlay, 1000); 
+        setTimeout(hideOverlay, 1000);
         // Adjust the time (in milliseconds) as needed
     }
     function hideOverlay() {

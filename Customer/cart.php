@@ -244,64 +244,63 @@
             }
 
             /* สำหรับ Guest */
-            else if(isset($_SESSION['cart'])){
-                foreach ($_SESSION['cart'] as $product_id => $product) {
-                    $cur = "SELECT product.proId, product.ProductName, product.Price FROM product WHERE proId = '$product_id'";
-                    $msresults = mysqli_query($conn, $cur);
-                    $row = mysqli_fetch_array($msresults);
+            // else if(isset($_SESSION['cart'])){
+            //     foreach ($_SESSION['cart'] as $product_id => $product) {
+            //         $cur = "SELECT product.proId, product.ProductName, product.Price FROM product WHERE proId = '$product_id'";
+            //         $msresults = mysqli_query($conn, $cur);
+            //         $row = mysqli_fetch_array($msresults);
                 
-                    $totalPrice = $row['Price'] * $product['quantity'];
-                    $totalPriceAllItems += $totalPrice;
+            //         $totalPrice = $row['Price'] * $product['quantity'];
+            //         $totalPriceAllItems += $totalPrice;
             
-                    echo '<div class="product">';
-                    echo '<img src="./image/cart.png" alt="Product">';
-                    echo '<div class="product-details">';
-                    echo '<p>' . $row['ProductName'] . '</p>';
-                    echo '<p>Price: ' . $row['Price'] . '</p>';
+            //         echo '<div class="product">';
+            //         echo '<img src="./image/cart.png" alt="Product">';
+            //         echo '<div class="product-details">';
+            //         echo '<p>' . $row['ProductName'] . '</p>';
+            //         echo '<p>Price: ' . $row['Price'] . '</p>';
                 
-                    /* Check if 'quantity' key exists in the $product array */
-                    if (isset($product['quantity'])) {
-                        echo "<div class='button-increase'>
-                                <button type='button' id='change-amount' class='change-amount' onclick='decrementAmount($index, {$row['proId']})'>-</button>
-                                <input type='text' name='amount' id='amount' class='amount' data-index='$index' value='" . $product['quantity'] . "' readonly>
-                                <button type='button' id='change-amount' class='change-amount' onclick='incrementAmount($index, {$row['proId']})'>+</button>
-                            </div>";
-                    }
+            //         /* Check if 'quantity' key exists in the $product array */
+            //         if (isset($product['quantity'])) {
+            //             echo "<div class='button-increase'>
+            //                     <button type='button' id='change-amount' class='change-amount' onclick='decrementAmount($index, {$row['proId']})'>-</button>
+            //                     <input type='text' name='amount' id='amount' class='amount' data-index='$index' value='" . $product['quantity'] . "' readonly>
+            //                     <button type='button' id='change-amount' class='change-amount' onclick='incrementAmount($index, {$row['proId']})'>+</button>
+            //                 </div>";
+            //         }
                     
-                    echo '</div>';
+            //         echo '</div>';
                 
-                    echo '<div class="total-price" id="total-price-' . $index . '">';
-                    echo '<p>Price: ' . $totalPrice . '</p>';
-                    echo '</div>';
+            //         echo '<div class="total-price" id="total-price-' . $index . '">';
+            //         echo '<p>Price: ' . $totalPrice . '</p>';
+            //         echo '</div>';
                 
-                    echo '<form method="post" action="accessCart.php">';
-                    echo '<input type="hidden" name="deleteID" value="' . $row['proId'] . '">';
-                    echo '<input type="image" alt="delete" class="remove-btn" style="width:" src="./image/minus-circle.png">';
-                    echo '</form>';
-                    echo '</div>';
+            //         echo '<form method="post" action="accessCart.php">';
+            //         echo '<input type="hidden" name="deleteID" value="' . $row['proId'] . '">';
+            //         echo '<input type="image" alt="delete" class="remove-btn" style="width:" src="./image/minus-circle.png">';
+            //         echo '</form>';
+            //         echo '</div>';
                 
-                    $index++;
-                }
+            //         $index++;
+            //     }
             
-                // Move this bracket to the correct position
-                echo '<div class="total">';
-                echo '<p>Total Price : ' . $totalPriceAllItems . '</p>';
-                echo "<hr>";
-                echo '</div>';
+            //     // Move this bracket to the correct position
+            //     echo '<div class="total">';
+            //     echo '<p>Total Price : ' . $totalPriceAllItems . '</p>';
+            //     echo "<hr>";
+            //     echo '</div>';
 
-                echo "<div class='buy-button-container'>
-                    <form method='post' action='addressForm.php'>
-                        <input type='hidden' name='cart' value='" . json_encode($_SESSION['cart']) . "'>
-                        ";
-                        if ($totalPriceAllItems <= 0){
-                            echo "<input class='buy-button' style='background-color:gray;' type='submit' value='ซื้อสินค้า' disabled>";
-                        }else{
-                            echo "<input class='buy-button' type='submit' value='ซื้อสินค้า'>";
-                        }
-                    "</form>
-                </div>";
-            }
-             
+            //     echo "<div class='buy-button-container'>
+            //         <form method='post' action='addressForm.php'>
+            //             <input type='hidden' name='cart' value='" . json_encode($_SESSION['cart']) . "'>
+            //             ";
+            //             if ($totalPriceAllItems <= 0){
+            //                 echo "<input class='buy-button' style='background-color:gray;' type='submit' value='ซื้อสินค้า' disabled>";
+            //             }else{
+            //                 echo "<input class='buy-button' type='submit' value='ซื้อสินค้า'>";
+            //             }
+            //         "</form>
+            //     </div>";
+            // }
         ?>
     </div>
   

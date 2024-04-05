@@ -1,5 +1,5 @@
 <?php
-    include_once '../dbConfig.php'; 
+include_once '../dbConfig.php';
 ?>
 
 <style>
@@ -18,6 +18,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-bottom: 1px solid;
     }
 
     .nav-left ul,
@@ -38,7 +39,7 @@
         display: block;
         color: #000;
         text-decoration: none;
-        padding: 10px 20px;
+        padding: 1.5rem;
         border-radius: 5px;
         transition: background-color 0.3s ease;
     }
@@ -48,12 +49,12 @@
         background-color: #ddd;
     }
 
-    .active {
-        background-color: #34495e;
-    }
+    /* .active {
+        background-color: #eef;
+    } */
 
     .cart-icon {
-        width: 30px;
+        width: 20px;
         margin-right: 5px;
     }
 
@@ -67,12 +68,18 @@
         top: 0;
         right: 0;
     }
+
+    @media only screen and (max-width: 1185px) {
+        *{
+            font-size: 12px;
+        }
+    }
 </style>
 
 <nav>
     <div class="nav-left">
         <ul>
-            <li><a <?php echo isActive('index.php'); ?> href="./">Home</a></li>
+            <li><a style="margin-left: 1rem;" <?php echo isActive('index.php'); ?> href="./">Home</a></li>
             <?php if (isset($_SESSION['id_username']) && isset($_SESSION['status']) === true) : ?>
                 <li><a <?php echo isActive('../history.php'); ?> href="./history.php">History</a></li>
             <?php endif; ?>
@@ -81,25 +88,28 @@
 
     <div class="nav-right">
         <ul>
+            <!-- <li>
+                <?php echo $_SESSION['auth']; ?>
+            </li> -->
             <li>
                 <a href='../admin/' id="admin" style='display:none;'>
-                    admin
+                    Admin
                 </a>
             </li>
             <li class="cart-icon-container">
-                <a href="cart.php" class="cart-link">
+                <a href="cart.php" style="display:none;" id="cart" class="cart-link">
                     <img class="cart-icon" src="./image/shopping-cart.png" alt="Cart">
                 </a>
                 <?php if (isset($_SESSION['cart']) || (isset($_SESSION['id_username']) && isset($_SESSION['status']) === true)) : ?>
                     <?php
-                        $cartIconCount = (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) ? count($_SESSION['cart']) : 0;
+                    $cartIconCount = (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) ? count($_SESSION['cart']) : 0;
 
-                        if (isset($_SESSION['id_username']) && isset($_SESSION['status']) === true) {
-                            $uid = (isset($_SESSION['id_username'])) ? $_SESSION['id_username'] : '';
-                            $cur = "SELECT * FROM cart WHERE CusID = '$uid'";
-                            $msresults = mysqli_query($conn, $cur);
-                            $cartIconCount = (mysqli_num_rows($msresults) > 0) ? mysqli_num_rows($msresults) : 0;
-                        }
+                    if (isset($_SESSION['id_username']) && isset($_SESSION['status']) === true) {
+                        $uid = (isset($_SESSION['id_username'])) ? $_SESSION['id_username'] : '';
+                        $cur = "SELECT * FROM cart WHERE CusID = '$uid'";
+                        $msresults = mysqli_query($conn, $cur);
+                        $cartIconCount = (mysqli_num_rows($msresults) > 0) ? mysqli_num_rows($msresults) : 0;
+                    }
                     ?>
                     <?php if (!empty($cartIconCount)) : ?>
                         <span class="badge" id="lblCartCount"><?php echo $cartIconCount; ?></span>
@@ -138,15 +148,18 @@
     }
 </style>
 <script>
-    <?php if (isset($_SESSION['auth']) && ($_SESSION['auth'] == 'product-admin' || $_SESSION['auth'] == 'permissions-admin' || $_SESSION['auth'] == 'super-admin')) : ?>
+    <?php if (isset($_SESSION['auth'])) : ?>
+        document.getElementById("cart").style.display = "inline-block";
+    <?php endif ?>
+    <?php if (($_SESSION['auth'] == 'product-admin' || $_SESSION['auth'] == 'permissions-admin' || $_SESSION['auth'] == 'super-admin')) : ?>
         document.getElementById("admin").style.display = "inline-block";
-    <?php endif; ?>
+    <?php endif ?>
 </script>
 
 
 <?php
-    function isActive($page)
-    {
-        return (basename($_SERVER['PHP_SELF']) == $page) ? 'class="active"' : '';
-    }
+function isActive($page)
+{
+    return (basename($_SERVER['PHP_SELF']) == $page) ? 'class="active"' : '';
+}
 ?>

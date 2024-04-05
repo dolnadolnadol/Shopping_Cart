@@ -1,8 +1,8 @@
 <?php
 // Include session file for session management
 include('./component/session.php');
-include('../logFolder/AccessLog.php');
-include('../logFolder/CallLog.php');
+// include('../logFolder/AccessLog.php');
+// include('../logFolder/CallLog.php');
 include('./component/getFunction/getName.php');
 
 // Check if the request method is POST
@@ -42,22 +42,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_param("si", $pending, $cusID);
             $stmt->execute();
             $lastId = mysqli_insert_id($conn);
-
-            $stmt = $conn->prepare("INSERT INTO address (Address, Province, City, PostalCode, CusId) VALUES (?,?,?,?,?)");
-            $stmt->bind_param("sssii", $address, $province, $city, $postalcode, $cusID);
-            $stmt->execute();
-            $addrId = mysqli_insert_id($conn);
+            if($_POST['changeInfo'] == "value" || $_POST['changeaddress'] == "value"){
+                echo $_POST['changeInfo'] . "wtfman ";
+                echo $_POST['changeaddress'];
+                $stmt = $conn->prepare("INSERT INTO address (fname, lname, tel, Address, Province, City, PostalCode, CusId) VALUES (?,?,?,?,?,?,?,?)");
+                $stmt->bind_param("sssssssi", $fname, $lname, $tel, $address, $province, $city, $postalcode, $cusID);
+                $stmt->execute();
+                $addrId = mysqli_insert_id($conn);
+            }else{
+                $addrId = $_POST['addrId'];
+                echo $addrId . "wtfman2gg ";
+            }
+            
 
             // ACCESS LOG
-            $productId = "";
-            if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            } else {
-                $ipAddress = $_SERVER['REMOTE_ADDR'];
-            }
-            $callingFile = __FILE__;
-            $action = 'INSERT'; // Static Change Action
-            CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
+            // $productId = "";
+            // if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            //     $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            // } else {
+            //     $ipAddress = $_SERVER['REMOTE_ADDR'];
+            // }
+            // $callingFile = __FILE__;
+            // $action = 'INSERT'; // Static Change Action
+            // CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
             //END LOG
 
             // Iterate through each item in the cart

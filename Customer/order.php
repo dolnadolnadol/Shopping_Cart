@@ -138,37 +138,36 @@
         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
         $customerId = $customerDetails['CusID'];
     } else {
-        $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer INNER JOIN account ON account.CusID = customer.CusID WHERE customer.CusID = '$uid'");
+        $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer  WHERE customer.CusID = '$uid'");
         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
         $customerId = $customerDetails['CusID'];
     }
 
-    $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer INNER JOIN account ON account.CusID = customer.CusID WHERE customer.CusID = '$uid'");
+    $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer  WHERE customer.CusID = '$uid'");
     $customerDetails = mysqli_fetch_array($customerDetailsQuery);
 
     
     $RecId = $_POST['id_order'];
-    $payerQuery = mysqli_query($conn, "SELECT * FROM receive
-        INNER JOIN payer ON receive.TaxID = payer.TaxID
-        WHERE receive.RecID = '$RecId '");
+    $payerQuery = mysqli_query($conn, "SELECT * FROM orderkey inner JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId inner join address on orderdelivery.addrId = address.AddrId 
+    inner join customer on customer.cusId = orderkey.cusId WHERE orderkey.orderId = '$RecId '");
     $payerResult = mysqli_fetch_array($payerQuery);
 
 
-    $recevierQuery = mysqli_query($conn, "SELECT * FROM receive
-        INNER JOIN receiver ON receive.RecvID = receiver.RecvID
-        WHERE receive.RecID = '$RecId '");
-    $recevierResult = mysqli_fetch_array($recevierQuery);
+    // $recevierQuery = mysqli_query($conn, "SELECT * FROM receive
+    //     INNER JOIN receiver ON receive.RecvID = receiver.RecvID
+    //     WHERE receive.RecID = '$RecId '");
+    // $payerResult = mysqli_fetch_array($payerQuery);
 
 
-    $recQuery = mysqli_query($conn, "SELECT * FROM receive
-    WHERE receive.RecID = '$RecId '");
+    $recQuery = mysqli_query($conn, "SELECT * FROM orderkey
+    WHERE orderkey.orderId = '$RecId '");
     $recResult = mysqli_fetch_array($recQuery);
 
 
     echo "<div class='container_order'>";
     echo "<div  id='row-rev' class='invoice-container'>
         <div class='invoice-header'>
-            <h1>เลขใบเสร็จของท่านคือ :{$recResult['RecID']} </h1>
+            <h1>เลขใบเสร็จของท่านคือ :{$recResult['orderId']} </h1>
         </div>";
 
     echo "<div class='item_order'>
@@ -181,45 +180,41 @@
     echo '<div class="grid-container">
             <div class="grid-item">';
     echo "<div class='item_order2'>
-                    <p>ชื่อผู้จ่าย: {$payerResult['PayerFName']} {$payerResult['PayerLName']}</p>
+                    <p>ชื่อผู้จ่าย: {$payerResult['fname']} {$payerResult['lname']}</p>
                     <p>ที่อยู่จัดส่ง : {$payerResult['Tel']}</p>
                 </div>";
     echo "</div>
                     <div class='grid-item'>
                         <div class='item_order2'>
                             <p id='Status'>สถานที่จัดส่ง</p>
-                            <p>ชื่อผู้รับ : {$recevierResult['RecvFName']} {$recevierResult['RecvLName']}</p>
-                            <p>ที่อยู่จัดส่ง : {$recevierResult['Address']}</p>
-                            <p>เบอร์โทร : {$recevierResult['Tel']}</p>
+                            <p>ชื่อผู้รับ : {$payerResult['Name']}</p>
+                            <p>ที่อยู่จัดส่ง : {$payerResult['Address']} {$payerResult['Province']} {$payerResult['City']} {$payerResult['PostalCode']}</p>
+                            <p>เบอร์โทร : {$payerResult['Tel']}</p>
                         </div>";
 
     echo "</div>
                     <div class='grid-item'>
                         <div class='item_order2'>
-                            <p id='Status'>สถานะ : {$recResult['Status']}</p>
-                            <p>วันที่สั่งซื้อ : {$recResult['OrderDate']}</p>
-                            <p>วันที่ส่ง : {$recResult['DeliveryDate']}</p>
+                            <p id='Status'>สถานะ : {$recResult['PaymentStatus']}</p>
+                            <p>วันที่สั่งซื้อ : {$recResult['orderCreate']}</p>
+                            <p>วันที่ส่ง : {$payerResult['DeliDate']}</p>
                         </div>
                     </div>
                 </div>";
-
-
     echo "</div>";
 
 
     if (isset($_POST['id_order'])) {
         $customerId = $customerDetails['CusID'];
-        $orderQuery = mysqli_query($conn, "SELECT Product.*, receive_detail.*  , receive.*
-                    FROM receive_detail
-                    INNER JOIN receive ON receive.RecID = receive_detail.RecID
-                    INNER JOIN Product ON Product.proId = receive_detail.proId
-                    WHERE receive_detail.RecID = '$RecId '");
+        $orderQuery = mysqli_query($conn, "SELECT *, ordervalue.Qty AS qtybuy FROM orderkey 
+        INNER JOIN ordervalue ON ordervalue.orderId = orderkey.orderId 
+        left JOIN product ON product.proId = ordervalue.ProId WHERE orderkey.orderId = '$RecId '");
 
         $totalPriceAllItems = 0;
         $detailsDisplayed = false;
 
         while ($row = mysqli_fetch_array($orderQuery)) {
-            $totalPrice = $row['Price'] * $row['Qty'];
+            $totalPrice = $row['Price'] * $row['qtybuy'];
             $totalPriceAllItems += $totalPrice;
 
             if (!$detailsDisplayed) {
@@ -239,7 +234,7 @@
 
             echo "<tr>
                     <td>{$row['ProductName']}</td>
-                    <td>{$row['Qty']}</td>
+                    <td>{$row['qtybuy']}</td>
                     <td>{$row['Price']} ฿</td>
                     <td>$totalPrice</td>
                   </tr>";

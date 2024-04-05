@@ -24,6 +24,7 @@ include('./component/getFunction/getName.php'); ?>
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
         }
 
         .checkout-header {
@@ -121,8 +122,8 @@ include('./component/getFunction/getName.php'); ?>
         if (isset($_SESSION['id_username'])) {
             $uid = $_SESSION['id_username'];
 
-            include_once '../dbConfig.php'; 
-            $query_address = "select * from customer left join address on customer.CusId = address.cusID where customer.CusID = '$uid'";
+            include_once '../dbConfig.php';
+            $query_address = "select * from address where address.CusID = '$uid' LIMIT 1";
             $result_address = mysqli_query($conn, $query_address);
             if (mysqli_num_rows($result_address) > 0) {
                 // Fetch a single row from the result set
@@ -131,65 +132,105 @@ include('./component/getFunction/getName.php'); ?>
         }
         ?>
         <div class="checkout-container">
-            <div class="checkout-header">
-                <h2>Checkout</h2>
-            </div>
-
-            <div class="checkout-steps">
-                <div class="checkout-step active">Step 1: Shipping</div>
-                <div class="checkout-step">Step 2: Payment</div>
-                <div class="checkout-step">Step 3: Success</div>
-            </div>
-
-            <div id="shippingForm" class="checkout-form" style="display: block;">
-                <!-- Shipping form content -->
-                <div class="form-group">
-                    <label for="fullname">First Name</label>
-                    <input type="text" id="fullname" name="fname" value="<?php echo $row['fname'] ?? ''; ?>"
-                        required>
-                    <label for="lastname">Last Name</label>
-                    <input type="text" id="lastname" name="lname" value="<?php echo $row['lname'] ?? ''; ?>"
-                        required>
-                    <label for="tel">Tel</label>
-                    <input required type="tel" name="tel" value="<?php echo $row['Tel'] ?? ''; ?>">
-                    <p>
-                        Address For Song Kong AHHH
-                    </p>
-                    <label for="address">Address</label>
-                    <input required type="text" name="address" value="<?php echo $row['Address'] ?? ''; ?>">
-                    <label for="province">Province</label>
-                    <input required type="text" name="province" value="<?php echo $row['Province'] ?? ''; ?>">
-                    <label for="city">City</label>
-                    <input required type="text" name="city" value="<?php echo $row['City'] ?? ''; ?>">
-                    <label for="postalcode">PostalCode</label>
-                    <input required type="text" name="postalcode" value="<?php echo $row['PostalCode'] ?? ''; ?>">
-
-                    <!-- <label for="address">Address</label>
-                    <textarea style="resize:none;" name="address" id="address" rows="3"
-                        required><?php echo ($row['Address'] ?? '') .' ' . ($row['Province'] ?? '') . ' ' . ($row['City'] ?? '') . ' ' . ($row['PostalCode'] ?? '') ; ?></textarea> -->
+            <div style="width:50%;">
+                <div class="checkout-header">
+                    <h2>Checkout</h2>
                 </div>
 
-                <!-- <button class="checkout-button" onclick="submit()">Next to Payment</button> -->
-                <input type='submit' value="Place your order">
+                <div class="checkout-steps">
+                    <div class="checkout-step active">Step 1: Shipping</div>
+                    <div class="checkout-step">Step 2: Payment</div>
+                    <div class="checkout-step">Step 3: Success</div>
+                </div>
 
-                <!-- ตรวจสอบว่าเป็น Guest หรือ User และแสดงปุ่ม 'ชำระเงิน' ตามเงื่อนไข -->
-                <?php if (isset($_SESSION['cart'])): ?>
-                    <input type='hidden' name='cart' value='<?php echo json_encode($_SESSION['cart']); ?>'>
-                <?php elseif (isset($_SESSION['id_username'])): ?>
-                    <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
-                <?php else: ?>
-                    <p>Oops Something went wrong</p>
-                    <?php echo 'header("Location: ./cart.php")'; ?>
-                <?php endif; ?>
+                <div id="shippingForm" class="checkout-form" style="display: block;">
+                    <!-- Shipping form content -->
+                    <div class="form-group">
+                        <label for="fullname">First Name</label>
+                        <input type="text" id="fname" name="fname" value="<?php echo $row['fname'] ?? ''; ?>" readonly required>
+                        <label for="lastname">Last Name</label>
+                        <input type="text" id="lastname" name="lname" value="<?php echo $row['lname'] ?? ''; ?>" readonly required>
+                        <label for="tel">Tel</label>
+                        <input required type="tel" id="tel" name="tel" value="<?php echo $row['tel'] ?? ''; ?>" readonly>
+                        <input type="hidden" name="changeInfo">
+                        <input type="hidden" name="addrId" value="<?php echo $row['AddrId'] ?? ''; ?>">
+                        <button type="button" onclick="editInfo()">edit info</button>
+                        <button type="button" id="saveInfo" onclick="saveInfobutton()" style="display:none;">save</button>
+                        <p>
+                            Address For Song Kong AHHH
+                        </p>
+
+                        <label for="address">Address</label>
+                        <input required type="text" name="address" id="address" value="<?php echo $row['Address'] ?? ''; ?>" readonly>
+                        <label for="province">Province</label>
+                        <input required type="text" name="province" id="province" value="<?php echo $row['Province'] ?? ''; ?>" readonly>
+                        <label for="city">City</label>
+                        <input required type="text" name="city" id="city" value="<?php echo $row['City'] ?? ''; ?>" readonly>
+                        <label for="postalcode">PostalCode</label>
+                        <input required type="text" name="postalcode" id="postalcode" value="<?php echo $row['PostalCode'] ?? ''; ?>" readonly>
+                        <input type="hidden" name="changeaddress">
+                        <button type="button" onclick="editAddress()">edit address</button>
+                        <button type="button" id="saveaddr" onclick="saveAddressbutton()" style="display:none;">save</button>
+                    </div>
+
+                    <!-- <button class="checkout-button" onclick="submit()">Next to Payment</button> -->
+                    <input type='submit' value="Place your order">
+
+                    <!-- ตรวจสอบว่าเป็น Guest หรือ User และแสดงปุ่ม 'ชำระเงิน' ตามเงื่อนไข -->
+                    <?php if (isset($_SESSION['cart'])) : ?>
+                        <input type='hidden' name='cart' value='<?php echo json_encode($_SESSION['cart']); ?>'>
+                    <?php elseif (isset($_SESSION['id_username'])) : ?>
+                        <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
+                    <?php else : ?>
+                        <p>Oops Something went wrong</p>
+                        <?php echo 'header("Location: ./cart.php")'; ?>
+                    <?php endif; ?>
+                </div>
+
+            </div>
+            
+            <div >
+                <div style="border:1px solid;">
+                    รวมจ้ารวม
+                </div>
             </div>
         </div>
     </form>
 
     <script>
+        function editInfo() {
+            document.getElementById("saveInfo").style.display = "block";
+            document.getElementById("fname").readOnly = false;
+            document.getElementById("lastname").readOnly = false;
+            document.getElementById("tel").readOnly = false;
+        }
 
-        // function submit() {
-        //     document.querySelector('form').submit();
-        // }
+        function saveInfobutton() {
+            document.getElementById("saveInfo").style.display = "none";
+            document.getElementById("fname").readOnly = true;
+            document.getElementById("lastname").readOnly = true;
+            document.getElementById("tel").readOnly = true;
+            document.getElementById("changeinfo").value = "true";
+            alert("saved");
+        }
+
+        function editAddress() {
+            document.getElementById("saveaddr").style.display = "block";
+            document.getElementById("address").readOnly = false;
+            document.getElementById("province").readOnly = false;
+            document.getElementById("city").readOnly = false;
+            document.getElementById("postalcode").readOnly = false;
+        }
+
+        function saveAddressbutton() {
+            document.getElementById("saveaddr").style.display = "none";
+            document.getElementById("address").readOnly = true;
+            document.getElementById("province").readOnly = true;
+            document.getElementById("city").readOnly = true;
+            document.getElementById("postalcode").readOnly = true;
+            document.getElementById("changeaddress").value = "true";
+            alert("saved");
+        }
     </script>
 </body>
 
