@@ -132,7 +132,8 @@
                         <th>Total Price</th>  
                     </tr>
                     <?php
-                        $cur = "SELECT * FROM ordervalue
+                        $cur = "SELECT ordervalue.*, ordervalue.Qty AS QtyO, product.*
+                                FROM ordervalue
                                 INNER JOIN product ON product.proId = ordervalue.ProId
                                 WHERE orderId = '$orderId'";
                         $msresults = mysqli_query($conn, $cur);
