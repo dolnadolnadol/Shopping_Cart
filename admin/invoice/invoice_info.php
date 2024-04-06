@@ -116,7 +116,7 @@
         $row = mysqli_fetch_array($msresults);
     ?>
     <div class="invoice-form">
-        <h2 style="color: #007bff; text-align: center;">Order Information</h2>
+        <h2 style="color: #007bff; text-align: center;">Invoice Information</h2>
 
         <div class="form-block">
             <div class="form-group">
