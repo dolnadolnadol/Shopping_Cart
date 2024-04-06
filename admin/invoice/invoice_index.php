@@ -187,7 +187,7 @@
             echo    "<td>
                         <form class='action-button' action='invoice_info.php' method='post' style='display: inline-block;'>  
                             <input type='hidden' name='id_order' value={$row['invId']}>
-                            <input type='image' alt='update' src='../img/pencil.png'/>
+                            <input type='image' alt='update' src='../img/list.png'/>
                         </form>
                         <form class='action-button' action='invoice_delete_confirm.php' method='post' style='display: inline-block;'>
                             <input type='hidden' name='total_id_order' value={$row['invId']}>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Form</title>
+    <title>Customer Info</title>
 
     <!-- Include necessary libraries -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -53,6 +53,7 @@
 
         input,textarea,
         select {
+            color: #000;
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
@@ -107,74 +108,70 @@
 
 <body>
     <?php  include_once '../../dbConfig.php';
-        $orderId = $_POST['id_order'];
-        $cur = "SELECT * FROM orderkey 
-        INNER JOIN customer ON customer.CusID = orderkey.cusId 
-        INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId 
-        WHERE orderId = '$orderId'";
+        $cusId = $_POST['id_customer'];
+        $cur = "SELECT * FROM customer
+        WHERE CusID = '$cusId'";
         $msresults = mysqli_query($conn, $cur);
         $row = mysqli_fetch_array($msresults);
     ?>
     <div class="invoice-form">
-        <h2 style="color: #007bff; text-align: center;">Order Information</h2>
-
-        <div class="form-block">
-            <div class="form-group">
-                <label for="RecID">RecID:</label>
-                <?php echo"<input type='text' id='orderId' name='orderId' value='$orderId' readonly>"?>
-            </div>
-            <table>
-                <tr style="color:black;">
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total Price</th>  
-                </tr>
-                <?php
-                    $cur = "SELECT ordervalue.*, ordervalue.Qty AS QtyO, product.*
-                            FROM ordervalue
-                            INNER JOIN product ON product.proId = ordervalue.ProId
-                            WHERE orderId = '$orderId'";
-                    $msresults = mysqli_query($conn, $cur);
-                    while ($row = mysqli_fetch_assoc($msresults)) {
-                        $total = (double)$row['Price'] * (double)$row['QtyO'];
-                        echo "<tr>";
-                        echo "<td>" . $row['proId'] . "</td>";
-                        echo "<td>" . $row['ProductName'] . "</td>";
-                        echo "<td>" . $row['Price'] . "</td>";
-                        echo "<td>" . $row['QtyO'] . "</td>";
-                        echo "<td>" . $total . "</td>";
-                        echo "</tr>";
-                    }
-                ?>
-            </table>
-        </div>
-        
         <h2 style="color: #007bff; text-align: center;">Customer Information</h2>
         <div class="form-block">
             <div class="form-group">
                 <?php
-                    $result = mysqli_query($conn, "SELECT * FROM orderkey INNER JOIN customer ON customer.CusID = orderkey.cusID WHERE orderkey.orderId = '$orderId'");
-                    $row = mysqli_fetch_assoc($result);
-                    echo "<label for='RecID'>RecID:</label>";
+                    echo "<label for='RecID'>Customer ID:</label>";
                     echo "<input type='text' value='{$row['CusID']}' readonly>";
                     echo "<label for='customerName'>Customer Name:</label>";
                     echo "<input type='text' value='{$row['fname']} {$row['lname']}' readonly>";
+                    echo "<label for='customerName'>Tel:</label>";
+                    echo "<input type='text' value='{$row['Tel']}' readonly>";
+                    echo "<label for='customerName'>Email:</label>";
+                    echo "<input type='text' value='{$row['Email']}' readonly>";
+                    echo "<label for='customerName'>Username:</label>";
+                    echo "<input type='text' value='{$row['Username']}' readonly>";
                 ?>
             </div>
             <div class="form-group" style="color: #007bff">
                 <label style="color: #007bff" for="customerName">Customer Address:</label>
                 <?php 
-                $cur = "SELECT * FROM orderkey
-                        INNER JOIN address ON address.CusID = orderkey.cusId
-                        WHERE orderId = '$orderId'";
+                $cur = "SELECT *
+                        FROM customer
+                        INNER JOIN address ON address.CusId = customer.CusID
+                        WHERE customer.CusID = '$cusId'";
                 $msresults = mysqli_query($conn, $cur);
-                $row = mysqli_fetch_assoc($msresults);
-                echo "<textarea readonly rows='8'>{$row['Address']}\n{$row['Province']}\n{$row['City']}\n{$row['PostalCode']}</textarea>";
+                if(mysqli_num_rows($msresults) > 0) {
+                    echo "<select id='addressSelect' readonly onchange='updateAddress()'>";
+                    $count = 1;
+                    while($row = mysqli_fetch_assoc($msresults)) {
+                        echo "<option value='{$row['Address']}, {$row['Province']}, {$row['City']}, {$row['PostalCode']}'";
+                        if ($count === 1) {
+                            echo " selected";
+                        }
+                        echo ">ที่อยู่ $count</option>";
+                        $count++;
+                    }
+                    echo "</select>";
+                } else {
+                    echo "No address found for this customer.";
+                }
                 ?>
+            </div>
+            <div class="form-group" style="color: #007bff">
+                <textarea id="selectedAddress" readonly rows="5"></textarea>
             </div>
         </div>
     </div>
 </body>
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        updateAddress();
+    });
+
+    function updateAddress() {
+        var select = document.getElementById("addressSelect");
+        var selectedOption = select.options[select.selectedIndex];
+        var addressInfo = selectedOption.value;
+        document.getElementById("selectedAddress").value = addressInfo;
+    }
+</script>

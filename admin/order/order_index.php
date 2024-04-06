@@ -150,8 +150,10 @@
             <tr>  
                 <th></th>                   
                 <th>Order ID</th>
-                <th>Customer</th>
+                <th>Customer ID</th>
+                <th>Customer Name</th>
                 <th>Order Date</th>
+                <th>Delivery ID</th>
                 <th>Delivery Date</th>
                 <th>Payment Status</th>
                 <th>Delivery Status</th>
@@ -164,8 +166,10 @@
             echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['orderId']}'></td>
                     <td>{$row['orderId']}</td>
-                    <td>{$row['fname']}</td>
+                    <td>{$row['cusId']}</td>
+                    <td>{$row['fname']} {$row['lname']}</td>
                     <td>{$row['orderCreate']}</td>
+                    <td>{$row['DeliId']}</td>
                     <td>{$row['DeliDate']}</td>";
 
 
@@ -215,7 +219,7 @@
             echo    "<td>
                         <form class='action-button' action='order_info.php' method='post' style='display: inline-block;'>  
                             <input type='hidden' name='id_order' value={$row['orderId']}>
-                            <input type='image' alt='update' src='../img/pencil.png'/>
+                            <input type='image' alt='update' src='../img/list.png'/>
                         </form>
                         <form class='action-button' action='order_delete_confirm.php' method='post' style='display: inline-block;'>
                             <input type='hidden' name='total_id_order' value={$row['orderId']}>

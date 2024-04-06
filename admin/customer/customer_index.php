@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User List</title>
+    <title>Customer List</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         body {
@@ -106,7 +106,7 @@
 
 <body>
     <div class="navbar"> <?php include('../navbar/navbarAdmin.php') ?></div>
-    <h1>User List</h1>
+    <h1>Customer List</h1>
     <div class="container">
         <div>
 
@@ -123,9 +123,9 @@
             <label for="filter">Filter by Name:</label>
             <input type="text" name="filter" id="filter" placeholder="Enter name to filter">
             <!------------------------------------------>
-            <form class="add-user-form" action="customer_insert_form.html" method="post">
+            <!-- <form class="add-user-form" action="customer_insert_form.html" method="post">
                 <input type="submit" id="addUserButton" value="Add User">
-            </form>
+            </form> -->
             <br>
         </div>
     </div>
@@ -144,6 +144,8 @@
                 <th>Name</th>
                 <th>Sex</th>
                 <th>Tel</th>
+                <th>Email</th>
+                <th>Username</th>
                 <th>Action</th>
             </tr>";
 
@@ -156,10 +158,12 @@
                     <td>{$row['fname']} {$row['lname']} </td>
                     <td>{$row['Sex']}</td>
                     <td>{$row['Tel']}</td>
+                    <td>{$row['Email']}</td>
+                    <td>{$row['Username']}</td>
                     <td class='action-buttons'>
                         <form class='action-button' action='customer_info.php' method='post'>  
                             <input type='hidden' name='id_customer' value={$row['CusID']}>
-                            <input type='image' alt='update' src='../img/pencil.png'>
+                            <input type='image' alt='update' src='../img/list.png'>
                         </form>
                         <form class='action-button' action='customer_delete_confirm.php' method='post'>
                             <input type='hidden' name='total_id_customer' value={$row['CusID']}>

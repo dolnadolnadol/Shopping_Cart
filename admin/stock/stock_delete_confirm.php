@@ -76,9 +76,9 @@
         $codesArray = explode(',', $code);
         echo "<center>";
         echo "<form method='POST' action='stock_delete.php'>";
-        echo "<h4>จำนวนชุดข้อมูลที่จะลบ</h4><font size='8'>";
-        echo count($codesArray);
-        echo "</font><br>";
+        echo "<h2>รหัสสินค้าที่จะลบ</h2><h1>";
+        echo implode(', ',$codesArray);
+        echo "</h1></font>";
         echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
         echo "<input type='hidden' name='list_id_stock' value={$_POST['list_id_stock']}>";
         echo "<a href='stock_index.php' style='color: black;   
@@ -95,11 +95,9 @@
             $row = mysqli_fetch_array($msresults);
             echo "<center>";
             echo "<form method='post' action='stock_delete.php'>";
-            echo "<h2>รหัสสินค้า ". $row['proId'] ."</h2><br>";
+            echo "<h2>รหัสสินค้าที่จะลบ</h2>";
+            echo "<h1>{$row['proId']}</h1>";
             echo "<input type='hidden' name='id_stock' value='" . $row['proId'] . "'>";
-            echo "ชื่อ : {$row['ProductName']}<br>";
-            echo "<br>";
-            echo "<br><br>";
             echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
             echo "<a href='stock_index.php' 
                     style='

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Form</title>
+    <title>Order Info</title>
 
     <!-- Include necessary libraries -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -121,8 +121,17 @@
 
         <div class="form-block">
             <div class="form-group">
-                <label for="RecID">RecID:</label>
+                <label>Order ID:</label>
                 <?php echo"<input type='text' id='orderId' name='orderId' value='$orderId' readonly>"?>
+                <label>Order Date:</label>
+                <?php echo"<input type='text' id='orderDate' name='orderDate' value='{$row['orderCreate']}' readonly>"?>
+                <label>Order Date:</label>
+                <?php echo"<input type='text' id='orderDate' name='orderDate' value='{$row['orderCreate']}' readonly>"?>
+                <label>Delivery ID:</label>
+                <?php echo "<input type='text' id='DeliId' name='DeliId' value='{$row['DeliId']}' readonly>" ?> 
+                <label>Delivery Date:</label>
+                <?php echo "<input type='text' id='DeliDate' name='DeliDate' value='{$row['DeliDate']}' readonly>" ?>
+                <label>Product list:</label>
             </div>
             <table>
                 <tr style="color:black;">
@@ -158,7 +167,7 @@
                 <?php
                     $result = mysqli_query($conn, "SELECT * FROM orderkey INNER JOIN customer ON customer.CusID = orderkey.cusID WHERE orderkey.orderId = '$orderId'");
                     $row = mysqli_fetch_assoc($result);
-                    echo "<label for='RecID'>RecID:</label>";
+                    echo "<label for='RecID'>Customer ID:</label>";
                     echo "<input type='text' value='{$row['CusID']}' readonly>";
                     echo "<label for='customerName'>Customer Name:</label>";
                     echo "<input type='text' value='{$row['fname']} {$row['lname']}' readonly>";
@@ -176,7 +185,7 @@
                         WHERE orderId = '$orderId'";
                 $msresults = mysqli_query($conn, $cur);
                 $row = mysqli_fetch_assoc($msresults);
-                echo "<textarea readonly rows='8'>{$row['Address']}\n{$row['Province']}\n{$row['City']}\n{$row['PostalCode']}</textarea>";
+                echo "<textarea readonly rows='5'>{$row['Address']}, {$row['Province']}, {$row['City']}, {$row['PostalCode']}</textarea>";
                 ?>
             </div>
         </div>

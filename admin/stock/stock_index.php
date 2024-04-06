@@ -144,10 +144,13 @@
         <table>
             <tr>  
                 <th></th>                   
-                <th>ID</th>
-                <th>ProductName</th>
-                <th>ProductPerUnit</th>
-                <th>Qty</th>
+                <th>Product ID</th>
+                <th>Product Type</th>
+                <th>Product Name</th>
+                <th>Cost</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>On Hand</th>
                 <th>Action</th>
             </tr>";
 
@@ -157,9 +160,12 @@
             echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['proId']}'></td>
                     <td>{$row['proId']}</td>
+                    <td>{$row['typeId']}</td>
                     <td>{$row['ProductName']}</td>
+                    <td>{$row['cost']}</td>
                     <td>{$row['Price']}</td>
                     <td>{$row['Qty']}</td>
+                    <td>{$row['onHand']}</td>
                     <td>
                         <form class='action-button' action='stock_update.php' method='post' style='display: inline-block;'>  
                             <input type='hidden' name='id_stock' value={$row['proId']}>
