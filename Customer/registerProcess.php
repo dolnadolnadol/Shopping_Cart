@@ -15,8 +15,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $select_user = "SELECT * FROM customer WHERE Username = '$username'";
     $run_qry = mysqli_query($conn, $select_user);
     if (mysqli_num_rows($run_qry) == 0) {
-        $stmt_1 = mysqli_query($conn, "INSERT INTO customer(fname, lname, Sex ,Tel, Email, Username , Password ,authority, deleteStatus)
-            VALUES('$fname','$lname', '$sex','$tel', '$email', '$username' , '$password', 'users', '1');");
+        $stmt_1 = mysqli_query($conn, "INSERT INTO customer(fname, lname, Sex ,Tel, Email, Username , Password ,authority)
+            VALUES('$fname','$lname', '$sex','$tel', '$email', '$username' , '$password', 'users');");
 
         if (!$stmt_1) {
             // echo "<script>

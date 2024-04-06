@@ -18,8 +18,8 @@
         else if($newStatus == 'Success'){
             $updateQuery1 = "UPDATE orderkey SET PaymentStatus = '$newStatus' WHERE orderId = '$orderId'";
             $updateQuery2 = "UPDATE orderdelivery SET statusDeli = 'Inprogress', DeliDate = null WHERE DeliId = '$deliId'";
-            mysqli_query($conn, "INSERT INTO invoice (timestamp, cusId, orderId, DeliId, deleteStatus) 
-            VALUES (NOW(), '{$row['cusId']}', '$orderId', '$deliId', '1')");
+            mysqli_query($conn, "INSERT INTO invoice (timestamp, cusId, orderId, DeliId) 
+            VALUES (NOW(), '{$row['cusId']}', '$orderId', '$deliId')");
         }
         else if($newStatus == 'Inprogress'){
             $updateQuery1 = "UPDATE orderkey SET PaymentStatus = 'Success' WHERE orderId = '$orderId'";

@@ -136,7 +136,7 @@
 
     <?php
     include_once '../../dbConfig.php'; 
-    $cur = "SELECT * FROM product WHERE deleteStatus = '1'";
+    $cur = "SELECT * FROM product WHERE deleteStatus = '0'";
     $msresults = mysqli_query($conn, $cur);
 
     echo "<center>";

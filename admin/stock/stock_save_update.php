@@ -52,8 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         Qty = ?, 
                         Photo = ?, 
                         cost = ?, 
-                        typeId = ?, 
-                        deleteStatus = '1' 
+                        typeId = ?,
                     WHERE proId = ?";
 
     // Prepare statement

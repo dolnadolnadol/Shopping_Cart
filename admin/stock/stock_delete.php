@@ -4,7 +4,7 @@
     if (isset($_POST['id_stock'])){
         try{
         $code = $_POST['id_stock'];
-        $stmt = mysqli_query($conn,"UPDATE product SET deleteStatus = '0' WHERE proId ='$code'");
+        $stmt = mysqli_query($conn,"UPDATE product SET deleteStatus = '1' WHERE proId ='$code'");
 
         // check for errors
         echo "Delete data = <font color=red> '$code' </font> is Successful. <br>";
@@ -26,7 +26,7 @@
         foreach ($codesArray as $code) {
             try{
             $code = mysqli_real_escape_string($conn, $code);
-            $stmt = mysqli_query($conn, "UPDATE product SET deleteStatus = '0' WHERE proId ='$code'");
+            $stmt = mysqli_query($conn, "UPDATE product SET deleteStatus = '1' WHERE proId ='$code'");
 
             // check for errors
             echo "Delete data with RecID = <font color=red> '$code' </font> is Successful.<br>";

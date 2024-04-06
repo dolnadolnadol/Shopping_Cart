@@ -138,7 +138,7 @@
 
     <?php
     include_once '../../dbConfig.php'; 
-    $cur = "SELECT * FROM customer WHERE authority != 'users' AND deleteStatus != '0'";
+    $cur = "SELECT * FROM customer WHERE authority != 'users' AND deleteStatus != '1'";
     $msresults = mysqli_query($conn, $cur);
 
     echo "<center>";

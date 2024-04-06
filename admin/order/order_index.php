@@ -141,7 +141,7 @@
     $cur = "SELECT * FROM orderkey 
     INNER JOIN customer ON customer.CusID = orderkey.cusID 
     INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId 
-    WHERE orderkey.deleteStatus != '0'";
+    WHERE orderkey.deleteStatus != '1'";
     $msresults = mysqli_query($conn, $cur);
 
     echo "<center>";

@@ -6,7 +6,7 @@ if (isset($_POST['total_id_order'])) {
     $code = $_POST['total_id_order'];
 
     // run delete
-    $check_id = mysqli_query($conn, "UPDATE invoice SET deleteStatus = '0' WHERE invId ='$code'");
+    $check_id = mysqli_query($conn, "UPDATE invoice SET deleteStatus = '1' WHERE invId ='$code'");
 
     // check for errors
     echo "Delete data = <font color=red> '$code' </font> is Successful. <br>";
@@ -25,7 +25,7 @@ if (isset($_POST['total_id_order'])) {
         $code = mysqli_real_escape_string($conn, $code);
 
         // run delete
-        $check_id = mysqli_query($conn, "UPDATE invoice SET deleteStatus = '0' WHERE invId ='$code'");
+        $check_id = mysqli_query($conn, "UPDATE invoice SET deleteStatus = '1' WHERE invId ='$code'");
        
         // check for errors
         echo "Delete data with RecID = <font color=red> '$code' </font> is Successful.<br>";

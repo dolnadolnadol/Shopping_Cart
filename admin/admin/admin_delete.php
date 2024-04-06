@@ -4,7 +4,7 @@
 if (isset($_POST['total_id_order'])) {
     $code = $_POST['total_id_order'];
     // run delete
-    $check_id = mysqli_query($conn, "UPDATE customer SET deleteStatus = '0' WHERE CusID ='$code' AND authority != 'permissions-admin'");
+    $check_id = mysqli_query($conn, "UPDATE customer SET deleteStatus = '1' WHERE CusID ='$code' AND authority != 'permissions-admin'");
 
     // check for errors
     echo "Delete data = <font color=red> '$code' </font> is Successful. <br>";
@@ -23,7 +23,7 @@ if (isset($_POST['total_id_order'])) {
         $code = mysqli_real_escape_string($conn, $code);
 
         // run delete
-        $check_id = mysqli_query($conn, "UPDATE customer SET deleteStatus = '0' WHERE CusID ='$code' AND authority != 'permissions-admin'");
+        $check_id = mysqli_query($conn, "UPDATE customer SET deleteStatus = '1' WHERE CusID ='$code' AND authority != 'permissions-admin'");
        
         // check for errors
         echo "Delete data with CusID = <font color=red> '$code' </font> is Successful.<br>";

@@ -139,7 +139,7 @@
     <?php
     include_once '../../dbConfig.php'; 
     $cur = "SELECT * FROM invoice 
-    WHERE deleteStatus != '0'";
+    WHERE deleteStatus != '1'";
     $msresults = mysqli_query($conn, $cur);
 
     echo "<center>";
