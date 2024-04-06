@@ -5,6 +5,11 @@
         $orderId = mysqli_real_escape_string($conn, $_POST['orderId']);
         $deliId = mysqli_real_escape_string($conn, $_POST['deliId']);
         $newStatus = mysqli_real_escape_string($conn, $_POST['newStatus']);
+
+        $cur = "SELECT * FROM orderkey 
+        WHERE orderkey.orderId = '$orderId'";
+        $msresults = mysqli_query($conn, $cur);
+        $row = mysqli_fetch_array($msresults);
     
         if($newStatus == 'Pending'){
             $updateQuery1 = "UPDATE orderkey SET PaymentStatus = '$newStatus' WHERE orderId = '$orderId'";
@@ -13,6 +18,8 @@
         else if($newStatus == 'Success'){
             $updateQuery1 = "UPDATE orderkey SET PaymentStatus = '$newStatus' WHERE orderId = '$orderId'";
             $updateQuery2 = "UPDATE orderdelivery SET statusDeli = 'Inprogress', DeliDate = null WHERE DeliId = '$deliId'";
+            mysqli_query($conn, "INSERT INTO invoice (timestamp, cusId, orderId, DeliId, deleteStatus) 
+            VALUES (NOW(), '{$row['cusId']}', '$orderId', '$deliId', '1')");
         }
         else if($newStatus == 'Inprogress'){
             $updateQuery1 = "UPDATE orderkey SET PaymentStatus = 'Success' WHERE orderId = '$orderId'";

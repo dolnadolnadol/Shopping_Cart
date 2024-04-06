@@ -53,7 +53,6 @@
 
         input,textarea,
         select {
-            color: #000000;
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
@@ -162,10 +161,6 @@
                     echo "<input type='text' value='{$row['CusID']}' readonly>";
                     echo "<label for='customerName'>Customer Name:</label>";
                     echo "<input type='text' value='{$row['fname']} {$row['lname']}' readonly>";
-                    echo "<label for='customerName'>Tel:</label>";
-                    echo "<input type='text' value='{$row['Tel']}' readonly>";
-                    echo "<label for='customerName'>Email:</label>";
-                    echo "<input type='text' value='{$row['Email']}' readonly>";
                 ?>
             </div>
             <div class="form-group" style="color: #007bff">

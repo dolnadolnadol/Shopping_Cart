@@ -2,15 +2,18 @@
     include_once '../../dbConfig.php'; 
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $orderId = mysqli_real_escape_string($conn, $_POST['orderId']);
+        $cusid = mysqli_real_escape_string($conn, $_POST['cusid']);
         $newStatus = mysqli_real_escape_string($conn, $_POST['newStatus']);
     
-        if($newStatus == 'Not Approve'){
-            $updateQuery1 = "UPDATE invoice SET approveStatus = '$newStatus' WHERE orderId = '$orderId'";
+        if($newStatus == 'super-admin'){
+            $updateQuery1 = "UPDATE customer SET authority = '$newStatus' WHERE CusID = '$cusid'";
         }
-        else if($newStatus == 'Approve'){
-            $updateQuery1 = "UPDATE invoice SET approveStatus = '$newStatus' WHERE orderId = '$orderId'";
+        else if($newStatus == 'product-admin'){
+            $updateQuery1 = "UPDATE customer SET authority = '$newStatus' WHERE CusID = '$cusid'";
         }
+        // else if($newStatus == 'permissions-admin'){
+        //     $updateQuery1 = "UPDATE customer SET authority = '$newStatus' WHERE CusID = '$cusid'";
+        // }
     
         mysqli_query($conn, $updateQuery1);
     

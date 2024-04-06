@@ -132,7 +132,7 @@
 
     <?php
     include_once '../../dbConfig.php'; 
-    $cur = "SELECT * FROM Customer";
+    $cur = "SELECT * FROM customer WHERE authority = 'users' AND deleteStatus != '0'";
     $msresults = mysqli_query($conn, $cur);
 
     echo "<center>";
@@ -157,12 +157,12 @@
                     <td>{$row['Sex']}</td>
                     <td>{$row['Tel']}</td>
                     <td class='action-buttons'>
-                        <form class='action-button' action='customer_update.php' method='post'>  
+                        <form class='action-button' action='customer_info.php' method='post'>  
                             <input type='hidden' name='id_customer' value={$row['CusID']}>
                             <input type='image' alt='update' src='../img/pencil.png'>
                         </form>
                         <form class='action-button' action='customer_delete_confirm.php' method='post'>
-                            <input type='hidden' name='id_customer' value={$row['CusID']}>
+                            <input type='hidden' name='total_id_customer' value={$row['CusID']}>
                             <input type='image' alt='delete' src='../img/trash.png'>
                         </form>
                     </td>

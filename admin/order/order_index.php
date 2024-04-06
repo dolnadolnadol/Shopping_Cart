@@ -139,7 +139,7 @@
     <?php
     include_once '../../dbConfig.php'; 
     $cur = "SELECT * FROM orderkey 
-    INNER JOIN customer ON customer.CusID = orderkey.CusID 
+    INNER JOIN customer ON customer.CusID = orderkey.cusID 
     INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId 
     WHERE orderkey.deleteStatus != '0'";
     $msresults = mysqli_query($conn, $cur);

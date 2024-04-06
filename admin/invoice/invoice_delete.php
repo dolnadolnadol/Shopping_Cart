@@ -1,62 +1,45 @@
-<?php /* get connection */
-    // header( "location: ./invoice_index.php");
+<?php
+// get connection
     include_once '../../dbConfig.php'; 
-    if (isset($_POST['total_id_invoice'])){
-        $code = $_POST['total_id_invoice'];
-        /* run delete */
-        try{
-        $stmt1 = mysqli_query($conn, "DELETE FROM invoice_detail WHERE InvID ='$code'");
-        $stmt2 = mysqli_query($conn, "DELETE FROM invoice WHERE InvID ='$code'");
-        /* check for errors */
-        if (!$stmt) { 
-            echo "<script type='text/javascript'>
-                    setTimeout(function(){
-                        alert('Delete Fail !');
-                        window.location.href = './invoice_index.php';
-                    }, 100);
-                  </script>";
-        } else {
-            echo "<script type='text/javascript'>
-                    setTimeout(function(){
-                        alert('Delete Successfully');
-                        window.location.href = './invoice_index.php';
-                    }, 100);
-                  </script>";
-        }}catch (mysqli_sql_exception $e) {
-            echo "<script type='text/javascript'>alert('Deletion failed: Cannot delete customer due to related records in the database.');
-            window.location.href = './invoice_index.php';</script>";
-        }
+
+if (isset($_POST['total_id_order'])) {
+    $code = $_POST['total_id_order'];
+
+    // run delete
+    $check_id = mysqli_query($conn, "UPDATE invoice SET deleteStatus = '0' WHERE invId ='$code'");
+
+    // check for errors
+    echo "Delete data = <font color=red> '$code' </font> is Successful. <br>";
+    echo "<a href='invoice_index.php' 
+        style='
+        padding: 9px 14px;
+        color: #ef476f;             
+        text-decoration: none;
+        margin-right: 5px;
+        '>กลับหน้าหลัก</a>";
+} else if (isset($_POST['list_id_order'])) {
+    $list_ids = $_POST['list_id_order'];  
+    $codesArray = explode(',', $list_ids);
+
+    foreach ($codesArray as $code) {
+        $code = mysqli_real_escape_string($conn, $code);
+
+        // run delete
+        $check_id = mysqli_query($conn, "UPDATE invoice SET deleteStatus = '0' WHERE invId ='$code'");
+       
+        // check for errors
+        echo "Delete data with RecID = <font color=red> '$code' </font> is Successful.<br>";
     }
-    else if (isset($_POST['list_id_invoice'])){
-        $list_ids = $_POST['list_id_invoice'];  
-        $codesArray = explode(',', $list_ids);
-        foreach ($codesArray as $code) {
-            try{
-            $code = mysqli_real_escape_string($conn, $code);
-            $stmt1 = mysqli_query($conn, "DELETE FROM invoice_detail WHERE InvID ='$code'");
-            $stmt2 = mysqli_query($conn, "DELETE FROM invoice WHERE InvID ='$code'");
-    
-            /* check for errors */
-            if (!$stmt1 && !$stmt2) {
-                echo "<script type='text/javascript'>
-                    setTimeout(function(){
-                        alert('Delete Fail ! This customer have order or invoice that does not complete.');
-                        window.location.href = './invoice_index.php';
-                    }, 100);
-                  </script>";
-            } else {
-                echo "<script type='text/javascript'>
-                    setTimeout(function(){
-                        alert('Delete Successfully');
-                        window.location.href = './invoice_index.php';
-                    }, 100);
-                  </script>";
-            }}catch (mysqli_sql_exception $e) {
-                echo "<script type='text/javascript'>alert('Deletion failed: Cannot delete customer due to related records in the database.');
-                window.location.href = './invoice_index.php';</script>";
-            }
-        }
-    }
-    /* close connection */
-    mysqli_close($conn);
+    echo "<a href='invoice_index.php' 
+    style='
+    padding: 9px 14px;
+    color: #ef476f;             
+    text-decoration: none;
+    margin-right: 5px;
+    '>กลับหน้าหลัก</a>";
+}
+
+// close connection
+header("location: ./invoice_index.php");
+mysqli_close($conn);
 ?>
