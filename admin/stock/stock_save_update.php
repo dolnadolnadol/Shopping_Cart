@@ -17,23 +17,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Check if either files or oldPhoto is set
     if (isset($_FILES['files']) || isset($_POST['OldPhoto'])) {
-        $targetDir = "../UploadImg/uploads/";
-        $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
-        $uploadedFiles = array();
+        // $targetDir = "../UploadImg/uploads/";
+        // $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+        // $uploadedFiles = array();
         
-        // Check if there are new files uploaded
-        if (isset($_FILES['files'])) {
-            foreach ($_FILES['files']['name'] as $key => $val) {
-                $fileName = basename($_FILES['files']['name'][$key]);
-                $targetFilePath = $targetDir . $fileName;
-                $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-                if (in_array($fileType, $allowTypes)) {
-                    if (move_uploaded_file($_FILES["files"]["tmp_name"][$key], $targetFilePath)) {
-                        $uploadedFiles[] = $targetFilePath;
-                    }
-                }
-            }
-        }
+        // // Check if there are new files uploaded
+        // if (isset($_FILES['files'])) {
+        //     foreach ($_FILES['files']['name'] as $key => $val) {
+        //         $fileName = basename($_FILES['files']['name'][$key]);
+        //         $targetFilePath = $targetDir . $fileName;
+        //         $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+        //         if (in_array($fileType, $allowTypes)) {
+        //             if (move_uploaded_file($_FILES["files"]["tmp_name"][$key], $targetFilePath)) {
+        //                 $uploadedFiles[] = $targetFilePath;
+        //             }
+        //         }
+        //     }
+        // }
 
         // Set photo based on whether new files are uploaded or not
         if (!empty($uploadedFiles)) {

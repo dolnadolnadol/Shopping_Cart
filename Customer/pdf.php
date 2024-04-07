@@ -7,36 +7,41 @@ include_once '../dbConfig.php';
 if (empty($_POST["id_receive"])) {
     // $receiptCode = $_SESSION['ReceiptCode'];
     $receiptCode = $_POST['id_receive'];
-    $sql = "SELECT RecvID FROM receive WHERE RecID = '$receiptCode'";
+    $sql = "SELECT receiptId FROM receipt WHERE orderId = '$receiptCode'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
-    $RecvID = $row['RecvID'];
+    $receiptId = $row['receiptId'];
 } else {
     $receiptCode = $_POST["id_receive"];
-    $sql = "SELECT RecvID FROM receive WHERE RecID = '$receiptCode'";
+    $sql = "SELECT receiptId FROM receipt WHERE orderId = '$receiptCode'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
-    $RecvID = $row['RecvID'];
+    $receiptId = $row['receiptId'];
 }
 
-$sql = "SELECT r.RecvID, r.RecvFName, r.RecvLName, r.Sex, r.Tel, r.Address, ro.CusID
-        FROM receiver r 
-        JOIN receiver_detail ro ON r.RecvID = '$RecvID' AND r.RecvID = ro.RecvID";
+$sql = "SELECT r.receiptId, r.fname, r.lname, a.Tel, a.Address, a.Province, a.City, a.PostalCode, r.cusId
+FROM receipt r
+JOIN orderkey o ON r.orderId = o.orderId
+JOIN customer c ON r.cusId = c.CusID
+JOIN address a ON c.CusID = a.CusId
+where r.receiptId = '$receiptId'";
 
 $result = mysqli_query($conn, $sql);
 
 $row = mysqli_fetch_assoc($result);
-$cusID = $row["CusID"];
+$cusID = $row["cusId"];
 $cusAddress = $row['Address'];
-$cusFName = $row['RecvFName'];
-$cusLName = $row['RecvLName'];
-$cusSex = $row['Sex'];
+$cusFName = $row['fname'];
+$cusLName = $row['lname'];
 $cusTel = $row['Tel'];
 
-$sql = "SELECT OrderDate FROM receive WHERE RecID = '$receiptCode'";
+$sql = "SELECT ok.orderCreate
+FROM receipt r
+JOIN orderkey ok ON r.orderId = ok.orderId
+WHERE r.receiptId ='$receiptId'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
-$payTime = $row['OrderDate'];
+$payTime = $row['orderCreate'];
 $payDate = date('Y-m-d', strtotime($payTime));
 
 
@@ -171,10 +176,12 @@ $pdf->Cell(60, 10, "testuser@test.com", 0, 1, 'L');
 
 $pdf->Cell(170, 10, "", 'T', 1, 'L');
 
-$sql = "SELECT *
-FROM receive_detail
-JOIN product ON receive_detail.proId = product.proId 
-WHERE receive_detail.RecID = '$receiptCode'";
+$sql = "SELECT p.ProductName, ov.Qty, p.Price
+FROM receipt r
+JOIN orderkey ok ON r.orderId = ok.orderId
+JOIN ordervalue ov ON ok.orderId = ov.orderId
+JOIN product p ON ov.ProId = p.proId
+WHERE r.receiptId = '$receiptId'";
 $result = mysqli_query($conn, $sql);
 
 $orderProducts = array();

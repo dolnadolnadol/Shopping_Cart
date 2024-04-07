@@ -12,7 +12,6 @@
             margin: 0;
             padding: 20px;
             background-color: #eee;
-            /* background: linear-gradient(to right, #eee, white); */
             display: flex;
             justify-content: center;
         }
@@ -23,13 +22,10 @@
             padding: 0 15px;
             padding-top: 8rem;
             border: 1px solid;
-            /* display:flexbox;
-            justify-content: center; */
             background-color: white;
         }
 
         .product-container {
-            /* background-color: red; */
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -159,10 +155,10 @@
                 if (mysqli_num_rows($msresults) > 0) {
                     while ($row = mysqli_fetch_array($msresults)) {
                         echo "<div class='product-card'>";
-                        $imageData = $row['Photo'];
-                        $imageDataEncoded = base64_encode($imageData);
-                        echo "<img src='data:image/jpeg;base64,{$imageDataEncoded}'/>";
-                        // include('./component/showPhotos.php');
+                        // $imageData = $row['Photo'];
+                        // $imageDataEncoded = base64_encode($imageData);
+                        // echo "<img src='data:image/jpeg;base64,{$imageDataEncoded}'/>";
+                        include('./component/showPhotos.php');
                         echo "
                                 <p class='product-name'>{$row['ProductName']}</p>
                                 <p class='product-price'>ราคา {$row['Price']} บาท</p>

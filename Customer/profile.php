@@ -1,6 +1,9 @@
 <?php
 include('./component/session.php');
-
+if(!isset($_SESSION['auth'])) {
+    header("Location: ./login.php");
+    exit;
+}
 include_once '../dbConfig.php'; 
 
 $query = "SELECT * FROM customer WHERE customer.CusID = '$uid'";

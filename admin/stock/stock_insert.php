@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $allowTypes = array('jpg','png','jpeg','gif'); 
         $fileNames = array_filter($_FILES['files']['name']); 
         $uploadedFiles = array();
+        // $photoData = file_get_contents($_FILES["files"]["name"]);
         
         if(!empty($fileNames)) { 
             foreach($_FILES['files']['name'] as $key=>$val) {
@@ -39,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt) {
             // Bind parameters
-            $stmt->bind_param("sssssss", $a2, $a5, $a3, $a4, $a6, $a7, $photo);
+            $stmt->bind_param("ssssssb", $a2, $a5, $a3, $a4, $a6, $a7, $photoData);
 
             // Combine uploaded file names into a single string separated by commas
             $photo = implode(",", $uploadedFiles);

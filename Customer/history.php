@@ -146,10 +146,11 @@
         <h1>History</h1>
         <!-- Tab buttons -->
         <div class="tab">
-            <button id="invoiceTab" class="tablinks" onclick="openTab(event, 'invoice')">Invoice</button>
-            <button class="tablinks" onclick="openTab(event, 'orders')">Orders</button>
+            <!-- <button id="invoiceTab" class="tablinks" onclick="openTab(event, 'invoice')">Invoice</button> -->
+            <button id="invoiceTab" class="tablinks" onclick="openTab(event, 'orders')">All Orders</button>
             <button class="tablinks" onclick="openTab(event, 'pay')">รอชำระ</button>
             <button class="tablinks" onclick="openTab(event, 'delivery')">รอจัดส่ง</button>
+            <button class="tablinks" onclick="openTab(event, 'success')">สำเร็จ</button>
         </div>
         <?php
         $uid = $_SESSION['id_username'];
@@ -208,7 +209,7 @@ LEFT JOIN
 JOIN 
     orderdelivery ON orderkey.DeliId = orderdelivery.DeliId 
 WHERE 
-    CusID = '$uid' and PaymentStatus != 'Pending' and statusDeli != 'Prepare'
+    CusID = '$uid' and PaymentStatus != 'Pending' and statusDeli = 'Inprogress'
 GROUP BY 
     orderkey.orderId;"); ?>
         </div>
@@ -238,26 +239,53 @@ WHERE
     CusID = '$uid'
 GROUP BY 
     orderkey.orderId;"); ?>
-            <!-- <?php includeOrders("SELECT * FROM orderkey join ordervalue on orderkey.orderId = ordervalue.orderId join orderdelivery on orderkey.DeliId = orderdelivery.DeliId 
-            WHERE CusID = '$uid'"); ?> -->
         </div>
-    </div>
-    <script>
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
+
+            <div id="success" class="tabcontent">
+                <?php includeSuccess("SELECT 
+    orderkey.orderId,
+    GROUP_CONCAT(ordervalue.ProId) AS ProId,
+    GROUP_CONCAT(ordervalue.Qty) AS Qty,
+    orderkey.DeliId,
+    orderdelivery.DeliDate,
+    orderdelivery.statusDeli,
+    orderdelivery.addrId,
+    orderdelivery.fname,
+    orderdelivery.lname,
+    orderdelivery.Tel,
+    orderdelivery.TotalPrice,
+    orderkey.orderCreate,
+    orderkey.PaymentStatus
+FROM 
+    orderkey 
+LEFT JOIN 
+    ordervalue ON orderkey.orderId = ordervalue.orderId 
+JOIN 
+    orderdelivery ON orderkey.DeliId = orderdelivery.DeliId 
+WHERE 
+    CusID = '$uid' and PaymentStatus != 'Pending' and statusDeli = 'Delivered'
+GROUP BY 
+    orderkey.orderId;"); ?>
+                <!-- <?php includeOrders("SELECT * FROM orderkey join ordervalue on orderkey.orderId = ordervalue.orderId join orderdelivery on orderkey.DeliId = orderdelivery.DeliId 
+            WHERE CusID = '$uid'"); ?> -->
+            </div>
+        </div>
+        <script>
+            function openTab(evt, tabName) {
+                var i, tabcontent, tablinks;
+                tabcontent = document.getElementsByClassName("tabcontent");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+                document.getElementById(tabName).style.display = "block";
+                evt.currentTarget.className += " active";
             }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
-        document.getElementById("invoiceTab").click();
-    </script>
+            document.getElementById("invoiceTab").click();
+        </script>
 </body>
 
 </html>
@@ -310,7 +338,7 @@ function includeOrders($query)
         echo "<pf>Order ID: {$row['orderId']}</pf>";
         echo "<p>Total Amount: {$row['TotalPrice']} ฿</p>";
         echo "<p>Order Date: {$row['orderCreate']}</p>";
-        if ($row['DeliDate'] != null) {
+        if ($row['statusDeli'] != null) {
             echo "<p>Delivery Date: {$row['DeliDate']}</p>";
         }
         if ($row['PaymentStatus'] == 'Pending') {
@@ -322,7 +350,7 @@ function includeOrders($query)
         } else if ($row['PaymentStatus'] == 'Canceled') {
             echo "<pl id='Canceled'>PaymentStatus: {$row['PaymentStatus']}</pl>";
         }
-
+        echo " ";
         if ($row['statusDeli'] == 'Prepare') {
             // echo "<pl id='prepare'>Status Delivery: {$row['statusDeli']}</pl>";
         } else if ($row['statusDeli'] == 'Inprogress') {
@@ -353,7 +381,7 @@ function includePay($query)
         echo "<pf>Order ID: {$row['orderId']}</pf>";
         echo "<p>Total Amount: {$row['TotalPrice']} ฿</p>";
         echo "<p>Order Date: {$row['orderCreate']}</p>";
-        if ($row['DeliDate'] != null) {
+        if ($row['statusDeli'] != null) {
             echo "<p>Delivery Date: {$row['DeliDate']}</p>";
         }
         if ($row['PaymentStatus'] == 'Pending') {
@@ -365,6 +393,49 @@ function includePay($query)
         } else if ($row['PaymentStatus'] == 'Canceled') {
             echo "<pl id='Canceled'>PaymentStatus: {$row['PaymentStatus']}</pl>";
         }
+
+        echo " ";
+        if ($row['statusDeli'] == 'Prepare') {
+            // echo "<pl id='prepare'>Status Delivery: {$row['statusDeli']}</pl>";
+        } else if ($row['statusDeli'] == 'Inprogress') {
+            echo "<pl id='Inprogress'>Status Delivery: {$row['statusDeli']}</pl>";
+        } else if ($row['statusDeli'] == 'Delivered') {
+            echo "<pl id='Delivered'>Status Delivery: {$row['statusDeli']}</pl>";
+        } else if ($row['statusDeli'] == 'Canceled') {
+            echo "<pl id='Canceled'>Status Delivery: {$row['statusDeli']}</pl>";
+        }
+        echo '</div>';
+    }
+}
+function includeSuccess($query)
+{
+    include '../dbConfig.php';
+    $msresults = mysqli_query($conn, $query);
+    while ($row = mysqli_fetch_array($msresults)) {
+        echo '<div class="order">';
+        echo "<div class='icon-container'>
+                <form method='post' action='order.php'>
+                    <input type='hidden' name='id_order' value='{$row['orderId']}'>
+                    <button type='submit'>
+                        <img src='./image/search-alt.png' alt='Order Icon' width='20'>
+                    </button>
+                </form>
+            </div>";
+        echo "<pf>Order ID: {$row['orderId']}</pf>";
+        echo "<p>Total Amount: {$row['TotalPrice']} ฿</p>";
+        echo "<p>Order Date: {$row['orderCreate']}</p>";
+        if ($row['statusDeli'] != null) {
+            echo "<p>Delivery Date: {$row['DeliDate']}</p>";
+        }
+        // if ($row['PaymentStatus'] == 'Pending') {
+        //     echo "<pl id='Pending'>PaymentStatus: {$row['PaymentStatus']}</pl>";
+        // } else if ($row['PaymentStatus'] == 'Inprogress') {
+        //     echo "<pl id='Inprogress'>PaymentStatus: {$row['PaymentStatus']}</pl>";
+        // } else if ($row['PaymentStatus'] == 'Success') {
+        //     echo "<pl id='Delivered'>PaymentStatus: {$row['PaymentStatus']}</pl>";
+        // } else if ($row['PaymentStatus'] == 'Canceled') {
+        //     echo "<pl id='Canceled'>PaymentStatus: {$row['PaymentStatus']}</pl>";
+        // }
 
         if ($row['statusDeli'] == 'Prepare') {
             // echo "<pl id='prepare'>Status Delivery: {$row['statusDeli']}</pl>";
