@@ -111,15 +111,16 @@
                 <?php     
 
                     include_once '../../dbConfig.php'; 
-                    $RecID = $_POST['id_order'];
-                    echo "<input type='text' id='RecID' name='RecID' value='$RecID' readonly>
+                    $orderId = $_POST['id_order'];
+                    echo "<input type='text' id='orderId' name='orderId' value='$orderId' readonly>
                     </div>";
-                    $cur = "SELECT * FROM receive 
-                    INNER JOIN Customer ON Customer.CusID = receive.CusID
-                    WHERE RecID = '$RecID'";
+                    $cur = "SELECT * FROM orderkey 
+                    INNER JOIN customer ON customer.CusID = orderkey.cusId 
+                    INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId 
+                    WHERE orderId = '$orderId'";
                     $msresults = mysqli_query($conn, $cur);
                     $row = mysqli_fetch_array($msresults);
-                    $status = $row['Status'];
+                    $status = $row['PaymentStatus'];
 
 
                 ?>

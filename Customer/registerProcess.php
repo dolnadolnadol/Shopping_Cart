@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         document.addEventListener('DOMContentLoaded', function() {
             swal('Failed to Register!', 'Register is Failed!', 'error')
                 .then(() => {
-                    window.location.href = './';
+                    window.location.href = './login.php';
                 });
         });
       </script>";
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         document.addEventListener('DOMContentLoaded', function() {
             swal('Registeration Successful!', 'Register is successful!', 'success')
                 .then(() => {
-                    window.location.href = './';
+                    window.location.href = './login.php';
                 });
         });
       </script>";
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         document.addEventListener('DOMContentLoaded', function() {
             swal('Failed to Register!', 'User Have Already!', 'error')
                 .then(() => {
-                    window.location.href = './';
+                    window.location.href = './login.php';
                 });
         });
       </script>";

@@ -81,6 +81,12 @@
         <label for="a5">รายละเอียดสินค้า:</label>
         <textarea id="a5" name="a5" rows="4" cols="50" required></textarea>
 
+        <label for="a7">ประเภทสินค้า:</label>
+        <input type="text" id="a7" name="a7" size="1" required>
+
+        <label for="a6">ต้นทุน:</label>
+        <input type="text" id="a6" name="a6" size="1" required>
+
         <label for="a3">ราคาต่อหน่วย:</label>
         <input type="text" id="a3" name="a3" size="1" required>
 

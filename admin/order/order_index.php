@@ -129,9 +129,9 @@
             <label for="filter">Filter by Name:</label>
             <input type="text" name="filter" id="filter" placeholder="Enter name to filter">
             <!------------------------------------------>
-            <form class="add-order-form" action='order_insert.php' method='post'>
+            <!-- <form class="add-order-form" action='order_insert.php' method='post'>
                 <input type='submit' id="addOrderButton" value='Add Order'/>
-            </form>
+            </form> -->
             <br>
         </div>
     </div>
@@ -139,8 +139,9 @@
     <?php
     include_once '../../dbConfig.php'; 
     $cur = "SELECT * FROM orderkey 
-    INNER JOIN customer ON customer.cusID = orderkey.CusID
-    INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId";
+    INNER JOIN customer ON customer.CusID = orderkey.cusID 
+    INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId 
+    WHERE orderkey.deleteStatus != '1'";
     $msresults = mysqli_query($conn, $cur);
 
     echo "<center>";
@@ -149,10 +150,12 @@
             <tr>  
                 <th></th>                   
                 <th>Order ID</th>
-                <th>Customer</th>
-                <th>Amount</th>
+                <th>Customer ID</th>
+                <th>Customer Name</th>
                 <th>Order Date</th>
+                <th>Delivery ID</th>
                 <th>Delivery Date</th>
+                <th>Payment Status</th>
                 <th>Delivery Status</th>
                 <th>Action</th>
             </tr>";
@@ -162,51 +165,64 @@
         while ($row = mysqli_fetch_array($msresults)) {
             echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['orderId']}'></td>
-                    <td>{$row['cusID']}</td>
-                    <td>{$row['Name']}</td>
-                    <td>{$row['TotalPrice']}</td>
+                    <td>{$row['orderId']}</td>
+                    <td>{$row['cusId']}</td>
+                    <td>{$row['fname']} {$row['lname']}</td>
                     <td>{$row['orderCreate']}</td>
+                    <td>{$row['DeliId']}</td>
                     <td>{$row['DeliDate']}</td>";
 
 
                     echo "<td>";
                     echo "<div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
-
-                    if ($row['Status'] == 'Pending' || $row['Status'] == 'pending') {
+                    if ($row['PaymentStatus'] == 'Pending') {
                         echo '#FFA500;';
-                    } elseif ($row['Status'] == 'Inprogress') {
-                        echo '#7C6BFF;'; 
-                    } elseif ($row['Status'] == 'Canceled') {
-                        echo '#FF0000;';
+                    } elseif ($row['PaymentStatus'] == 'Success') {
+                        echo '#06D6B1;';
                     } else {
-                        echo '#06D6B1;'; 
                     }
-
                     echo "'>";
-                    echo "<select id='select_$index' data-recid='{$row['RecID']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
+                    echo "<select id='select_$index' data-orderId='{$row['orderId']}' data-deliId='{$row['DeliId']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
                     user-select: none; color: #ffff;' required>";
-
-                    $statusCompare = ['Pending', 'Inprogress', 'Delivered', 'Canceled'];
-
+                    $statusCompare = ['Pending', 'Success'];
                     foreach ($statusCompare as $value) {
-                        $selected = ($value == $row['Status']) ? 'selected' : '';
- 
-
+                        $selected = ($value == $row['PaymentStatus']) ? 'selected' : '';
                         echo "<option value='$value' style='background-color: #ffff; color: black;' $selected>{$value}</option>";
                     }
+                    echo "</select>";
+                    echo "</div></td>";
 
+
+                    echo "<td>";
+                    echo "<div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
+                    if ($row['statusDeli'] == 'Inprogress') {
+                        echo '#FFA500;';
+                    } elseif ($row['statusDeli'] == 'Delivered') {
+                        echo '#06D6B1;';
+                    } elseif ($row['statusDeli'] == 'Prepare') {
+                        echo '#FF0000;';
+                    } else {
+                    }
+                    echo "'>";
+                    echo "<select id='select2_$index' data-orderId='{$row['orderId']}' data-deliId='{$row['DeliId']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
+                    user-select: none; color: #ffff;' required>";
+                    $statusCompare = ['Prepare', 'Inprogress', 'Delivered'];
+                    foreach ($statusCompare as $value) {
+                        $selected = ($value == $row['statusDeli']) ? 'selected' : '';
+                        echo "<option value='$value' style='background-color: #ffff; color: black;' $selected>{$value}</option>";
+                    }
                     echo "</select>";
                     echo "</div></td>";
 
 
                   
             echo    "<td>
-                        <form class='action-button' action='order_update.php' method='post' style='display: inline-block;'>  
-                            <input type='hidden' name='id_order' value={$row['RecID']}>
-                            <input type='image' alt='update' src='../img/pencil.png'/>
+                        <form class='action-button' action='order_info.php' method='post' style='display: inline-block;'>  
+                            <input type='hidden' name='id_order' value={$row['orderId']}>
+                            <input type='image' alt='update' src='../img/list.png'/>
                         </form>
                         <form class='action-button' action='order_delete_confirm.php' method='post' style='display: inline-block;'>
-                            <input type='hidden' name='total_id_order' value={$row['RecID']}>
+                            <input type='hidden' name='total_id_order' value={$row['orderId']}>
                             <input type='image' alt='delete' src='../img/trash.png'/>
                         </form>
                     </td>
@@ -225,7 +241,6 @@
         var deleteButton = document.getElementById('deleteButton');
         var selectedValuesInput = document.getElementById('selectedValues');
 
-
         var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
         var enableDeleteButton = checkedCheckboxes.length > 0;
 
@@ -242,8 +257,10 @@
         });
     }
 </script>
+
 <script>
-   document.addEventListener('DOMContentLoaded', function () {
+    /*Payment*/
+    document.addEventListener('DOMContentLoaded', function () {
     for (var i = 1; i <= <?php echo $index; ?>; i++) {
         var selectElement = document.getElementById('select_' + i);
 
@@ -251,34 +268,28 @@
             selectElement.addEventListener('change', function () {
                 var selectedValue = this.value;
                 var selectDiv = this.parentElement;
-                var recID = this.getAttribute('data-recid');
+                var orderId = this.getAttribute('data-orderId');
+                var deliId = this.getAttribute('data-deliId');
 
                 switch (selectedValue) {
                     case 'Pending':
                         selectDiv.style.backgroundColor = '#FFA500';
                         break;
-                    case 'Inprogress':
-                        selectDiv.style.backgroundColor = '#7C6BFF';
-                        break;
-                    case 'Canceled':
-                        selectDiv.style.backgroundColor = '#FF0000';
-                        break;
-                    default:
+                    case 'Success':
                         selectDiv.style.backgroundColor = '#06D6B1';
+                        break;
                 }
 
-                console.log(recID , selectedValue )
-                updateStatus(recID, selectedValue);
+                console.log(orderId, deliId, selectedValue);
+                updateStatus(orderId, deliId, selectedValue);
             });
         }
     }
-
-    function updateStatus(recID, newStatus) {
+    
+    function updateStatus(orderId, deliId, newStatus) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'order_update_status.php', true);
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-        console.log(recID , newStatus )
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -289,11 +300,61 @@
                 }
             }
         };
-        xhr.send('recID=' + encodeURIComponent(recID) + '&newStatus=' + encodeURIComponent(newStatus));
-
+        xhr.send('orderId=' + encodeURIComponent(orderId) + '&deliId=' + encodeURIComponent(deliId) + '&newStatus=' + encodeURIComponent(newStatus));
     }
 });
 </script>
+
+<script>
+    /*Deliver*/
+    document.addEventListener('DOMContentLoaded', function () {
+    for (var i = 1; i <= <?php echo $index; ?>; i++) {
+        var selectElement = document.getElementById('select2_' + i);
+
+        if (selectElement) {
+            selectElement.addEventListener('change', function () {
+                var selectedValue = this.value;
+                var selectDiv = this.parentElement;
+                var orderId = this.getAttribute('data-orderId');
+                var deliId = this.getAttribute('data-deliId');
+
+                switch (selectedValue) {
+                    case 'Inprogress':
+                        selectDiv.style.backgroundColor = '#FFA500';
+                        break;
+                    case 'Delivered':
+                        selectDiv.style.backgroundColor = '#06D6B1';
+                        break;
+                    case 'Prepare':
+                        selectDiv.style.backgroundColor = '#FF0000';
+                        break;
+                }
+
+                console.log(orderId, deliId, selectedValue);
+                updateStatus(orderId, deliId, selectedValue);
+            });
+        }
+    }
+    
+    function updateStatus(orderId, deliId, newStatus) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'order_update_status.php', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log('Status updated successfully');
+                } else {
+                    console.error('Error updating status');
+                }
+            }
+        };
+        xhr.send('orderId=' + encodeURIComponent(orderId) + '&deliId=' + encodeURIComponent(deliId) + '&newStatus=' + encodeURIComponent(newStatus));
+    }
+});
+</script>
+
 <script>
     function checkAll() {
         var checkboxes = document.getElementsByName('checkbox[]');
@@ -348,7 +409,6 @@
 
         $('#filter').on('input', function() {
             var filterKeyword = $(this).val();
-
             updateTable(filterKeyword);
         });
 </script>

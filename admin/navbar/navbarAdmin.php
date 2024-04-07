@@ -135,7 +135,7 @@
     <?php elseif ($_SESSION['auth'] == 'permissions-admin') : ?>
         document.getElementById("customer").style.display = "inline-block";
         document.getElementById("admin").style.display = "inline-block";
-        document.getElementById("log").style.display = "inline-block";
+        // document.getElementById("log").style.display = "inline-block";
     <?php elseif ($_SESSION['auth'] == 'super-admin') : ?>
         document.getElementById("dashboard").style.display = "inline-block";
         document.getElementById("summary").style.display = "inline-block";

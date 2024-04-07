@@ -39,9 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_param("si", $pending, $cusID);
             $success = $stmt->execute();
             $lastId = mysqli_insert_id($conn);
-            if ($_POST['changeInfo'] == "value" || $_POST['changeaddress'] == "value") {
-                $stmt = $conn->prepare("INSERT INTO address (fname, lname, tel, Address, Province, City, PostalCode, CusId) VALUES (?,?,?,?,?,?,?,?)");
-                $stmt->bind_param("sssssssi", $fname, $lname, $tel, $address, $province, $city, $postalcode, $cusID);
+            if($_POST['changeInfo'] == "value" || $_POST['changeaddress'] == "value"){
+                $stmt = $conn->prepare("INSERT INTO address (fname, lname, tel, Address, Province, City, PostalCode, CusId, deleteStatus) VALUES (?,?,?,?,?,?,?,?)");
+                $stmt->bind_param("sssssssi", $fname, $lname, $tel, $address, $province, $city, $postalcode, $cusID, '1');
                 $stmt->execute();
                 $addrId = mysqli_insert_id($conn);
             } else {

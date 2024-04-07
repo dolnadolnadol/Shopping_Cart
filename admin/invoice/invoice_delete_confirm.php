@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete invoice</title>
+    <title>Delete Order</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,11 +52,11 @@
         }
 
         input[type="submit"] {
-            background-color: #ef476f;
+            background-color: #4b93ff;
         }
 
         a {
-            background-color: #4b93ff;
+            background-color: #ef476f
         }
 
         input[type="submit"]:hover,
@@ -71,32 +71,31 @@
     include_once '../../dbConfig.php'; 
 
     /*SELECT*/
-    if (isset($_POST['list_id_invoice'])){
-        $code = $_POST['list_id_invoice'];
+    if (isset($_POST['list_id_order'])){
+        $code = $_POST['list_id_order'];
         $codesArray = explode(',', $code);
         echo "<center>";
         echo "<form method='POST' action='invoice_delete.php'>";
-        echo "<h4>จำนวนชุดข้อมูลที่จะลบ</h4><font size='8'>";
-        echo count($codesArray);
+        echo "<h4>รหัสข้อมูลที่จะลบ</h4><font size='8'>";
+        echo implode(', ', $codesArray);
         echo "</font><br>";
         echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
-        echo "<input type='hidden' name='list_id_invoice' value={$_POST['list_id_invoice']}>";
+        echo "<input type='hidden' name='list_id_order' value={$_POST['list_id_order']}>";
         echo "<a href='invoice_index.php' style='
         padding: 9px 14px;
         color: black;   
-        background-color: #F2F3F5;      
+        background-color: #F2F3F5;
         text-decoration: none;
         margin-right: 5px;
         '>ยกเลิก</a>"; 
         echo "<input type='submit' value='ยืนยัน'>";
         echo "</form>\n";
         echo "</center>";
-
     }
     else {
-        $code = $_POST['total_id_invoice'];
-        echo $code;
-        $cur = "SELECT * FROM invoice WHERE InvID = '$code'";
+        $code = $_POST['total_id_order'];
+        // echo $code;
+        $cur = "SELECT * FROM invoice WHERE invId = '$code'";
         $msresults = mysqli_query($conn,$cur);
     
         if(mysqli_num_rows($msresults) > 0) {
@@ -107,18 +106,18 @@
             echo $code;
             echo "<br></font><br>";
             echo "⚠️โปรดให้เเน่ใจที่จะต้องการลบข้อมูล⚠️<br><br>";
-            echo "<input type='hidden' name='list_id_invoice' value={$code}>";
-            echo "<a href='invoice_index.php' style='
-            padding: 9px 14px;
-            color: black;   
-            background-color: #F2F3F5;      
-            text-decoration: none;
-            margin-right: 5px;
-            '>ยกเลิก</a>"; 
+            echo "<input type='hidden' name='list_id_order' value={$code}>";
+            echo "<a href='invoice_index.php'
+            style='
+                    padding: 9px 14px;
+                    color: black;   
+                    background-color: #F2F3F5;      
+                    text-decoration: none;
+                    margin-right: 5px;
+                    '>ยกเลิก</a>"; 
             echo "<input type='submit' value='ยืนยัน'>";
             echo "</form>\n";
             echo "</center>";
-    
         }
     }
 
