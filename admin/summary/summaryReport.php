@@ -112,7 +112,9 @@
                     FROM product
                     INNER JOIN ordervalue ON ordervalue.ProId = product.proId
                     INNER JOIN orderkey ON orderkey.orderId = ordervalue.orderId
-                    WHERE orderkey.PaymentStatus = 'Success'
+                    INNER JOIN invoice ON invoice.orderId = ordervalue.orderId
+                    WHERE orderkey.PaymentStatus = 'Success' 
+                    AND DATE_FORMAT(invoice.timestamp, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
                     GROUP BY product.proId";
                     $msresults = mysqli_query($conn, $cur);
                     $TotalSales = 0;
@@ -156,7 +158,9 @@
                             FROM product
                             INNER JOIN ordervalue ON ordervalue.ProId = product.proId
                             INNER JOIN orderkey ON orderkey.orderId = ordervalue.orderId
-                            WHERE orderkey.PaymentStatus = 'Success'
+                            INNER JOIN invoice ON invoice.orderId = ordervalue.orderId
+                            WHERE orderkey.PaymentStatus = 'Success' 
+                            AND DATE_FORMAT(invoice.timestamp, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
                             GROUP BY product.proId, product.typeId
                             ORDER BY product.typeId ASC";
                     $msresults = mysqli_query($conn, $cur);
@@ -221,10 +225,12 @@
                             customer.Sex,
                             SUM(product.Price * ordervalue.Qty) AS TotalPricePaid
                             FROM customer
-                            JOIN orderkey ON customer.CusID = orderkey.cusId
-                            JOIN ordervalue ON orderkey.orderId = ordervalue.orderId
-                            JOIN product ON ordervalue.ProId = product.proId
+                            INNER JOIN orderkey ON customer.CusID = orderkey.cusId
+                            INNER JOIN ordervalue ON orderkey.orderId = ordervalue.orderId
+                            INNER JOIN product ON ordervalue.ProId = product.proId
+                            INNER JOIN invoice ON invoice.orderId = ordervalue.orderId
                             WHERE customer.deleteStatus = '0' AND orderkey.PaymentStatus = 'Success'
+                            AND DATE_FORMAT(invoice.timestamp, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
                             GROUP BY customer.CusID, customer.fname, customer.lname, customer.Sex";
                     $msresults = mysqli_query($conn, $cur);
                     $TotalPricePaid = 0;
