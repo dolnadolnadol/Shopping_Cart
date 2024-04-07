@@ -125,12 +125,12 @@
             </a>
         </div>
         <div style="width:100%; margin:0;">
-        all
+            all
             <div class="product-container">
                 <!-- <div class="scroll-container"> -->
                 <?php
                 include_once '../dbConfig.php';
-                $cur = "SELECT * FROM product";
+                $cur = "SELECT * FROM product where deleteStatus != 1";
                 $msresults = mysqli_query($conn, $cur);
                 if (mysqli_num_rows($msresults) > 0) {
                     while ($row = mysqli_fetch_array($msresults)) {
@@ -149,17 +149,20 @@
                     echo "<center><h1>ไม่มีสินค้า</h1></center>";
                 }
                 ?>
-                </div>
-                type1
+            </div>
+            type1
             <div class="product-container">
                 <?php
                 include_once '../dbConfig.php';
-                $cur = "SELECT * FROM product where typeId = 1";
+                $cur = "SELECT * FROM product where typeId = 1 and deleteStatus != 1";
                 $msresults = mysqli_query($conn, $cur);
                 if (mysqli_num_rows($msresults) > 0) {
                     while ($row = mysqli_fetch_array($msresults)) {
                         echo "<div class='product-card'>";
-                        include('./component/showPhotos.php');
+                        $imageData = $row['Photo'];
+                        $imageDataEncoded = base64_encode($imageData);
+                        echo "<img src='data:image/jpeg;base64,{$imageDataEncoded}'/>";
+                        // include('./component/showPhotos.php');
                         echo "
                                 <p class='product-name'>{$row['ProductName']}</p>
                                 <p class='product-price'>ราคา {$row['Price']} บาท</p>
@@ -173,14 +176,14 @@
                     echo "<center><h1>ไม่มีสินค้า</h1></center>";
                 }
                 ?>
-                </div>
-                type2
+            </div>
+            type2
             <div class="product-container">
 
-            <!-- </div> -->
+                <!-- </div> -->
                 <?php
                 include_once '../dbConfig.php';
-                $cur = "SELECT * FROM product where typeId = 2";
+                $cur = "SELECT * FROM product where typeId = 2 and deleteStatus != 1";
                 $msresults = mysqli_query($conn, $cur);
                 if (mysqli_num_rows($msresults) > 0) {
                     while ($row = mysqli_fetch_array($msresults)) {
