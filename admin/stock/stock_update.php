@@ -16,7 +16,7 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f4;
-            margin: 0;
+            margin-top: 50px;
             padding: 20px;
             display: flex;
             align-items: center;
@@ -101,6 +101,14 @@
 
         <label for="a7">ประเภทสินค้า:</label>
         <input type="text" id="a7" name="a7" value="<?php echo $row['typeId']; ?>" size="1" required>
+
+        <label for="a7">ประเภทสินค้า:</label>
+        <select id="a7" name="a7" required>
+            <option value="">กรุณาเลือกประเภทสินค้า</option>
+            <option value="1">ประเภท 1</option>
+            <option value="2">ประเภท 2</option>
+            <option value="3">ประเภท 3</option>
+        </select>
 
         <label for="a6">ต้นทุน:</label>
         <input type="text" id="a6" name="a6" value="<?php echo $row['cost']; ?>" size="1" required>

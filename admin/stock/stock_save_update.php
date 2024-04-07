@@ -52,14 +52,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         Qty = ?, 
                         Photo = ?, 
                         cost = ?, 
-                        typeId = ?,
+                        typeId = ?
                     WHERE proId = ?";
 
     // Prepare statement
     $stmt = $conn->prepare($updateQuery);
     if ($stmt) {
         // Bind parameters
-        $stmt->bind_param("sssissii", $productName, $description, $price, $qty, $photo, $cost, $typeId, $stockId);
+        $stmt->bind_param("ssssssii", $productName, $description, $price, $qty, $photo, $cost, $typeId, $stockId);
 
         // Execute statement
         if ($stmt->execute()) {

@@ -89,7 +89,12 @@
         <textarea id="a5" name="a5" rows="4" cols="50" required></textarea>
 
         <label for="a7">ประเภทสินค้า:</label>
-        <input type="text" id="a7" name="a7" size="1" required>
+        <select id="a7" name="a7" required>
+            <option value="">กรุณาเลือกประเภทสินค้า</option>
+            <option value="1">ประเภท 1</option>
+            <option value="2">ประเภท 2</option>
+            <option value="3">ประเภท 3</option>
+        </select>
 
         <label for="a6">ต้นทุน:</label>
         <input type="text" id="a6" name="a6" size="1" required>
