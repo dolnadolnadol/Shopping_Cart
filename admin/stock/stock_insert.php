@@ -1,5 +1,5 @@
 <?php 
-header( "location: ./stock_index.php");
+header("location: ./stock_index.php");
 include_once '../../dbConfig.php';
 
 // Check if the form is submitted
@@ -26,28 +26,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION); 
                 if(in_array($fileType, $allowTypes)) {
                     if(move_uploaded_file($_FILES["files"]["tmp_name"][$key], $targetFilePath)) {
-                        $uploadedFiles[] = $targetFilePath;
+                        $uploadedFiles[] = $targetFilePath; // Store filenames only
                     }
                 }
             } 
         }
-        
-        $insertValuesSQL = implode(", ", array_map(function($file) use ($conn) {
-            return "('".mysqli_real_escape_string($conn, $file)."')";
-        }, $uploadedFiles));
 
-        
-        $insertQuery = "INSERT INTO product(ProductName, Description ,Price, Qty, Photo, cost, typeId) 
-                        VALUES ('$a2', '$a5', '$a3', '$a4', $insertValuesSQL, '$a6', '$a7')";
+        // Prepare statement for non-file data
+        $insertQuery = "INSERT INTO product(ProductName, Description, Price, Qty, cost, typeId, Photo) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($insertQuery);
 
-        $insertResult = mysqli_query($conn, $insertQuery);
+        if ($stmt) {
+            // Bind parameters
+            $stmt->bind_param("sssssss", $a2, $a5, $a3, $a4, $a6, $a7, $photo);
 
-        if ($insertResult) {
-            echo 'Insert data is successful.';
+            // Combine uploaded file names into a single string separated by commas
+            $photo = implode(",", $uploadedFiles);
+
+            // Execute statement
+            if ($stmt->execute()) {
+                echo 'Insert data is successful.';
+            } else {
+                echo 'Error inserting data: ' . $stmt->error;
+            }
+
+            // Close statement
+            $stmt->close();
         } else {
-            echo 'Error inserting data: ' . mysqli_error($conn);
+            echo 'Error preparing statement: ' . $conn->error;
         }
-
+        
         echo "<a href='stock_index.php'>Back to Main Page</a>";
     } else {
         echo "No files uploaded.";
