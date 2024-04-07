@@ -1,4 +1,4 @@
-<?php include ('./component/session.php'); ?>
+<?php include('./component/session.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -67,6 +67,7 @@
             background-color: #FFA500;
             margin-top: 5px;
         }
+
         #prepare {
             padding: 3px 8px;
             background-color: #ccc;
@@ -140,13 +141,15 @@
 </head>
 
 <body>
-    <?php include ('./component/accessNavbar.php') ?>
+    <?php include('./component/accessNavbar.php') ?>
     <div class="container">
         <h1>History</h1>
         <!-- Tab buttons -->
         <div class="tab">
             <button id="invoiceTab" class="tablinks" onclick="openTab(event, 'invoice')">Invoice</button>
             <button class="tablinks" onclick="openTab(event, 'orders')">Orders</button>
+            <button class="tablinks" onclick="openTab(event, 'pay')">รอชำระ</button>
+            <button class="tablinks" onclick="openTab(event, 'delivery')">รอจัดส่ง</button>
         </div>
         <?php
         $uid = $_SESSION['id_username'];
@@ -155,6 +158,59 @@
         <!-- Tab content -->
         <div id="invoice" class="tabcontent">
             <?php includeInvoice("SELECT * FROM invoice WHERE CusID = '$uid'"); ?>
+        </div>
+        <div id="pay" class="tabcontent">
+            <?php includePay("SELECT
+    orderkey.orderId,
+    GROUP_CONCAT(ordervalue.ProId) AS ProId,
+    GROUP_CONCAT(ordervalue.Qty) AS Qty,
+    orderkey.DeliId,
+    orderdelivery.DeliDate,
+    orderdelivery.statusDeli,
+    orderdelivery.addrId,
+    orderdelivery.fname,
+    orderdelivery.lname,
+    orderdelivery.Tel,
+    orderdelivery.TotalPrice,
+    orderkey.orderCreate,
+    orderkey.PaymentStatus
+FROM 
+    orderkey 
+LEFT JOIN 
+    ordervalue ON orderkey.orderId = ordervalue.orderId
+JOIN 
+    orderdelivery ON orderkey.DeliId = orderdelivery.DeliId 
+WHERE 
+    CusID = '$uid' and PaymentStatus = 'Pending'
+GROUP BY 
+    orderkey.orderId;"); ?>
+        </div>
+
+        <div id="delivery" class="tabcontent">
+            <?php includeOrders("SELECT 
+    orderkey.orderId,
+    GROUP_CONCAT(ordervalue.ProId) AS ProId,
+    GROUP_CONCAT(ordervalue.Qty) AS Qty,
+    orderkey.DeliId,
+    orderdelivery.DeliDate,
+    orderdelivery.statusDeli,
+    orderdelivery.addrId,
+    orderdelivery.fname,
+    orderdelivery.lname,
+    orderdelivery.Tel,
+    orderdelivery.TotalPrice,
+    orderkey.orderCreate,
+    orderkey.PaymentStatus
+FROM 
+    orderkey 
+LEFT JOIN 
+    ordervalue ON orderkey.orderId = ordervalue.orderId
+JOIN 
+    orderdelivery ON orderkey.DeliId = orderdelivery.DeliId 
+WHERE 
+    CusID = '$uid' and PaymentStatus != 'Pending' and statusDeli != 'Prepare'
+GROUP BY 
+    orderkey.orderId;"); ?>
         </div>
 
         <div id="orders" class="tabcontent">
@@ -166,7 +222,8 @@
     orderdelivery.DeliDate,
     orderdelivery.statusDeli,
     orderdelivery.addrId,
-    orderdelivery.Name,
+    orderdelivery.fname,
+    orderdelivery.lname,
     orderdelivery.Tel,
     orderdelivery.TotalPrice,
     orderkey.orderCreate,
@@ -208,7 +265,7 @@ GROUP BY
 <?php
 function includeInvoice($query)
 {
-    include '../dbConfig.php'; 
+    include '../dbConfig.php';
     $msresults = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_array($msresults)) {
 
@@ -260,14 +317,57 @@ function includeOrders($query)
             echo "<pl id='Pending'>PaymentStatus: {$row['PaymentStatus']}</pl>";
         } else if ($row['PaymentStatus'] == 'Inprogress') {
             echo "<pl id='Inprogress'>PaymentStatus: {$row['PaymentStatus']}</pl>";
-        } else if ($row['PaymentStatus'] == 'Delivered') {
+        } else if ($row['PaymentStatus'] == 'Success') {
             echo "<pl id='Delivered'>PaymentStatus: {$row['PaymentStatus']}</pl>";
         } else if ($row['PaymentStatus'] == 'Canceled') {
             echo "<pl id='Canceled'>PaymentStatus: {$row['PaymentStatus']}</pl>";
         }
-        
-        if ($row['statusDeli'] == 'PREPARE') {
-            echo "<pl id='prepare'>Status Delivery: {$row['statusDeli']}</pl>";
+
+        if ($row['statusDeli'] == 'Prepare') {
+            // echo "<pl id='prepare'>Status Delivery: {$row['statusDeli']}</pl>";
+        } else if ($row['statusDeli'] == 'Inprogress') {
+            echo "<pl id='Inprogress'>Status Delivery: {$row['statusDeli']}</pl>";
+        } else if ($row['statusDeli'] == 'Delivered') {
+            echo "<pl id='Delivered'>Status Delivery: {$row['statusDeli']}</pl>";
+        } else if ($row['statusDeli'] == 'Canceled') {
+            echo "<pl id='Canceled'>Status Delivery: {$row['statusDeli']}</pl>";
+        }
+        echo '</div>';
+    }
+}
+
+function includePay($query)
+{
+    include '../dbConfig.php';
+    $msresults = mysqli_query($conn, $query);
+    while ($row = mysqli_fetch_array($msresults)) {
+        echo '<div class="order">';
+        echo "<div class='icon-container'>
+                <form method='post' action='paycheck.php'>
+                    <input type='hidden' name='id_order' value='{$row['orderId']}'>
+                    <button type='submit'>
+                        <img src='./image/search-alt.png' alt='Order Icon' width='20'>
+                    </button>
+                </form>
+            </div>";
+        echo "<pf>Order ID: {$row['orderId']}</pf>";
+        echo "<p>Total Amount: {$row['TotalPrice']} ฿</p>";
+        echo "<p>Order Date: {$row['orderCreate']}</p>";
+        if ($row['DeliDate'] != null) {
+            echo "<p>Delivery Date: {$row['DeliDate']}</p>";
+        }
+        if ($row['PaymentStatus'] == 'Pending') {
+            echo "<pl id='Pending'>PaymentStatus: {$row['PaymentStatus']}</pl>";
+        } else if ($row['PaymentStatus'] == 'Inprogress') {
+            echo "<pl id='Inprogress'>PaymentStatus: {$row['PaymentStatus']}</pl>";
+        } else if ($row['PaymentStatus'] == 'Success') {
+            echo "<pl id='Delivered'>PaymentStatus: {$row['PaymentStatus']}</pl>";
+        } else if ($row['PaymentStatus'] == 'Canceled') {
+            echo "<pl id='Canceled'>PaymentStatus: {$row['PaymentStatus']}</pl>";
+        }
+
+        if ($row['statusDeli'] == 'Prepare') {
+            // echo "<pl id='prepare'>Status Delivery: {$row['statusDeli']}</pl>";
         } else if ($row['statusDeli'] == 'Inprogress') {
             echo "<pl id='Inprogress'>Status Delivery: {$row['statusDeli']}</pl>";
         } else if ($row['statusDeli'] == 'Delivered') {

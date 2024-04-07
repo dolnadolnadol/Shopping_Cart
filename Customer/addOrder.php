@@ -9,7 +9,7 @@ include('./component/getFunction/getName.php');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Connect to the database
-    include_once '../dbConfig.php'; 
+    include_once '../dbConfig.php';
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $tel = $_POST['tel'];
@@ -21,10 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $totalPriceAllItems = 0;
     $recv_id = '';
 
-    // Check if 'id_customer' is set in the POST data
     if (isset($_POST['id_customer'])) {
-
-        // Retrieve customer ID from the POST data
         $cusID = $_POST['id_customer'];
 
         /* ------------------------------------------------------------------------- */
@@ -40,20 +37,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $pending = "Pending";
             $stmt = $conn->prepare("INSERT INTO orderkey (PaymentStatus, cusId) VALUES (?,?)");
             $stmt->bind_param("si", $pending, $cusID);
-            $stmt->execute();
+            $success = $stmt->execute();
             $lastId = mysqli_insert_id($conn);
             if($_POST['changeInfo'] == "value" || $_POST['changeaddress'] == "value"){
-                echo $_POST['changeInfo'] . "wtfman ";
-                echo $_POST['changeaddress'];
                 $stmt = $conn->prepare("INSERT INTO address (fname, lname, tel, Address, Province, City, PostalCode, CusId, deleteStatus) VALUES (?,?,?,?,?,?,?,?)");
                 $stmt->bind_param("sssssssi", $fname, $lname, $tel, $address, $province, $city, $postalcode, $cusID, '1');
                 $stmt->execute();
                 $addrId = mysqli_insert_id($conn);
-            }else{
+            } else {
                 $addrId = $_POST['addrId'];
-                echo $addrId . "wtfman2gg ";
+                // echo $addrId . "wtfman2gg ";
             }
-            
+            // if ($success) {
+            //     echo "Insert kry successful.";
+            //     echo $lname;
+            // } else {
+            //     echo "Error: kry " . $stmt->error;
+            // }
+
 
             // ACCESS LOG
             // $productId = "";
@@ -85,14 +86,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->execute();
             }
 
-            $statusDeli = "PREPARE";
-            $fullname = $fname . "  " . $lname;
-            $stmt = $conn->prepare("INSERT INTO orderdelivery (statusDeli, addrId, Name, Tel, TotalPrice) VALUES (?,?,?,?,?)");
-            $stmt->bind_param("sissi", $statusDeli, $addrId, $fullname, $tel, $Total);
-            $stmt->execute();
+            $statusDeli = "Prepare";
+
+            $stmt = $conn->prepare("INSERT INTO orderdelivery (statusDeli, addrId, fname, lname, Tel, TotalPrice) VALUES (?,?,?,?,?,?)");
+            $stmt->bind_param("sisssi", $statusDeli, $addrId, $fname, $lname, $tel, $Total);
+            $success = $stmt->execute();
             $delilast = mysqli_insert_id($conn);
 
-            
             $stmt = $conn->prepare("update orderkey set DeliId = ? where orderId = ?");
             $stmt->bind_param("ii", $delilast, $lastId);
             $stmt->execute();
@@ -106,10 +106,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "Deletion failed: " . mysqli_error($conn);
             }
             echo "<form id='auto_submit_form' method='post' action='paymentForm.php'>
-                <input type='hidden' name='id_invoice' value='$InvID'>
                 <input type='hidden' name='id_receiver' value='$recv_id'>
                 <input type='hidden' name='id_order' value='$lastId'>
                 <input type='hidden' name='id_address' value='$addrId'>
+                <input type='hidden' name='id_deli' value='$delilast'>
+                <button type='submit'>submit</button>
             </form>";
 
             echo "<script>
@@ -117,8 +118,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     document.getElementById('auto_submit_form').submit();
                 });
             </script>";
-            
-        // header("Location: ./paymentForm.php");
+
+            // header("Location: ./paymentForm.php");
         } else {
             echo "alert('No Item In Cart!')";
             // Redirect to cart page if the cart is empty
@@ -126,9 +127,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
 
-    /* Guest */
+        /* Guest */
     } else {
         header("Location: ./cart.php");
     }
 }
-?>
