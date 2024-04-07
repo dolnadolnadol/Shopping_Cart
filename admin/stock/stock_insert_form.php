@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    if($_SESSION['auth'] !== 'product-admin') {
+        header("Location: ../notHavePage.php");
+        exit;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +32,6 @@
             width: 100%;
             max-width: 400px;
             box-sizing: border-box;
-            /* height:100%; */
         }
 
         h1 {
@@ -102,7 +109,49 @@
                 <input type='submit' value='ยืนยัน' style='background-color: blue; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; margin-right:1rem;'>
             </center>
         </div>
-
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const productName = document.getElementById('a2').value;
+                const productDescription = document.getElementById('a5').value;
+                const productType = document.getElementById('a7').value;
+                const productCost = document.getElementById('a6').value;
+                const productPrice = document.getElementById('a3').value;
+                const productQuantity = document.getElementById('a4').value;
+                const textRegex = /^[a-zA-Z\s]+$/;
+                const numberAndTextRegex = /^[a-zA-Z0-9\s]+$/;
+                const numberRegex = /^[0-9]+$/;
+                const errors = [];
+                if (!textRegex.test(productName)) {
+                    errors.push('ชื่อสินค้า: ต้องเป็นตัวอักษรเท่านั้น');
+                }
+                if (!numberAndTextRegex.test(productDescription)) {
+                    errors.push('รายละเอียดสินค้า: ต้องเป็นตัวอักษรหรือตัวเลขเท่านั้น');
+                }
+                if (!numberRegex.test(productType)) {
+                    errors.push('ประเภทสินค้า: ต้องเป็นตัวเลขเท่านั้น');
+                }
+                if (!numberRegex.test(productCost)) {
+                    errors.push('ต้นทุน: ต้องเป็นตัวเลขเท่านั้น');
+                }
+                if (!numberRegex.test(productPrice)) {
+                    errors.push('ราคาต่อหน่วย: ต้องเป็นตัวเลขเท่านั้น');
+                }
+                if (!numberRegex.test(productQuantity)) {
+                    errors.push('จำนวนสินค้า: ต้องเป็นตัวเลขเท่านั้น');
+                }
+                if (errors.length > 0) {
+                    alert(errors.join('\n'));
+                } else {
+                    form.submit();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
