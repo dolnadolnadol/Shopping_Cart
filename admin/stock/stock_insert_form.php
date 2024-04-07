@@ -49,7 +49,7 @@
         input[type="number"],
         input[type="tel"],
         input[type="file"],
-        textarea {
+        textarea, select {
             resize:none;
             width: 100%;
             padding: 10px;
