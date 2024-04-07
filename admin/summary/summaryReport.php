@@ -111,6 +111,8 @@
                     $cur = "SELECT product.proId, product.ProductName, product.Price, product.cost, SUM(ordervalue.Qty) AS TotalQty
                     FROM product
                     INNER JOIN ordervalue ON ordervalue.ProId = product.proId
+                    INNER JOIN orderkey ON orderkey.orderId = ordervalue.orderId
+                    WHERE orderkey.PaymentStatus = 'Success'
                     GROUP BY product.proId";
                     $msresults = mysqli_query($conn, $cur);
                     $TotalSales = 0;
@@ -153,6 +155,8 @@
                     $cur = "SELECT product.proId, product.typeId, product.Price, product.cost, SUM(ordervalue.Qty) AS TotalQty
                             FROM product
                             INNER JOIN ordervalue ON ordervalue.ProId = product.proId
+                            INNER JOIN orderkey ON orderkey.orderId = ordervalue.orderId
+                            WHERE orderkey.PaymentStatus = 'Success'
                             GROUP BY product.proId, product.typeId
                             ORDER BY product.typeId ASC";
                     $msresults = mysqli_query($conn, $cur);
@@ -164,14 +168,9 @@
                     if (mysqli_num_rows($msresults) > 0) {
                         while ($row = mysqli_fetch_array($msresults)) {
                             if ($previousTypeId == null) {
-                                $Sales += (double)$row['Price'] * (double)$row['TotalQty'];
-                                $Cost = (double)$row['cost'] * (double)$row['TotalQty'];
-                                $Profit += $Sales - $Cost;
-                                $TotalSales += $Sales;
-                                $TotalProfit += $Profit;
                                 $previousTypeId = $row['typeId'];
                             }
-                            else if ($row['typeId'] !== $previousTypeId) {
+                            if ($row['typeId'] !== $previousTypeId) {
                                 echo "<tr>";
                                 echo "<td>{$previousTypeId}</td>";
                                 echo "<td>฿" . $Sales . "</td>";
@@ -199,8 +198,6 @@
                             echo "<td>฿" . $Sales . "</td>";
                             echo "<td>฿" . $Profit . "</td>";
                             echo "</tr>";
-                            $Sales = 0;
-                            $Profit = 0;
                         }
                     }
                     ?>
@@ -218,16 +215,35 @@
                         <th>Sex</th>
                         <th>Price Paid</th>
                     </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>John Doe</td>
-                        <td>Male</td>
-                        <td>฿5000</td>
-                    </tr>
+                    <?php
+                    $cur = "SELECT customer.CusID,
+                            customer.fname, customer.lname,
+                            customer.Sex,
+                            SUM(product.Price * ordervalue.Qty) AS TotalPricePaid
+                            FROM customer
+                            JOIN orderkey ON customer.CusID = orderkey.cusId
+                            JOIN ordervalue ON orderkey.orderId = ordervalue.orderId
+                            JOIN product ON ordervalue.ProId = product.proId
+                            WHERE customer.deleteStatus = '0' AND orderkey.PaymentStatus = 'Success'
+                            GROUP BY customer.CusID, customer.fname, customer.lname, customer.Sex";
+                    $msresults = mysqli_query($conn, $cur);
+                    $TotalPricePaid = 0;
+                    if (mysqli_num_rows($msresults) > 0) {
+                        while ($row = mysqli_fetch_array($msresults)) {
+                            echo "<tr>";
+                            echo "<td>{$row['CusID']}</td>";
+                            echo "<td>{$row['fname']} {$row['lname']}</td>";
+                            echo "<td>{$row['Sex']}</td>";
+                            echo "<td>฿{$row['TotalPricePaid']}</td>";
+                            echo "</tr>";
+                            $TotalPricePaid += $row['TotalPricePaid'];
+                        }
+                    }
+                    ?>
                     <tr>
                         <td colspan="2"></td>
                         <td class="text-right"><strong>Total</strong></td>
-                        <td class="text-right">฿5000</td>
+                        <td class="text-right">฿<?php echo number_format($TotalPricePaid, 2); ?></td>
                     </tr>
                 </table>
             </div>
