@@ -13,6 +13,8 @@
 
         .invoice {
             padding: 30px;
+            width: 380mm;
+            height: 537.43mm;
         }
 
         .invoice h2 {
@@ -71,6 +73,7 @@
         $row = mysqli_fetch_array($msresults);
     ?>
     <div class="container">
+        <button id="convertToPDF" class="convertToPDF">Convert to PDF</button>
         <div class="row">
             <div class="col-xs-12">
                 <div class="grid invoice">
@@ -191,5 +194,21 @@
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        document.getElementById('convertToPDF').addEventListener('click', function() {
+            document.getElementById("convertToPDF").style.display = "none";
+            const element = document.querySelector('.grid invoice');
+            html2canvas(element).then(function(canvas) {
+                const imageData = canvas.toDataURL('image/png');
+                var doc = new jspdf.jsPDF();
+                doc.addImage(imageData, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
+                doc.save('Summary_Report.pdf');
+                document.getElementById("convertToPDF").style.display = "block";
+            });
+        });
+    </script>
 </body>
 </html>

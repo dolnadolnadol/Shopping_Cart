@@ -125,10 +125,8 @@
         <label>จำนวนสินค้า On Hand:</label>
         <input type="text" id="on" name="on" value="<?php echo $row['onHand']; ?>" size="1" maxlength="6" readonly>
         
-        <label for="files[]">อัพโหลดรูปภาพสินค้าเก่า:</label>
-        <input type="text" name="OldPhoto" value="<?php echo $row['Photo']; ?>" readonly>
-        <label for="files[]">อัพโหลดรูปภาพสินค้าใหม่:</label>
-        <input type="file" name="files[]">
+        <label for="photo">อัพโหลดรูปภาพสินค้า:</label>
+        <input type="file" name="photo" id="photo" required>
         
         <div >
             <center>

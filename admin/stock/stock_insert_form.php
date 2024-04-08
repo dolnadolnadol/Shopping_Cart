@@ -112,8 +112,8 @@
         <label for="a4">จำนวนสินค้า:</label>
         <input type="text" id="a4" name="a4" size="1" maxlength="6" required>
         
-        <label for="files[]">อัพโหลดรูปภาพสินค้า:</label>
-        <input type='file' name='files[]' required>
+        <label for="photo">อัพโหลดรูปภาพสินค้า:</label>
+        <input type='file' name='photo' id="photo" required>
         
         <div >
             <center>
