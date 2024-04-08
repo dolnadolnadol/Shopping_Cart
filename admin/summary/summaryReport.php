@@ -5,6 +5,7 @@
         exit;
     }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,24 +18,50 @@
             background-color: black;
             color: white;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
         .container {
             margin-top: 100px;
-            width: 75%;
+            margin-bottom: 100px;
+            width: 380mm;
+            height: 537.43mm;
             background-color: white;
+            overflow: hidden;
         }
 
         .dashboard-heading {
+            color: black;
+            text-align: center;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+
+        .dashboard-inheading {
             color: black;
             text-align: right;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             margin-top: 20px;
-            margin-left: 40px;
-            margin-right: 40px;
+        }
+
+        .dashboard-inheading2 {
+            color: black;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            width: 60%;
         }
 
         .data-container {
@@ -83,6 +110,24 @@
             margin-top: 35px;
             margin-bottom: 35px;
         }
+
+        .convertToPDF {
+            background-color: red;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .convertToPDF:hover {
+            background-color: #aa0000;
+        }
+
     </style>
 </head>
 <body> 
@@ -91,9 +136,14 @@
     ?>
     <div class="container">
         <div class="dashboard-heading">
-            <h1 style="margin-bottom: 0px">Summary Report</h1>
-            <h2 style="margin-bottom: 0px">E-Commerce Co., Ltd.</h2>
-            <h2 style="margin-bottom: 0px; font-weight: normal;"><?php echo date("F Y"); ?></h2>
+            <div class="dashboard-inheading2">
+                <button id="convertToPDF" class="convertToPDF">Convert to PDF</button>
+            </div>
+            <div class="dashboard-inheading">
+                <h1 style="margin-bottom: 0px">Summary Report</h1>
+                <h2 style="margin-bottom: 0px">E-Commerce Co., Ltd.</h2>
+                <h2 style="margin-bottom: 0px; font-weight: normal;"><?php echo date("F Y"); ?></h2>
+            </div>
         </div>
         <div class="data-container">
             <div class="data-card" id='card-1'>
@@ -255,5 +305,22 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        document.getElementById('convertToPDF').addEventListener('click', function() {
+            document.getElementById("convertToPDF").style.display = "none";
+            const element = document.querySelector('.container');
+            html2canvas(element).then(function(canvas) {
+                const imageData = canvas.toDataURL('image/png');
+                var doc = new jspdf.jsPDF();
+                doc.addImage(imageData, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
+                doc.save('Summary_Report.pdf');
+                document.getElementById("convertToPDF").style.display = "block";
+            });
+        });
+    </script>
 </body>
 </html>
