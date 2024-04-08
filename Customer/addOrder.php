@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $result = mysqli_query($conn, $deleteQuery);
 
             if ($result) {
-                echo "Deletion successful!";
+                // echo "Deletion successful!";
             } else {
                 echo "Deletion failed: " . mysqli_error($conn);
             }
@@ -110,7 +110,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type='hidden' name='id_order' value='$lastId'>
                 <input type='hidden' name='id_address' value='$addrId'>
                 <input type='hidden' name='id_deli' value='$delilast'>
-                <button type='submit'>submit</button>
             </form>";
 
             echo "<script>
@@ -121,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // header("Location: ./paymentForm.php");
         } else {
-            echo "alert('No Item In Cart!')";
+            // echo "alert('No Item In Cart!')";
             // Redirect to cart page if the cart is empty
             echo header("Location: ./cart.php");;
             exit();

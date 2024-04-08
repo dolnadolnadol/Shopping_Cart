@@ -14,24 +14,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $a6 = $_POST['a6'];
         $a7 = $_POST['a7'];
         
-        $targetDir = "../UploadImg/uploads/"; 
-        $allowTypes = array('jpg','png','jpeg','gif'); 
-        $fileNames = array_filter($_FILES['files']['name']); 
-        $uploadedFiles = array();
-        // $photoData = file_get_contents($_FILES["files"]["name"]);
-        
-        if(!empty($fileNames)) { 
-            foreach($_FILES['files']['name'] as $key=>$val) {
-                $fileName = basename($_FILES['files']['name'][$key]);
-                $targetFilePath = $targetDir . $fileName; 
-                $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION); 
-                if(in_array($fileType, $allowTypes)) {
-                    if(move_uploaded_file($_FILES["files"]["tmp_name"][$key], $targetFilePath)) {
-                        $uploadedFiles[] = $targetFilePath; // Store filenames only
-                    }
-                }
-            } 
-        }
+        // $targetDir = "../UploadImg/uploads/"; 
+        // $allowTypes = array('jpg','png','jpeg','gif'); 
+        // $fileNames = array_filter($_FILES['files']['name']); 
+        // $uploadedFiles = array();
+        $image_data = file_get_contents($_FILES["files"]["tmp_name"]);
 
         // Prepare statement for non-file data
         $insertQuery = "INSERT INTO product(ProductName, Description, Price, Qty, cost, typeId, Photo) 
@@ -40,10 +27,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt) {
             // Bind parameters
-            $stmt->bind_param("ssssssb", $a2, $a5, $a3, $a4, $a6, $a7, $photoData);
+            $stmt->bind_param("sssssss", $a2, $a5, $a3, $a4, $a6, $a7, $image_data);
 
             // Combine uploaded file names into a single string separated by commas
-            $photo = implode(",", $uploadedFiles);
+            // $photo = implode(",", $uploadedFiles);
 
             // Execute statement
             if ($stmt->execute()) {

@@ -202,11 +202,12 @@ include('./component/getFunction/getName.php'); ?>
                     <div class="form-group">
                         <!-- <div style="display:none"> -->
                         <label for="fullname">First Name</label>
-                        <input type="text" id="fname" name="fname" value="<?php echo $row['fname'] ?? ''; ?>" readonly required>
+                        <input type="text" id="fname" name="fname" value="<?php echo isset($row['fname']) ? $row['fname'] : ''; ?>" readonly required>
                         <label for="lastname">Last Name</label>
-                        <input type="text" id="lname" name="lname" value="<?php echo $row['lname'] ?? ''; ?>" readonly required>
+                        <input type="text" id="lname" name="lname" value="<?php echo isset($row['lname']) ? $row['lname'] : ''; ?>" readonly required>
                         <label for="tel">Tel</label>
-                        <input required type="tel" id="tel" name="tel" value="<?php echo $row['tel'] ?? ''; ?>" readonly>
+                        <input required type="tel" id="tel" name="tel" value="<?php echo isset($row['tel']) ? $row['tel'] : ''; ?>" readonly>
+
                         <input type="hidden" name="changeInfo">
                         <input type="hidden" name="addrId" value="<?php echo $row['AddrId'] ?? ''; ?>">
                         <button type="button" onclick="editInfo()">edit info</button>
@@ -217,33 +218,34 @@ include('./component/getFunction/getName.php'); ?>
                         </p>
 
                         <!-- <select>
-                            <?php 
-                                // $query_address = "select * from address where address.CusID = '$uid'";
-                                // $result_address = mysqli_query($conn, $query_address);
-                                // if (mysqli_num_rows($result_address) > 0) {
-                                //     // Fetch a single row from the result set
-                                //     $row = mysqli_fetch_array($result_address);
-                                //     while($row){
-                                //         echo "<option value='$row'> "  . $row['fname'] ." ". $row['lname'] ." ". $row['tel'] ." ". $row['Address'] ." ". $row['City'] ." ". $row['Province'] ." ". $row['PostalCode'] ." ".  "</option>";
-                                //         $row = mysqli_fetch_array($result_address);
-                                //     }
-                                // }
+                            <?php
+                            // $query_address = "select * from address where address.CusID = '$uid'";
+                            // $result_address = mysqli_query($conn, $query_address);
+                            // if (mysqli_num_rows($result_address) > 0) {
+                            //     // Fetch a single row from the result set
+                            //     $row = mysqli_fetch_array($result_address);
+                            //     while($row){
+                            //         echo "<option value='$row'> "  . $row['fname'] ." ". $row['lname'] ." ". $row['tel'] ." ". $row['Address'] ." ". $row['City'] ." ". $row['Province'] ." ". $row['PostalCode'] ." ".  "</option>";
+                            //         $row = mysqli_fetch_array($result_address);
+                            //     }
+                            // }
                             ?>
                         </select>
                         <button> edit </button> -->
 
                         <!-- <div style="display:none"> -->
-                            <label for="address">Address</label>
-                            <input required type="text" name="address" id="address" value="<?php echo $row['Address'] ?? ''; ?>" readonly>
-                            <label for="province">Province</label>
-                            <input required type="text" name="province" id="province" value="<?php echo $row['Province'] ?? ''; ?>" readonly>
-                            <label for="city">City</label>
-                            <input required type="text" name="city" id="city" value="<?php echo $row['City'] ?? ''; ?>" readonly>
-                            <label for="postalcode">PostalCode</label>
-                            <input required type="text" name="postalcode" id="postalcode" value="<?php echo $row['PostalCode'] ?? ''; ?>" readonly>
-                            <input type="hidden" name="changeaddress">
-                            <button type="button" onclick="editAddress()">edit address</button>
-                            <button type="button" id="saveaddr" onclick="saveAddressbutton()" style="display:none;">save</button>
+                        <label for="address">Address</label>
+                        <input required type="text" name="address" id="address" value="<?php echo isset($row['Address']) ? $row['Address'] : ''; ?>" readonly>
+                        <label for="province">Province</label>
+                        <input required type="text" name="province" id="province" value="<?php echo isset($row['Province']) ? $row['Province'] : ''; ?>" readonly>
+                        <label for="city">City</label>
+                        <input required type="text" name="city" id="city" value="<?php echo isset($row['City']) ? $row['City'] : ''; ?>" readonly>
+                        <label for="postalcode">PostalCode</label>
+                        <input required type="text" name="postalcode" id="postalcode" value="<?php echo isset($row['PostalCode']) ? $row['PostalCode'] : ''; ?>" readonly>
+
+                        <input type="hidden" name="changeaddress">
+                        <button type="button" onclick="editAddress()">edit address</button>
+                        <button type="button" id="saveaddr" onclick="saveAddressbutton()" style="display:none;">save</button>
                         <!-- </div> -->
                     </div>
 
@@ -333,16 +335,33 @@ include('./component/getFunction/getName.php'); ?>
                     }
                     ?>
                     <!-- <a href='./invoice.php?id_invoice={$inv}&id_receiver={$row['RecvID']}' class='view-details-link' style='text-decoration: underline; color: #3498db;'>View Full Details</a> -->
-                </div>
-            </div> -->
+        </div>
+        </div> -->
         </div>
     </form>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        if (
+            "<?php echo isset($row['Address']) ? $row['Address'] : ''; ?>" === '' ||
+            "<?php echo isset($row['Province']) ? $row['Province'] : ''; ?>" === '' ||
+            "<?php echo isset($row['City']) ? $row['City'] : ''; ?>" === '' ||
+            "<?php echo isset($row['PostalCode']) ? $row['PostalCode'] : ''; ?>" === ''
+        ) {
+            editAddress();
+        }
+        if (
+            "<?php echo isset($row['fname']) ? $row['fname'] : ''; ?>" === '' ||
+            "<?php echo isset($row['lname']) ? $row['lname'] : ''; ?>" === '' ||
+            "<?php echo isset($row['tel']) ? $row['tel'] : ''; ?>" === ''
+        ){
+            editInfo();
+        }
+    });
         function editInfo() {
             document.getElementById("saveInfo").style.display = "block";
             document.getElementById("fname").readOnly = false;
-            document.getElementById("lastname").readOnly = false;
+            document.getElementById("lname").readOnly = false;
             document.getElementById("tel").readOnly = false;
         }
 

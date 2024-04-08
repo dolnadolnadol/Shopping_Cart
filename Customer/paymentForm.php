@@ -190,7 +190,7 @@ include('./component/getFunction/getName.php'); ?>
 </head>
 
 <body>
-    <form id="profileForm" method="post" action="accessOrder.php">
+    <form id="profileForm" method="post" action="accessOrder.php" enctype="multipart/form-data">
         <?php
         if (isset($_SESSION['id_username'])) {
             $uid = $_SESSION['id_username'];

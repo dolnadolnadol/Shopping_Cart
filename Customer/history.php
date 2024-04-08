@@ -147,7 +147,7 @@
         <!-- Tab buttons -->
         <div class="tab">
             <!-- <button id="invoiceTab" class="tablinks" onclick="openTab(event, 'invoice')">Invoice</button> -->
-            <button id="invoiceTab" class="tablinks" onclick="openTab(event, 'orders')">All Orders</button>
+            <!-- <button id="invoiceTab" class="tablinks" onclick="openTab(event, 'orders')">All Orders</button> -->
             <button class="tablinks" onclick="openTab(event, 'pay')">รอชำระ</button>
             <button class="tablinks" onclick="openTab(event, 'delivery')">รอจัดส่ง</button>
             <button class="tablinks" onclick="openTab(event, 'success')">สำเร็จ</button>
@@ -214,7 +214,7 @@ GROUP BY
     orderkey.orderId;"); ?>
         </div>
 
-        <div id="orders" class="tabcontent">
+        <div id="orders" class="tabcontent" style="display:none;">
             <?php includeOrders("SELECT 
     orderkey.orderId,
     GROUP_CONCAT(ordervalue.ProId) AS ProId,
@@ -266,8 +266,6 @@ WHERE
     CusID = '$uid' and PaymentStatus != 'Pending' and statusDeli = 'Delivered'
 GROUP BY 
     orderkey.orderId;"); ?>
-                <!-- <?php includeOrders("SELECT * FROM orderkey join ordervalue on orderkey.orderId = ordervalue.orderId join orderdelivery on orderkey.DeliId = orderdelivery.DeliId 
-            WHERE CusID = '$uid'"); ?> -->
             </div>
         </div>
         <script>
@@ -371,8 +369,10 @@ function includePay($query)
     while ($row = mysqli_fetch_array($msresults)) {
         echo '<div class="order">';
         echo "<div class='icon-container'>
-                <form method='post' action='paycheck.php'>
+                <form method='post' action='paymentForm.php'>
                     <input type='hidden' name='id_order' value='{$row['orderId']}'>
+                    <input type='hidden' name='id_deli' value='{$row['DeliId']}'>
+                    <input type='hidden' name='id_address' value='{$row['addrId']}'>
                     <button type='submit'>
                         <img src='./image/search-alt.png' alt='Order Icon' width='20'>
                     </button>

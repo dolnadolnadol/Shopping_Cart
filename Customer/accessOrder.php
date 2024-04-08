@@ -13,22 +13,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $orderId = $_POST['id_order'];
         $deli = $_POST['id_deli'];
 
-        /* Order */
         $payer_fname = $_POST['fname'];
         $payer_lname = $_POST['lname'];
         $payer_time = $_POST['time'];
-        $slip = $_POST['slip'];
+        $slip = file_get_contents($_FILES["slip"]["tmp_name"]);
 
-        // echo $cusID;
-        // echo $orderId;
-
-
-        $insert_query_head = "INSERT INTO receipt(cusId, orderId, fname, lname, time, slip) 
-                            VALUES('$cusID', '$orderId', '$payer_fname', '$payer_lname', '$payer_time','$slip')";
-        $insert_result_head = mysqli_query($conn, $insert_query_head);
+        $stmt = $conn->prepare("INSERT INTO receipt(cusId, orderId, fname, lname, time, slip)  VALUES(?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iissss", $cusID, $orderId, $payer_fname, $payer_lname, $payer_time, $slip);
+        $success = $stmt->execute();
         $lastID = mysqli_insert_id($conn);
 
-        if (!$insert_result_head) {
+        if (!$success) {
             die("Error inserting into payer: " . mysqli_error($conn));
         } else {
             if (isset($_POST['invoice-taxid']) && $_POST['invoice-taxid'] != '') {
@@ -47,7 +42,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_param("ssi", $statusde, $track, $deli);
             $success = $stmt->execute();
             if ($success) {
-                echo "update successful.";
                 echo "<form id='auto_submit_form' method='post' action='bill.php'>
                 <input type='hidden' name='id_order' value='$orderId'>
                 <input type='hidden' name='id_deli' value='$deli'>
