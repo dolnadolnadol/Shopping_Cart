@@ -177,21 +177,11 @@
                     echo "<div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
                     if ($row['PaymentStatus'] == 'Pending') {
                         echo '#FFA500;';
+                        echo "<option value='Pending' style='background-color: #ffff; color: black;'>Pending</option>";
                     } elseif ($row['PaymentStatus'] == 'Success') {
                         echo '#06D6B1;';
-                    } else {
+                        echo "<option value='Success' style='background-color: #ffff; color: black;'>Success</option>";
                     }
-                    echo "'>";
-                    echo "<select id='select_$index' data-orderId='{$row['orderId']}' data-deliId='{$row['DeliId']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
-                    user-select: none; color: #ffff;' required>";
-                    $statusCompare = ['Pending', 'Success'];
-                    foreach ($statusCompare as $value) {
-                        $selected = ($value == $row['PaymentStatus']) ? 'selected' : '';
-                        echo "<option value='$value' style='background-color: #ffff; color: black;' $selected>{$value}</option>";
-                    }
-                    echo "</select>";
-                    echo "</div></td>";
-
 
                     echo "<td>";
                     echo "<div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
@@ -204,7 +194,7 @@
                     } else {
                     }
                     echo "'>";
-                    echo "<select id='select2_$index' data-orderId='{$row['orderId']}' data-deliId='{$row['DeliId']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
+                    echo "<select id='select_$index' data-orderId='{$row['orderId']}' data-deliId='{$row['DeliId']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
                     user-select: none; color: #ffff;' required>";
                     $statusCompare = ['Prepare', 'Inprogress', 'Delivered'];
                     foreach ($statusCompare as $value) {
@@ -309,7 +299,7 @@
     /*Deliver*/
     document.addEventListener('DOMContentLoaded', function () {
     for (var i = 1; i <= <?php echo $index; ?>; i++) {
-        var selectElement = document.getElementById('select2_' + i);
+        var selectElement = document.getElementById('select_' + i);
 
         if (selectElement) {
             selectElement.addEventListener('change', function () {

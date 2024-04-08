@@ -199,16 +199,17 @@
                 <h2 id='PQ'>Summary of product types</h2>
                 <table>
                     <tr>
-                        <th>Type ID</th>
+                        <th>Type</th>
                         <th>Sales</th>
                         <th>Profit</th>
                     </tr>
                     <?php
-                    $cur = "SELECT product.proId, product.typeId, product.Price, product.cost, SUM(ordervalue.Qty) AS TotalQty
+                    $cur = "SELECT product.proId, product.typeId, product.Price, product.cost, product_type.typeName, SUM(ordervalue.Qty) AS TotalQty
                             FROM product
                             INNER JOIN ordervalue ON ordervalue.ProId = product.proId
                             INNER JOIN orderkey ON orderkey.orderId = ordervalue.orderId
                             INNER JOIN invoice ON invoice.orderId = ordervalue.orderId
+                            INNER JOIN product_type ON product_type.typeId = product.typeId
                             WHERE orderkey.PaymentStatus = 'Success' 
                             AND DATE_FORMAT(invoice.timestamp, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
                             GROUP BY product.proId, product.typeId
@@ -222,9 +223,9 @@
                     if (mysqli_num_rows($msresults) > 0) {
                         while ($row = mysqli_fetch_array($msresults)) {
                             if ($previousTypeId == null) {
-                                $previousTypeId = $row['typeId'];
+                                $previousTypeId = $row['typeName'];
                             }
-                            if ($row['typeId'] !== $previousTypeId) {
+                            if ($row['typeName'] !== $previousTypeId) {
                                 echo "<tr>";
                                 echo "<td>{$previousTypeId}</td>";
                                 echo "<td>฿" . $Sales . "</td>";
@@ -237,14 +238,14 @@
                                 $Profit += $Sales - $Cost;
                                 $TotalSales += $Sales;
                                 $TotalProfit += $Profit;
-                                $previousTypeId = $row['typeId'];
+                                $previousTypeId = $row['typeName'];
                             } else {
                                 $Sales += (double)$row['Price'] * (double)$row['TotalQty'];
                                 $Cost = (double)$row['cost'] * (double)$row['TotalQty'];
                                 $Profit += $Sales - $Cost;
                                 $TotalSales = $Sales;
                                 $TotalProfit = $Profit;
-                                $previousTypeId = $row['typeId'];
+                                $previousTypeId = $row['typeName'];
                             }
                         } if ($Sales != 0 && $Profit != 0 && $previousTypeId !== null) {
                             echo "<tr>";

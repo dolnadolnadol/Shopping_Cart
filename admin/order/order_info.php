@@ -52,6 +52,14 @@
             margin-bottom: 20px;
         }
 
+        .form-groupRow {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 20%;
+        }
+
         label {
             display: block;
             margin-bottom: 5px;
@@ -73,18 +81,16 @@
 
         button {
             background-color: #007bff;
-            /* Darker ocean-sky blue button color */
             color: #fff;
-            /* White text color for the button */
             padding: 10px 15px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            width: 15%;
         }
 
         button:hover {
             background-color: #0056b3;
-            /* Slightly darker color on hover */
         }
 
         table {
@@ -115,14 +121,17 @@
 </head>
 
 <body>
-    <?php  include_once '../../dbConfig.php';
+    <?php
+        include_once '../../dbConfig.php';
         $orderId = $_POST['id_order'];
         $cur = "SELECT * FROM orderkey 
-        INNER JOIN customer ON customer.CusID = orderkey.cusId 
-        INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId 
-        WHERE orderId = '$orderId'";
+                INNER JOIN customer ON customer.CusID = orderkey.cusId 
+                INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId 
+                WHERE orderId = '$orderId'";
         $msresults = mysqli_query($conn, $cur);
         $row = mysqli_fetch_array($msresults);
+        $orderId = $row['orderId'];
+        $deliId = $row['DeliId'];
     ?>
     <div class="invoice-form">
         <h2 style="color: #007bff; text-align: center;">Order Information</h2>
@@ -194,6 +203,31 @@
                 echo "<textarea readonly rows='5'>{$row['Address']}, {$row['Province']}, {$row['City']}, {$row['PostalCode']}</textarea>";
                 ?>
             </div>
+        </div>
+        <h2 style="color: #007bff; text-align: center;">Receipt Information</h2>
+        <div class="form-block">
+            <div class="form-group">
+                <?php
+                    $result = mysqli_query($conn, "SELECT * FROM orderkey INNER JOIN customer ON customer.CusID = orderkey.cusID WHERE orderkey.orderId = '$orderId'");
+                    $row = mysqli_fetch_assoc($result);
+                    echo "<label for='RecID'>Customer ID:</label>";
+                    echo "<input type='text' value='{$row['CusID']}' readonly>";
+                    echo "<label for='customerName'>Customer Name:</label>";
+                    echo "<input type='text' value='{$row['fname']} {$row['lname']}' readonly>";
+                    echo "<label for='customerName'>Tel:</label>";
+                    echo "<input type='text' value='{$row['Tel']}' readonly>";
+                    echo "<label for='customerName'>Email:</label>";
+                    echo "<input type='text' value='{$row['Email']}' readonly>";
+                ?>
+            </div>
+            <form id="paramsForm" method="POST" action="order_update_status.php">
+                <div class="form-groupRow" style="color: #007bff">
+                    <button type="submit" class="newStatus" name="newStatus" value="Pending">Not Approve</button>
+                    <button type="submit" class="newStatus" name="newStatus" value="Success">Approve</button>
+                    <input type="hidden" name="orderId" id="orderId" value="<?php echo $orderId; ?>">
+                    <input type="hidden" name="deliId" id="deliId" value="<?php echo $deliId; ?>">
+                </div>
+            </form>
         </div>
     </div>
 </body>

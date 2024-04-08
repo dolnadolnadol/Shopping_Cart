@@ -97,30 +97,33 @@
         <input type="text" id="a2" name="a2" value="<?php echo $row['ProductName']; ?>" maxlength="20" required>
         
         <label for="a5">รายละเอียดสินค้า:</label>
-        <textarea id="a5" name="a5" rows="4" cols="50" required><?php echo $row['Description']; ?></textarea>  
+        <textarea id="a5" name="a5" rows="4" cols="50" maxlength="300" required><?php echo $row['Description']; ?></textarea>  
 
         <label for="a7">ประเภทสินค้า:</label>
-        <input type="text" id="a7" name="a7" value="<?php echo $row['typeId']; ?>" size="1" required>
-
-        <label for="a7">ประเภทสินค้า:</label>
-        <select id="a7" name="a7" required>
+        <select id="a7" name="a7" value="$row['typeId']" maxlength="6" required>
             <option value="">กรุณาเลือกประเภทสินค้า</option>
-            <option value="1">ประเภท 1</option>
-            <option value="2">ประเภท 2</option>
-            <option value="3">ประเภท 3</option>
+            <?php
+            $query2 = "SELECT * FROM product_type WHERE product_type.hide != '1'";
+            $result2 = mysqli_query($conn, $query2);
+            if (mysqli_num_rows($result2) > 0) {
+                while ($row2 = mysqli_fetch_assoc($result2)) {
+                    echo "<option value='" . $row2['typeId'] . "'>" . $row2['typeName'] . "</option>";
+                }
+            }
+            ?>
         </select>
 
         <label for="a6">ต้นทุน:</label>
-        <input type="text" id="a6" name="a6" value="<?php echo $row['cost']; ?>" size="1" required>
+        <input type="text" id="a6" name="a6" value="<?php echo $row['cost']; ?>" size="1" maxlength="6" required>
 
         <label for="a3">ราคาต่อหน่วย:</label>
-        <input type="text" id="a3" name="a3" value="<?php echo $row['Price']; ?>" size="1" required>
+        <input type="text" id="a3" name="a3" value="<?php echo $row['Price']; ?>" size="1" maxlength="6" required>
 
         <label for="a4">จำนวนสินค้า:</label>
-        <input type="text" id="a4" name="a4" value="<?php echo $row['Qty']; ?>" size="1" required>
+        <input type="text" id="a4" name="a4" value="<?php echo $row['Qty']; ?>" size="1" maxlength="6" required>
 
         <label>จำนวนสินค้า On Hand:</label>
-        <input type="text" id="on" name="on" value="<?php echo $row['onHand']; ?>" size="1" readonly>
+        <input type="text" id="on" name="on" value="<?php echo $row['onHand']; ?>" size="1" maxlength="6" readonly>
         
         <label for="files[]">อัพโหลดรูปภาพสินค้าเก่า:</label>
         <input type="text" name="OldPhoto" value="<?php echo $row['Photo']; ?>" readonly>
@@ -141,34 +144,56 @@
 
             form.addEventListener('submit', function (event) {
                 event.preventDefault();
+
                 const productName = document.getElementById('a2').value;
                 const productDescription = document.getElementById('a5').value;
                 const productType = document.getElementById('a7').value;
                 const productCost = document.getElementById('a6').value;
                 const productPrice = document.getElementById('a3').value;
                 const productQuantity = document.getElementById('a4').value;
-                const textRegex = /^[a-zA-Z\s]+$/;
-                const numberAndTextRegex = /^[a-zA-Z0-9\s]+$/;
+
+                const textRegex = /^[a-zA-Zก-๙เแโใไะาีึืุูเแโใไ็่้๊๋\s]+$/;
                 const numberRegex = /^[0-9]+$/;
+                const numberAndtextRegex = /^[a-zA-Zก-๙เแโใไะาีึืุูเแโใไ็่้๊๋0-9\s]+$/;
+
+                const maxLengthProductName = 20;
+                const maxLengthProductDescription = 50;
+                const maxLengthProductNum = 6;
+
                 const errors = [];
-                if (!textRegex.test(productName)) {
-                    errors.push('ชื่อสินค้า: ต้องเป็นตัวอักษรเท่านั้น');
+
+                function checkMaxLength(value, maxLength, fieldName) {
+                    if (value.length > maxLength) {
+                        errors.push(`${fieldName}: ต้องไม่เกิน ${maxLength} ตัวอักษร`);
+                    }
                 }
-                if (!numberAndTextRegex.test(productDescription)) {
-                    errors.push('รายละเอียดสินค้า: ต้องเป็นตัวอักษรหรือตัวเลขเท่านั้น');
+
+                if (!numberAndtextRegex.test(productName)) {
+                    errors.push('ชื่อสินค้า: ต้องเป็นตัวอักษรและตัวเลขเท่านั้น');
                 }
+                checkMaxLength(productName, maxLengthProductName, 'ชื่อสินค้า');
+
+                if (!numberAndtextRegex.test(productDescription)) {
+                    errors.push('รายละเอียดสินค้า: ต้องเป็นตัวอักษรและตัวเลขเท่านั้น');
+                }
+                checkMaxLength(productDescription, maxLengthProductDescription, 'รายละเอียดสินค้า');
+
                 if (!numberRegex.test(productType)) {
-                    errors.push('ประเภทสินค้า: ต้องเป็นตัวเลขเท่านั้น');
+                    errors.push('ประเภทสินค้า: ต้องกดเลือกเท่านั้น');
                 }
-                if (!numberRegex.test(productCost)) {
-                    errors.push('ต้นทุน: ต้องเป็นตัวเลขเท่านั้น');
+
+                function validateNumericField(value, fieldName) {
+                    if (!numberRegex.test(value)) {
+                        errors.push(`${fieldName}: ต้องเป็นตัวเลขเท่านั้น`);
+                    } else {
+                        checkMaxLength(value, maxLengthProductNum, fieldName);
+                    }
                 }
-                if (!numberRegex.test(productPrice)) {
-                    errors.push('ราคาต่อหน่วย: ต้องเป็นตัวเลขเท่านั้น');
-                }
-                if (!numberRegex.test(productQuantity)) {
-                    errors.push('จำนวนสินค้า: ต้องเป็นตัวเลขเท่านั้น');
-                }
+
+                validateNumericField(productCost, 'ต้นทุน');
+                validateNumericField(productPrice, 'ราคาต่อหน่วย');
+                validateNumericField(productQuantity, 'จำนวนสินค้า');
+
                 if (errors.length > 0) {
                     alert(errors.join('\n'));
                 } else {
