@@ -1,5 +1,6 @@
 <?php
 include('./component/session.php');
+session_start();
 include_once '../dbConfig.php';
 // include('../logFolder/AccessLog.php');
 // include('../logFolder/CallLog.php');
@@ -24,10 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $lastID = mysqli_insert_id($conn);
 
         if (!$success) {
-            echo "in not success";
             die("Error inserting into payer: " . mysqli_error($conn));
         } else {
-            echo "in success";
             if (isset($_POST['invoice-taxid']) && $_POST['invoice-taxid'] != '') {
                 $taxid = $_POST['invoice-taxid'];
                 $taxname = $_POST['invoice-name'];

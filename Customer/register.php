@@ -125,7 +125,6 @@
                 <input type="radio" id="female" class="radio-input" name="sex" value="F">
                 <label for="female" class="radio-label">Female</label>
             </div>
-            
             <input type="submit" value="Register">
         </form>
     </div>
