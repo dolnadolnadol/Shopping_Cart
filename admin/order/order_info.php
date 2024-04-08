@@ -133,8 +133,6 @@
                 <?php echo"<input type='text' id='orderId' name='orderId' value='$orderId' readonly>"?>
                 <label>Order Date:</label>
                 <?php echo"<input type='text' id='orderDate' name='orderDate' value='{$row['orderCreate']}' readonly>"?>
-                <label>Order Date:</label>
-                <?php echo"<input type='text' id='orderDate' name='orderDate' value='{$row['orderCreate']}' readonly>"?>
                 <label>Delivery ID:</label>
                 <?php echo "<input type='text' id='DeliId' name='DeliId' value='{$row['DeliId']}' readonly>" ?> 
                 <label>Delivery Date:</label>
