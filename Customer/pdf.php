@@ -19,7 +19,7 @@ if (empty($_POST["id_receive"])) {
     $receiptId = $row['receiptId'];
 }
 
-$sql = "SELECT r.receiptId, r.fname, r.lname, a.Tel, a.Address, a.Province, a.City, a.PostalCode, r.cusId
+$sql = "SELECT r.receiptId, r.fname, r.lname, a.Tel,c.Email, a.Address, a.Province, a.City, a.PostalCode, r.cusId
 FROM receipt r
 JOIN orderkey o ON r.orderId = o.orderId
 JOIN customer c ON r.cusId = c.CusID
@@ -34,6 +34,7 @@ $cusAddress = $row['Address'];
 $cusFName = $row['fname'];
 $cusLName = $row['lname'];
 $cusTel = $row['Tel'];
+$cusEmail = $row['Email'];
 
 $sql = "SELECT ok.orderCreate
 FROM receipt r
@@ -43,6 +44,14 @@ $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
 $payTime = $row['orderCreate'];
 $payDate = date('Y-m-d', strtotime($payTime));
+
+$inv = $_POST['id_inv'];
+$sql = "SELECT *
+FROM invoice
+WHERE invId ='$inv'";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$invresult = $row;
 
 
 
@@ -108,7 +117,7 @@ $pdf->SetFont('sarabun', '', 9);
 
 $pdf->SetXY(30, 40);
 
-$pdf->Cell(60, 10, "" . $cusFName . " " . $cusLName . "", 0, 0, 'L');
+$pdf->Cell(60, 10, "" . $invresult['name'] . "", 0, 0, 'L');
 
 $pdf->SetFont('sarabun', '', 10);
 
@@ -120,7 +129,7 @@ $pdf->SetFont('sarabun', '', 9);
 
 $pdf->SetXY(140, 40);
 
-$pdf->Cell(60, 10, "" . $receiptCode . "", 0, 0, 'L');
+$pdf->Cell(60, 10, "" . $invresult['invId'] . "", 0, 0, 'L');
 
 $pdf->SetFont('sarabun', '', 10);
 
@@ -130,7 +139,7 @@ $pdf->Cell(60, 10, "ที่อยู่: ", 0, 0, 'L');
 
 $pdf->SetXY(30, 45);
 
-$pdf->Cell(60, 10, "" . $cusAddress . "", 0, 0, 'L');
+$pdf->Cell(60, 10, "" . $invresult['address'] . "", 0, 0, 'L');
 
 $pdf->SetFont('sarabun', '', 10);
 
@@ -152,7 +161,7 @@ $pdf->Cell(60, 10, "เลขประจำตัวผู้เสียภา
 
 $pdf->SetXY(55, 50);
 
-$pdf->Cell(60, 10, "123456789123", 0, 0, 'L');
+$pdf->Cell(60, 10, $invresult['taxId'] , 0, 0, 'L');
 
 $pdf->SetFont('sarabun', '', 10);
 
@@ -172,7 +181,7 @@ $pdf->Cell(60, 10, "อีเมล: ", 0, 0, 'L');
 
 $pdf->SetXY(65, 55);
 
-$pdf->Cell(60, 10, "testuser@test.com", 0, 1, 'L');
+$pdf->Cell(60, 10, $cusEmail, 0, 1, 'L');
 
 $pdf->Cell(170, 10, "", 'T', 1, 'L');
 

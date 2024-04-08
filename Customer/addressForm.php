@@ -371,7 +371,6 @@ include('./component/getFunction/getName.php'); ?>
             document.getElementById("lastname").readOnly = true;
             document.getElementById("tel").readOnly = true;
             document.getElementById("changeinfo").value = "true";
-            alert("saved");
         }
 
         function editAddress() {
@@ -389,7 +388,6 @@ include('./component/getFunction/getName.php'); ?>
             document.getElementById("city").readOnly = true;
             document.getElementById("postalcode").readOnly = true;
             document.getElementById("changeaddress").value = "true";
-            alert("saved");
         }
     </script>
 </body>

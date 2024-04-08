@@ -338,6 +338,7 @@
                         <form class='action-button' action='pdf.php' method='post' target='_blank' style='display: inline-block;'>
                             <input type='hidden' name='id_receive' value='" . $orderId . "'>
                             <input type='hidden' name='id_customer' value='" . $customerId . "'>
+                            <input type='hidden' name='id_inv' value='" . $_POST['id_inv'] . "'>
                             <button type='submit'>
                                 <img src='./image/print.png' alt='print'>
                             </button>

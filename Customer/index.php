@@ -155,9 +155,6 @@
                 if (mysqli_num_rows($msresults) > 0) {
                     while ($row = mysqli_fetch_array($msresults)) {
                         echo "<div class='product-card'>";
-                        // $imageData = $row['Photo'];
-                        // $imageDataEncoded = base64_encode($imageData);
-                        // echo "<img src='data:image/jpeg;base64,{$imageDataEncoded}'/>";
                         include('./component/showPhotos.php');
                         echo "
                                 <p class='product-name'>{$row['ProductName']}</p>

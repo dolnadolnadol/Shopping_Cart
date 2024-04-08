@@ -24,8 +24,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $lastID = mysqli_insert_id($conn);
 
         if (!$success) {
+            echo "in not success";
             die("Error inserting into payer: " . mysqli_error($conn));
         } else {
+            echo "in success";
             if (isset($_POST['invoice-taxid']) && $_POST['invoice-taxid'] != '') {
                 $taxid = $_POST['invoice-taxid'];
                 $taxname = $_POST['invoice-name'];
@@ -45,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "<form id='auto_submit_form' method='post' action='bill.php'>
                 <input type='hidden' name='id_order' value='$orderId'>
                 <input type='hidden' name='id_deli' value='$deli'>
+                <input type='hidden' name='id_inv' value='$invId'>
             </form>";
 
                 // Use JavaScript to trigger form submission

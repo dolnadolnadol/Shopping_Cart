@@ -369,6 +369,12 @@ function includePay($query)
     while ($row = mysqli_fetch_array($msresults)) {
         echo '<div class="order">';
         echo "<div class='icon-container'>
+                <form method='post' action='deleteOrder.php'>
+                    <input type='hidden' name='id_order' value='{$row['orderId']}'>
+                    <button type='submit'>
+                        <img src='./image/search-alt.png' alt='Order Icon' width='20'>
+                    </button>
+                </form>
                 <form method='post' action='paymentForm.php'>
                     <input type='hidden' name='id_order' value='{$row['orderId']}'>
                     <input type='hidden' name='id_deli' value='{$row['DeliId']}'>

@@ -194,7 +194,6 @@ include('./component/getFunction/getName.php'); ?>
         <?php
         if (isset($_SESSION['id_username'])) {
             $uid = $_SESSION['id_username'];
-            // $inv = $_POST['id_invoice'];
             $deli = $_POST['id_deli'];
             $lastId = $_POST['id_order'];
             $addrId = $_POST['id_address'];
