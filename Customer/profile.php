@@ -1,6 +1,9 @@
 <?php
 include('./component/session.php');
-
+if(!isset($_SESSION['auth'])) {
+    header("Location: ./login.php");
+    exit;
+}
 include_once '../dbConfig.php'; 
 
 $query = "SELECT * FROM customer WHERE customer.CusID = '$uid'";
@@ -62,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
         }
 
         .container {
-            padding: 20px 60px 70px 60px;
+            padding: 60px 60px 70px 60px;
             text-align: left;
             width: 800px;
             background-color: #fff; /* Added background color */

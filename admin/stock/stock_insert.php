@@ -10,15 +10,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $a5 = $_POST['a5'];
         $a6 = $_POST['a6'];
         $a7 = $_POST['a7'];
-        $photo = file_get_contents($_FILES["photo"]["tmp_name"]);
+        
+        // $targetDir = "../UploadImg/uploads/"; 
+        // $allowTypes = array('jpg','png','jpeg','gif'); 
+        // $fileNames = array_filter($_FILES['files']['name']); 
+        // $uploadedFiles = array();
+        $image_data = file_get_contents($_FILES["files"]["tmp_name"]);
 
         $insertQuery = "INSERT INTO product(ProductName, Description, Price, Qty, cost, typeId, Photo) 
                         VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insertQuery);
 
         if ($stmt) {
-            $stmt->bind_param("sssssss", $a2, $a5, $a3, $a4, $a6, $a7, $photo);
+            // Bind parameters
+            $stmt->bind_param("sssssss", $a2, $a5, $a3, $a4, $a6, $a7, $image_data);
 
+            // Combine uploaded file names into a single string separated by commas
+            // $photo = implode(",", $uploadedFiles);
+
+            // Execute statement
             if ($stmt->execute()) {
                 echo 'Insert data is successful.';
             } else {

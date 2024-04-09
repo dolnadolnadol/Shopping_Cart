@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order</title>
+    <title>Paycheck</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -159,7 +159,7 @@
     echo "<div class='container_order'>";
     echo "<div  id='row-rev' class='invoice-container'>
         <div class='invoice-header'>
-            <h1>เลขใบเสร็จของท่านคือ :{$recResult['orderId']} </h1>
+            <h1>เลขรายการสั่งซื้อของท่านคือ :{$recResult['orderId']} </h1>
         </div>";
 
     echo "<div class='item_order'>
@@ -172,8 +172,7 @@
     echo '<div class="grid-container">
             <div class="grid-item">';
     echo "<div class='item_order2'>
-                    <p>ชื่อผู้จ่าย: {$payerResult['fname']} {$payerResult['lname']}</p>
-                    <p>ที่อยู่จัดส่ง : {$payerResult['Tel']}</p>
+        <p>ชื่อผู้จ่าย: รอรับชำระ </p>
                 </div>";
     echo "</div>
                     <div class='grid-item'>
@@ -187,7 +186,7 @@
     echo "</div>
                     <div class='grid-item'>
                         <div class='item_order2'>
-                            <p id='Status'>สถานะ : {$recResult['PaymentStatus']}</p>
+                            <p id='Status'>สถานะ : รอรับชำระเงิน ({$recResult['PaymentStatus']})</p>
                             <p>วันที่สั่งซื้อ : {$recResult['orderCreate']}</p>
                             <p>วันที่ส่ง : {$payerResult['DeliDate']}</p>
                         </div>

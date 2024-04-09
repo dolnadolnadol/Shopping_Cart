@@ -203,20 +203,21 @@ $cur = "SELECT * FROM product WHERE proId = $code ";
 $msresults = mysqli_query($conn, $cur);
 $row = mysqli_fetch_array($msresults);
 $OnHandtock = $row['Qty'] - $row['OnHand'];
-$imageURL = '../admin/UploadImg/'.$row["Photo"];
+// $imageURL = '../admin/UploadImg/'.$row["Photo"];
+$imageDataEncoded = base64_encode($row['Photo']);
 echo " <div class='container-body'>
             <div class='container-1'>
                 <div class='product-image'>
-                    <img src='$imageURL' style='height:20rem; width:100%;' alt='Product Image'>
+                    <img src='data:image/jpg;base64,{$imageDataEncoded}' style='height:20rem; width:100%;' alt='Product Image'>
                 </div>
                 <div class='product-image'>
-                    <img src='$imageURL' style='height:20rem; width:100%;' alt='Product Image'>
+                    <img src='data:image/jpg;base64,{$imageDataEncoded}' style='height:20rem; width:100%;' alt='Product Image'>
                 </div>
                 <div class='product-image'>
-                    <img src='$imageURL' style='height:20rem; width:100%;' alt='Product Image'>
+                    <img src='data:image/jpg;base64,{$imageDataEncoded}' style='height:20rem; width:100%;' alt='Product Image'>
                 </div>
                 <div class='product-image'>
-                    <img src='$imageURL' style='height:20rem; width:100%;' alt='Product Image'>
+                    <img src='data:image/jpg;base64,{$imageDataEncoded}' style='height:20rem; width:100%;' alt='Product Image'>
                 </div>
             </div>
             <div class='container-2'>

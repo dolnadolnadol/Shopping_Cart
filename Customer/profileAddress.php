@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="tel" name="postal" value="">
 
         <button type="submit">save</button>
-        <button type="button" onclick="href:'./profile.php'"> ยกเลิก </button>
+        <button type="button" onclick="window.location.href='./profile.php'">ยกเลิก </button>
     </form>
 </body>
 </html>

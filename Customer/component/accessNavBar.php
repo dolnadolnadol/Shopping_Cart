@@ -81,7 +81,7 @@ include_once '../dbConfig.php';
         <ul>
             <li><a style="margin-left: 1rem;" <?php echo isActive('index.php'); ?> href="./">Home</a></li>
             <?php if (isset($_SESSION['id_username']) && isset($_SESSION['status']) === true) : ?>
-                <li><a <?php echo isActive('../history.php'); ?> href="./history.php">History</a></li>
+                <li><a <?php echo isActive('../history.php'); ?> href="./history.php">การทำรายการ</a></li>
             <?php endif; ?>
         </ul>
     </div>

@@ -1,14 +1,25 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <?php
     session_start();
-    if($_SESSION['auth'] == 'product-admin'){
+    if(!isset($_SESSION['auth'])){
+        echo "<script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    swal('Do Not Have Authority!', 'Cant Access!', 'error')
+                        .then(() => {
+                            window.location.href = '../customer';
+                        });
+                });
+            </script>";
+    } 
+    else if($_SESSION['auth'] == 'product-admin'){
         header('Location: ./stock/stock_index.php');
         exit();
     }
-    if($_SESSION['auth'] == 'permissions-admin'){
+    else if($_SESSION['auth'] == 'permissions-admin'){
         header('Location: ./customer/customer_index.php');
         exit();
     }
-    if($_SESSION['auth'] == 'super-admin'){
+    else if($_SESSION['auth'] == 'super-admin'){
         header('Location: ./dashboard/dashboard.php');
         exit();
     }
@@ -19,7 +30,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <style>
+    <!-- <style>
         .font-login {
             display: flex;
             justify-content: center;
@@ -72,10 +83,10 @@
         .container-register {
             text-align: center;
         }
-    </style>
+    </style> -->
 </head>
 <body>
-    <div class="font-login">
+    <!-- <div class="font-login">
         <p>Log In Admin</p>
     </div>
     <div class="body-container">
@@ -88,7 +99,7 @@
                 <input type="submit" value="เข้าสู่ระบบ">
             </form>
         </div>
-    </div>
+    </div> -->
 </body>
 </html>
 

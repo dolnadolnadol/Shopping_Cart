@@ -2,6 +2,7 @@
 <?php
 include_once '../dbConfig.php';
 session_start();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
@@ -9,57 +10,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $sex = $_POST['sex'];
     $tel = $_POST['tel'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    $password  = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $check_user_query = "SELECT * FROM customer WHERE Username = ?";
+    $stmt_check_user = mysqli_prepare($conn, $check_user_query);
+    mysqli_stmt_bind_param($stmt_check_user, "s", $username);
+    mysqli_stmt_execute($stmt_check_user);
+    mysqli_stmt_store_result($stmt_check_user);
 
-    $select_user = "SELECT * FROM customer WHERE Username = '$username'";
-    $run_qry = mysqli_query($conn, $select_user);
-    if (mysqli_num_rows($run_qry) == 0) {
-        $stmt_1 = mysqli_query($conn, "INSERT INTO customer(fname, lname, Sex ,Tel, Email, Username , Password ,authority)
-            VALUES('$fname','$lname', '$sex','$tel', '$email', '$username' , '$password', 'users');");
+    if (mysqli_stmt_num_rows($stmt_check_user) == 0) {
+        $insert_user_query = "INSERT INTO customer (fname, lname, Sex, Tel, Email, Username, Password, authority) 
+                              VALUES (?, ?, ?, ?, ?, ?, ?, 'users')";
+        $stmt_insert_user = mysqli_prepare($conn, $insert_user_query);
+        mysqli_stmt_bind_param($stmt_insert_user, "sssssss", $fname, $lname, $sex, $tel, $email, $username, $password);
 
-        if (!$stmt_1) {
-            // echo "<script>
-            //     setTimeout(function(){
-            //         alert('Error!');
-            //         window.location.href = './login.php';
-            //     }, 1000);</script>";
-
+        if (mysqli_stmt_execute($stmt_insert_user)) {
             echo "<script>
-        document.addEventListener('DOMContentLoaded', function() {
-            swal('Failed to Register!', 'Register is Failed!', 'error')
-                .then(() => {
-                    window.location.href = './login.php';
-                });
-        });
-      </script>";
+                    document.addEventListener('DOMContentLoaded', function() {
+                        swal('Registration Successful!', 'Registration is successful!', 'success')
+                            .then(() => {
+                                window.location.href = './login.php';
+                            });
+                    });
+                </script>";
         } else {
             echo "<script>
-        document.addEventListener('DOMContentLoaded', function() {
-            swal('Registeration Successful!', 'Register is successful!', 'success')
-                .then(() => {
-                    window.location.href = './login.php';
-                });
-        });
-      </script>";
+                    document.addEventListener('DOMContentLoaded', function() {
+                        swal('Failed to Register!', 'Registration failed!', 'error')
+                            .then(() => {
+                                window.location.href = './login.php';
+                            });
+                    });
+                </script>";
         }
-        // header("Location: login.php");
 
+        mysqli_stmt_close($stmt_insert_user);
     } else {
-        // echo "<script>
-        //     setTimeout(function(){
-        //         alert('User Have Already!');
-        //         window.location.href = './login.php';
-        //     }, 1000);
-        //     </script>";
         echo "<script>
-        document.addEventListener('DOMContentLoaded', function() {
-            swal('Failed to Register!', 'User Have Already!', 'error')
-                .then(() => {
-                    window.location.href = './login.php';
+                document.addEventListener('DOMContentLoaded', function() {
+                    swal('Failed to Register!', 'User already exists!', 'error')
+                        .then(() => {
+                            window.location.href = './login.php';
+                        });
                 });
-        });
-      </script>";
+            </script>";
     }
+    mysqli_stmt_close($stmt_check_user);
 }
+
+mysqli_close($conn);
 ?>
