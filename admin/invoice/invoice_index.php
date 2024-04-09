@@ -120,7 +120,7 @@
             <form id='deleteForm' class="delete-form" action='invoice_delete_confirm.php' method='post'>
                 <input type='hidden' name='list_id_order' id='selectedValues' value=''>
                 <input type='hidden' name='total_id_order' id='selectedTotal' value=''>
-                <input type='submit' id='deleteButton' value='Delete Order' disabled />
+                <input type='submit' id='deleteButton' value='Delete Invoice' disabled />
             </form>
 
         </div>
