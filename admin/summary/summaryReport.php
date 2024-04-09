@@ -204,57 +204,64 @@
                         <th>Profit</th>
                     </tr>
                     <?php
-                    $cur = "SELECT product.proId, product.typeId, product.Price, product.cost, product_type.typeName, SUM(ordervalue.Qty) AS TotalQty
-                            FROM product
-                            INNER JOIN ordervalue ON ordervalue.ProId = product.proId
-                            INNER JOIN orderkey ON orderkey.orderId = ordervalue.orderId
-                            INNER JOIN receipt ON receipt.orderId = ordervalue.orderId
-                            INNER JOIN product_type ON product_type.typeId = product.typeId
-                            WHERE orderkey.PaymentStatus = 'Success' 
-                            AND DATE_FORMAT(receipt.timestamp, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
-                            GROUP BY product.proId, product.typeId
-                            ORDER BY product.typeId ASC";
-                    $msresults = mysqli_query($conn, $cur);
-                    $TotalSales = 0;
-                    $TotalProfit = 0;
-                    $Sales = 0;
-                    $Profit = 0;
-                    $previousTypeId = null;
-                    if (mysqli_num_rows($msresults) > 0) {
-                        while ($row = mysqli_fetch_array($msresults)) {
-                            if ($previousTypeId == null) {
-                                $previousTypeId = $row['typeName'];
-                            }
-                            if ($row['typeName'] !== $previousTypeId) {
+                        $cur = "SELECT product.proId, product.typeId, product.Price, product.cost, product_type.typeName, SUM(ordervalue.Qty) AS TotalQty
+                                FROM product
+                                INNER JOIN ordervalue ON ordervalue.ProId = product.proId
+                                INNER JOIN orderkey ON orderkey.orderId = ordervalue.orderId
+                                INNER JOIN receipt ON receipt.orderId = ordervalue.orderId
+                                INNER JOIN product_type ON product_type.typeId = product.typeId
+                                WHERE orderkey.PaymentStatus = 'Success' 
+                                AND DATE_FORMAT(receipt.timestamp, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+                                GROUP BY product.proId, product.typeId
+                                ORDER BY product.typeId ASC";
+                        $msresults = mysqli_query($conn, $cur);
+                        $TotalSales = 0;
+                        $TotalProfit = 0;
+                        $SalesCal = 0;
+                        $Sales = 0;
+                        $Profit = 0;
+                        $previousTypeId = null;
+                        $previousTypeName = null;
+                        if (mysqli_num_rows($msresults) > 0) {
+                            while ($row = mysqli_fetch_array($msresults)) {
+                                if ($previousTypeId == null && $previousTypeName == null) {
+                                    $previousTypeId = $row['typeId'];
+                                    $previousTypeName = $row['typeName'];
+                                }
+                                if ($row['typeId'] !== $previousTypeId) {
+                                    echo "<tr>";
+                                    echo "<td>{$previousTypeName}</td>";
+                                    echo "<td>฿" . $Sales . "</td>";
+                                    echo "<td>฿" . $Profit . "</td>";
+                                    echo "</tr>";
+                                    $TotalSales += $Sales;
+                                    $TotalProfit += $Profit;
+                                    $Sales = 0;
+                                    $Profit = 0;
+                                    $SalesCal = (double)$row['Price'] * (double)$row['TotalQty'];
+                                    $Cost = (double)$row['cost'] * (double)$row['TotalQty'];
+                                    $Profit += $SalesCal - $Cost;
+                                    $Sales += $SalesCal;
+                                    $previousTypeId = $row['typeId'];
+                                    $previousTypeName = $row['typeName'];
+                                } else {
+                                    $SalesCal = (double)$row['Price'] * (double)$row['TotalQty'];
+                                    $Cost = (double)$row['cost'] * (double)$row['TotalQty'];
+                                    $Profit += $SalesCal - $Cost;
+                                    $Sales += $SalesCal;
+                                    $previousTypeId = $row['typeId'];
+                                    $previousTypeName = $row['typeName'];
+                                }
+                            } if ($Sales != 0 && $Profit != 0 && $previousTypeId !== null) {
                                 echo "<tr>";
-                                echo "<td>{$previousTypeId}</td>";
+                                echo "<td>{$previousTypeName}</td>";
                                 echo "<td>฿" . $Sales . "</td>";
                                 echo "<td>฿" . $Profit . "</td>";
                                 echo "</tr>";
-                                $Sales = 0;
-                                $Profit = 0;
-                                $Sales += (double)$row['Price'] * (double)$row['TotalQty'];
-                                $Cost = (double)$row['cost'] * (double)$row['TotalQty'];
-                                $Profit += $Sales - $Cost;
                                 $TotalSales += $Sales;
                                 $TotalProfit += $Profit;
-                                $previousTypeId = $row['typeName'];
-                            } else {
-                                $Sales += (double)$row['Price'] * (double)$row['TotalQty'];
-                                $Cost = (double)$row['cost'] * (double)$row['TotalQty'];
-                                $Profit += $Sales - $Cost;
-                                $TotalSales = $Sales;
-                                $TotalProfit = $Profit;
-                                $previousTypeId = $row['typeName'];
                             }
-                        } if ($Sales != 0 && $Profit != 0 && $previousTypeId !== null) {
-                            echo "<tr>";
-                            echo "<td>{$previousTypeId}</td>";
-                            echo "<td>฿" . $Sales . "</td>";
-                            echo "<td>฿" . $Profit . "</td>";
-                            echo "</tr>";
                         }
-                    }
                     ?>
                     <tr>
                         <td class="text-right"><strong>Total</strong></td>

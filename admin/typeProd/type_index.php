@@ -119,7 +119,7 @@
             <form id='deleteForm' class="delete-form" action='type_delete_confirm.php' method='post'>
                 <input type='hidden' name='list_id_type' id='selectedValues' value=''>
                 <input type='hidden' name='total_id_type' id='selectedTotal' value=''>
-                <input type='submit' id='deleteButton' value='Delete Product' disabled />
+                <input type='submit' id='deleteButton' value='Delete Type' disabled />
             </form>
         </div>
         <div>
@@ -128,7 +128,7 @@
             <input type="text" name="filter" id="filter" placeholder="Enter name to filter">
             <!------------------------------------------>
             <form class="add-user-form" action='type_insert_form.php' method='post'>
-                <input type='submit' id="addUserButton" value='Add Product'/>
+                <input type='submit' id="addUserButton" value='Add Type'/>
             </form>
             <br>
         </div>

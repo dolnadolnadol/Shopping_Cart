@@ -20,8 +20,8 @@
 
         .invoice {
             padding: 30px;
-            width: 380mm;
-            height: 537.43mm;
+            width: 200mm;
+            height: 282.86mm;
             background-color: white;
             margin: 0px auto;
         }
@@ -107,6 +107,7 @@
                                 <div class="col-xs-12">
                                 <h2>Invoice<br>
                                 <span class="small">Invoice ID : <?php echo $row['invId']; ?></span></h2>
+                                <h4>Tax ID : <?php echo $row['taxId']; ?></h4>
                                 </div>
                                 <button id="convertToPDF" class="convertToPDF">Convert to PDF</button>
                             </div>
@@ -208,7 +209,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12 text-right identity">
-                                <h3>ผู้รับรอง<br><strong><br>__________________</strong></h3>
+                                <h4>ผู้รับรอง<br><br>__________________</h4>
                             </div>
                         </div>
                     </div>

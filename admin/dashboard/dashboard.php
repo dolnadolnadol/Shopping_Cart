@@ -195,33 +195,66 @@
                     <tr style="color:black;">
                         <th>ID</th>
                         <th>Name</th>
+                        <th>Price</th>
                         <th>Sold Quantity</th>
+                        <th>Profit</th>
                     </tr>
                     <?php
-                        $bestSell_Query = mysqli_query($conn, "SELECT product.proId, product.ProductName, SUM(ordervalue.Qty) AS TotalQty
-                        FROM product
-                        INNER JOIN ordervalue ON product.proId = ordervalue.ProId
-                        GROUP BY product.proId
-                        ORDER BY TotalQty DESC");
-                        while($row = mysqli_fetch_assoc($bestSell_Query)) {
+                    $cur = "SELECT product.proId, product.ProductName, product.Price, product.cost, SUM(ordervalue.Qty) AS TotalQty
+                    FROM product
+                    INNER JOIN ordervalue ON ordervalue.ProId = product.proId
+                    INNER JOIN orderkey ON orderkey.orderId = ordervalue.orderId
+                    INNER JOIN receipt ON receipt.orderId = ordervalue.orderId
+                    WHERE orderkey.PaymentStatus = 'Success' 
+                    AND DATE_FORMAT(receipt.timestamp, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+                    GROUP BY product.proId";
+                    $msresults = mysqli_query($conn, $cur);
+                    $TotalSales = 0;
+                    $TotalProfit = 0;
+                    if (mysqli_num_rows($msresults) > 0) {
+                        while ($row = mysqli_fetch_array($msresults)) {
+                            $Sales = (double)$row['Price'] * (double)$row['TotalQty'];
+                            $Cost = (double)$row['cost'] * (double)$row['TotalQty'];
+                            $Profit = $Sales - $Cost;
+                            $TotalSales += $Sales;
+                            $TotalProfit += $Profit;
                             echo "<tr>";
-                            echo "<td>" . $row['proId'] . "</td>";
-                            echo "<td>" . $row['ProductName'] . "</td>";
-                            echo "<td>" . $row['TotalQty'] . "</td>";
+                            echo "<td>{$row['proId']}</td>";
+                            echo "<td>{$row['ProductName']}</td>";
+                            echo "<td>฿" . $row['Price'] . "</td>";
+                            echo "<td>{$row['TotalQty']}</td>";
+                            echo "<td>฿" . $Profit . "</td>";
                             echo "</tr>";
                         }
+                    }
                     ?>
                 </table>
             </div>
             <div class="data-card" id='card-4'>
                 <h2 id='Re'>Revenue</h2>
-                <?php 
-                    $income_Query = mysqli_query($conn, "SELECT * FROM product INNER JOIN ordervalue ON product.ProID = ordervalue.ProID");
-                    (double)$total_income = 0;
-                    while($row = mysqli_fetch_assoc($income_Query)) {
-                        $total_income += (double)$row['Price'] * (double)$row['Qty'];
+                <?php
+                    $cur = "SELECT product.proId, product.ProductName, product.Price, product.cost, SUM(ordervalue.Qty) AS TotalQty
+                    FROM product
+                    INNER JOIN ordervalue ON ordervalue.ProId = product.proId
+                    INNER JOIN orderkey ON orderkey.orderId = ordervalue.orderId
+                    INNER JOIN receipt ON receipt.orderId = ordervalue.orderId
+                    WHERE orderkey.PaymentStatus = 'Success' 
+                    AND DATE_FORMAT(receipt.timestamp, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+                    GROUP BY product.proId";
+                    $msresults = mysqli_query($conn, $cur);
+                    $TotalSales = 0;
+                    $TotalProfit = 0;
+                    if (mysqli_num_rows($msresults) > 0) {
+                        while ($row = mysqli_fetch_array($msresults)) {
+                            $Sales = (double)$row['Price'] * (double)$row['TotalQty'];
+                            $Cost = (double)$row['cost'] * (double)$row['TotalQty'];
+                            $Profit = $Sales - $Cost;
+                            $TotalSales += $Sales;
+                            $TotalProfit += $Profit;
+                        }
+                        echo "<h1>Total Income  ฿" . $TotalSales . "</h1>";
+                        echo "<h1>Total Profit  ฿" . $TotalProfit . "</h1>";
                     }
-                    echo "<h1>Total Income: ฿" . number_format($total_income, 2) . "</h1>";
                 ?>
             </div>
         </div>

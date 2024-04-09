@@ -20,9 +20,9 @@
             $existingInvoiceQuery = "SELECT * FROM invoice WHERE orderId = '$orderId'";
             $existingInvoiceResult = mysqli_query($conn, $existingInvoiceQuery);
             if (mysqli_num_rows($existingInvoiceResult) == 0) {
-                $invoiceInsertQuery = "UPDATE invoice SET timestamp = null, cusId = '{$row['cusId']}', orderId = '$orderId', DeliId = '$deliId'";
+                $invoiceInsertQuery = "UPDATE invoice SET cusId = '{$row['cusId']}', orderId = '$orderId', DeliId = '$deliId'";
                 mysqli_query($conn, $invoiceInsertQuery);
-            }  
+            } 
         }
         else if($newStatus == 'Success'){
             $updateQuery1 = "UPDATE orderkey SET PaymentStatus = '$newStatus' WHERE orderId = '$orderId'";
@@ -40,7 +40,7 @@
             $existingInvoiceQuery = "SELECT * FROM invoice WHERE orderId = '$orderId'";
             $existingInvoiceResult = mysqli_query($conn, $existingInvoiceQuery);
             if (mysqli_num_rows($existingInvoiceResult) == 0) {
-                $invoiceInsertQuery = "UPDATE invoice SET timestamp = null, cusId = '{$row['cusId']}', orderId = '$orderId', DeliId = '$deliId', deleteStatus = '1'";
+                $invoiceInsertQuery = "UPDATE invoice SET cusId = '{$row['cusId']}', orderId = '$orderId', DeliId = '$deliId', deleteStatus = '1'";
                 mysqli_query($conn, $invoiceInsertQuery);
             }            
         }
