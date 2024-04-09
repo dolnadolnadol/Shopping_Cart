@@ -208,7 +208,7 @@ include('./component/getFunction/getName.php'); ?>
                         <label for="tel">Tel</label>
                         <input required type="tel" id="tel" name="tel" value="<?php echo isset($row['tel']) ? $row['tel'] : ''; ?>" readonly>
 
-                        <input type="hidden" name="changeInfo">
+                        <input type="hidden" name="changeinfo" id="changeinfo">
                         <input type="hidden" name="addrId" value="<?php echo $row['AddrId'] ?? ''; ?>">
                         <button type="button" onclick="editInfo()">edit info</button>
                         <button type="button" id="saveInfo" onclick="saveInfobutton()" style="display:none;">save</button>
@@ -243,7 +243,7 @@ include('./component/getFunction/getName.php'); ?>
                         <label for="postalcode">PostalCode</label>
                         <input required type="text" name="postalcode" id="postalcode" value="<?php echo isset($row['PostalCode']) ? $row['PostalCode'] : ''; ?>" readonly>
 
-                        <input type="hidden" name="changeaddress">
+                        <input type="hidden" name="changeaddress" id="changeaddress">
                         <button type="button" onclick="editAddress()">edit address</button>
                         <button type="button" id="saveaddr" onclick="saveAddressbutton()" style="display:none;">save</button>
                         <!-- </div> -->
@@ -342,35 +342,41 @@ include('./component/getFunction/getName.php'); ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        if (
-            "<?php echo isset($row['Address']) ? $row['Address'] : ''; ?>" === '' ||
-            "<?php echo isset($row['Province']) ? $row['Province'] : ''; ?>" === '' ||
-            "<?php echo isset($row['City']) ? $row['City'] : ''; ?>" === '' ||
-            "<?php echo isset($row['PostalCode']) ? $row['PostalCode'] : ''; ?>" === ''
-        ) {
-            editAddress();
-        }
-        if (
-            "<?php echo isset($row['fname']) ? $row['fname'] : ''; ?>" === '' ||
-            "<?php echo isset($row['lname']) ? $row['lname'] : ''; ?>" === '' ||
-            "<?php echo isset($row['tel']) ? $row['tel'] : ''; ?>" === ''
-        ){
-            editInfo();
-        }
-    });
+            if (
+                "<?php echo isset($row['Address']) ? $row['Address'] : ''; ?>" === '' ||
+                "<?php echo isset($row['Province']) ? $row['Province'] : ''; ?>" === '' ||
+                "<?php echo isset($row['City']) ? $row['City'] : ''; ?>" === '' ||
+                "<?php echo isset($row['PostalCode']) ? $row['PostalCode'] : ''; ?>" === ''
+            ) {
+                editAddress();
+            }
+            if (
+                "<?php echo isset($row['fname']) ? $row['fname'] : ''; ?>" === '' ||
+                "<?php echo isset($row['lname']) ? $row['lname'] : ''; ?>" === '' ||
+                "<?php echo isset($row['tel']) ? $row['tel'] : ''; ?>" === ''
+            ) {
+                editInfo();
+            }
+        });
+
         function editInfo() {
             document.getElementById("saveInfo").style.display = "block";
             document.getElementById("fname").readOnly = false;
             document.getElementById("lname").readOnly = false;
             document.getElementById("tel").readOnly = false;
+
+            // document.getElementById("fname").addEventListener('input', function(event) {
+            //     const newValue = event.target.value;
+            //     console.log("New value of fname:", document.getElementById("fname").value);
+            // });
         }
 
         function saveInfobutton() {
             document.getElementById("saveInfo").style.display = "none";
             document.getElementById("fname").readOnly = true;
-            document.getElementById("lastname").readOnly = true;
+            document.getElementById("lname").readOnly = true;
             document.getElementById("tel").readOnly = true;
-            document.getElementById("changeinfo").value = "true";
+            document.getElementById("changeinfo").value ="value";
         }
 
         function editAddress() {
@@ -387,7 +393,7 @@ include('./component/getFunction/getName.php'); ?>
             document.getElementById("province").readOnly = true;
             document.getElementById("city").readOnly = true;
             document.getElementById("postalcode").readOnly = true;
-            document.getElementById("changeaddress").value = "true";
+            document.getElementById("changeaddress").value ="value";
         }
     </script>
 </body>

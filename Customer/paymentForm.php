@@ -263,7 +263,7 @@ include('./component/getFunction/getName.php'); ?>
                         <div id='invoicefill' style="display: none; margin:2rem; padding:1rem; border: 1px solid;">
                             <div class="form-group">
                                 <label>เลขกำกับภาษี</label>
-                                <input name="invoice-taxid" id="invoice-taxid" type="number" required>
+                                <input name="invoice-taxid" id="invoice-taxid" type="text" required>
                             </div>
                             <div class="form-group">
                                 <label>ชื่อ</label>

@@ -1,6 +1,5 @@
 <?php
 include('./component/session.php');
-session_start();
 include_once '../dbConfig.php';
 // include('../logFolder/AccessLog.php');
 // include('../logFolder/CallLog.php');

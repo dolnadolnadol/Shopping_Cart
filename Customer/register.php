@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,7 +83,7 @@
             background-color: blue;
         }
 
-        .radio-input:checked + .radio-label {
+        .radio-input:checked+.radio-label {
             color: #333;
         }
 
@@ -94,8 +95,9 @@
         }
     </style>
 </head>
+
 <body>
-    <?php include('./component/backLogin.php')?>
+    <?php include('./component/backLogin.php') ?>
     <div class="container">
         <h2>Register</h2>
         <form method="post" action="registerProcess.php">
@@ -107,6 +109,7 @@
 
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
+            <div id="passwordWarning" style="color: red; margin-bottom: 12px;"></div>
 
             <label for="fname">First Name</label>
             <input type="text" id="fname" name="fname" required>
@@ -128,5 +131,41 @@
             <input type="submit" value="Register">
         </form>
     </div>
+    <script>
+        const passwordInput = document.getElementById('password');
+        const passwordWarning = document.getElementById('passwordWarning');
+        const submitButton = document.querySelector('input[type="submit"]');
+
+        passwordInput.addEventListener('input', function() {
+            const password = passwordInput.value;
+            const containsUppercase = /[A-Z]/.test(password);
+            const containsLowercase = /[a-z]/.test(password);
+            const containsNumber = /\d/.test(password);
+            const isLengthValid = password.length >= 8;
+
+            let warningMessage = '';
+
+            if (!containsUppercase) {
+                warningMessage += 'Password must contain at least one uppercase letter.<br>';
+            }
+            if (!containsLowercase) {
+                warningMessage += 'Password must contain at least one lowercase letter.<br>';
+            }
+            if (!containsNumber) {
+                warningMessage += 'Password must contain at least one number.<br>';
+            }
+            if (!isLengthValid) {
+                warningMessage += 'Password must be at least 8 characters long.<br>';
+            }
+
+            passwordWarning.innerHTML = warningMessage;
+            if (warningMessage) {
+                submitButton.disabled = true;
+            } else {
+                submitButton.disabled = false;
+            }
+        });
+    </script>
 </body>
+
 </html>

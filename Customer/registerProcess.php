@@ -1,3 +1,4 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <?php
 include_once '../dbConfig.php';
 session_start();
@@ -11,7 +12,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tel = $_POST['tel'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    // Check if the username already exists
     $check_user_query = "SELECT * FROM customer WHERE Username = ?";
     $stmt_check_user = mysqli_prepare($conn, $check_user_query);
     mysqli_stmt_bind_param($stmt_check_user, "s", $username);
@@ -19,14 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_stmt_store_result($stmt_check_user);
 
     if (mysqli_stmt_num_rows($stmt_check_user) == 0) {
-        // Insert the new user
         $insert_user_query = "INSERT INTO customer (fname, lname, Sex, Tel, Email, Username, Password, authority) 
                               VALUES (?, ?, ?, ?, ?, ?, ?, 'users')";
         $stmt_insert_user = mysqli_prepare($conn, $insert_user_query);
         mysqli_stmt_bind_param($stmt_insert_user, "sssssss", $fname, $lname, $sex, $tel, $email, $username, $password);
 
         if (mysqli_stmt_execute($stmt_insert_user)) {
-            // Registration successful
             echo "<script>
                     document.addEventListener('DOMContentLoaded', function() {
                         swal('Registration Successful!', 'Registration is successful!', 'success')
@@ -36,7 +34,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     });
                 </script>";
         } else {
-            // Registration failed
             echo "<script>
                     document.addEventListener('DOMContentLoaded', function() {
                         swal('Failed to Register!', 'Registration failed!', 'error')
@@ -49,7 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         mysqli_stmt_close($stmt_insert_user);
     } else {
-        // User already exists
         echo "<script>
                 document.addEventListener('DOMContentLoaded', function() {
                     swal('Failed to Register!', 'User already exists!', 'error')
@@ -59,7 +55,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 });
             </script>";
     }
-
     mysqli_stmt_close($stmt_check_user);
 }
 
