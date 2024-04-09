@@ -2,11 +2,8 @@
 header("location: ./stock_index.php");
 include_once '../../dbConfig.php';
 
-// Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    if(isset($_FILES['files'])) {
-
+    if(isset($_FILES["photo"]) && $_FILES["photo"]["error"] === 0) {
         $a2 = $_POST['a2'];
         $a3 = $_POST['a3'];
         $a4 = $_POST['a4'];
@@ -20,7 +17,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // $uploadedFiles = array();
         $image_data = file_get_contents($_FILES["files"]["tmp_name"]);
 
-        // Prepare statement for non-file data
         $insertQuery = "INSERT INTO product(ProductName, Description, Price, Qty, cost, typeId, Photo) 
                         VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insertQuery);
@@ -38,8 +34,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 echo 'Error inserting data: ' . $stmt->error;
             }
-
-            // Close statement
             $stmt->close();
         } else {
             echo 'Error preparing statement: ' . $conn->error;

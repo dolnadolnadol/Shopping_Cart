@@ -113,6 +113,7 @@
                 <li><a class="a" id="stock" href="../stock/stock_index.php"><span class="nav-text">Stock</span></a></li>
                 <li><a class="a" id="invoice" href="../invoice/invoice_index.php"><span class="nav-text">Invoice</span></a></li>
                 <li><a class="a" id="order" href="../order/order_index.php"><span class="nav-text">Order</span></a></li>
+                <li><a class="a" id="type" href="../typeProd/type_index.php"><span class="nav-text">Type</span></a></li>
                 <li><a class="a" id="customer" href="../customer/customer_index.php"><span class="nav-text">Customer</span></a></li>
                 <li><a class="a" id="admin" href="../admin/admin_index.php"><span class="nav-text">Admin</span></a></li>
                 <li><a class="a" id="log" href="../log/log_index.php?page=1"><span class="nav-text">AccessLog</span></a></li>
@@ -132,6 +133,7 @@
         document.getElementById("stock").style.display = "inline-block";
         document.getElementById("invoice").style.display = "inline-block";
         document.getElementById("order").style.display = "inline-block";
+        document.getElementById("type").style.display = "inline-block";
     <?php elseif ($_SESSION['auth'] == 'permissions-admin') : ?>
         document.getElementById("customer").style.display = "inline-block";
         document.getElementById("admin").style.display = "inline-block";

@@ -176,26 +176,22 @@
                     echo "<td>";
                     echo "<div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
                     if ($row['PaymentStatus'] == 'Pending') {
+                        echo '#ff0000;';
+                        echo "<option value='Pending' style='background-color: #ffff; color: black;'>Pending</option>";
+                    } elseif ($row['PaymentStatus'] == 'Checking') {
                         echo '#FFA500;';
+                        echo "<option value='Checking' style='background-color: #ffff; color: black;'>Checking</option>";
                     } elseif ($row['PaymentStatus'] == 'Success') {
                         echo '#06D6B1;';
-                    } else {
+                        echo "<option value='Success' style='background-color: #ffff; color: black;'>Success</option>";
+                    } elseif ($row['PaymentStatus'] == 'Canceled') {
+                        echo '#aa0000;';
+                        echo "<option value='Canceled' style='background-color: #ffff; color: black;'>Canceled</option>";
                     }
-                    echo "'>";
-                    echo "<select id='select_$index' data-orderId='{$row['orderId']}' data-deliId='{$row['DeliId']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
-                    user-select: none; color: #ffff;' required>";
-                    $statusCompare = ['Pending', 'Success'];
-                    foreach ($statusCompare as $value) {
-                        $selected = ($value == $row['PaymentStatus']) ? 'selected' : '';
-                        echo "<option value='$value' style='background-color: #ffff; color: black;' $selected>{$value}</option>";
-                    }
-                    echo "</select>";
-                    echo "</div></td>";
-
 
                     echo "<td>";
                     echo "<div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
-                    if ($row['statusDeli'] == 'Inprogress') {
+                    if ($row['statusDeli'] == 'Inprogress' || $row['statusDeli'] == 'inprogress') {
                         echo '#FFA500;';
                     } elseif ($row['statusDeli'] == 'Delivered') {
                         echo '#06D6B1;';
@@ -204,7 +200,7 @@
                     } else {
                     }
                     echo "'>";
-                    echo "<select id='select2_$index' data-orderId='{$row['orderId']}' data-deliId='{$row['DeliId']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
+                    echo "<select id='select_$index' data-orderId='{$row['orderId']}' data-deliId='{$row['DeliId']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
                     user-select: none; color: #ffff;' required>";
                     $statusCompare = ['Prepare', 'Inprogress', 'Delivered'];
                     foreach ($statusCompare as $value) {
@@ -257,59 +253,13 @@
         });
     }
 </script>
-
-<script>
-    /*Payment*/
-    document.addEventListener('DOMContentLoaded', function () {
-    for (var i = 1; i <= <?php echo $index; ?>; i++) {
-        var selectElement = document.getElementById('select_' + i);
-
-        if (selectElement) {
-            selectElement.addEventListener('change', function () {
-                var selectedValue = this.value;
-                var selectDiv = this.parentElement;
-                var orderId = this.getAttribute('data-orderId');
-                var deliId = this.getAttribute('data-deliId');
-
-                switch (selectedValue) {
-                    case 'Pending':
-                        selectDiv.style.backgroundColor = '#FFA500';
-                        break;
-                    case 'Success':
-                        selectDiv.style.backgroundColor = '#06D6B1';
-                        break;
-                }
-
-                console.log(orderId, deliId, selectedValue);
-                updateStatus(orderId, deliId, selectedValue);
-            });
-        }
-    }
-    
-    function updateStatus(orderId, deliId, newStatus) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'order_update_status.php', true);
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    console.log('Status updated successfully');
-                } else {
-                    console.error('Error updating status');
-                }
-            }
-        };
-        xhr.send('orderId=' + encodeURIComponent(orderId) + '&deliId=' + encodeURIComponent(deliId) + '&newStatus=' + encodeURIComponent(newStatus));
-    }
-});
 </script>
 
 <script>
     /*Deliver*/
     document.addEventListener('DOMContentLoaded', function () {
     for (var i = 1; i <= <?php echo $index; ?>; i++) {
-        var selectElement = document.getElementById('select2_' + i);
+        var selectElement = document.getElementById('select_' + i);
 
         if (selectElement) {
             selectElement.addEventListener('change', function () {
