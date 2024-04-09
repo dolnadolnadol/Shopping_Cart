@@ -89,8 +89,8 @@
             width: 15%;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        button.newStatus:hover {
+            opacity: 0.8;
         }
 
         table {
@@ -206,28 +206,42 @@
         </div>
         <h2 style="color: #007bff; text-align: center;">Receipt Information</h2>
         <div class="form-block">
-            <div class="form-group">
-                <?php
-                    $result = mysqli_query($conn, "SELECT * FROM orderkey INNER JOIN customer ON customer.CusID = orderkey.cusID WHERE orderkey.orderId = '$orderId'");
-                    $row = mysqli_fetch_assoc($result);
-                    echo "<label for='RecID'>Customer ID:</label>";
-                    echo "<input type='text' value='{$row['CusID']}' readonly>";
-                    echo "<label for='customerName'>Customer Name:</label>";
-                    echo "<input type='text' value='{$row['fname']} {$row['lname']}' readonly>";
-                    echo "<label for='customerName'>Tel:</label>";
-                    echo "<input type='text' value='{$row['Tel']}' readonly>";
-                    echo "<label for='customerName'>Email:</label>";
-                    echo "<input type='text' value='{$row['Email']}' readonly>";
-                ?>
-            </div>
-            <form id="paramsForm" method="POST" action="order_update_status.php">
-                <div class="form-groupRow" style="color: #007bff">
-                    <button type="submit" class="newStatus" name="newStatus" value="Pending">Not Approve</button>
-                    <button type="submit" class="newStatus" name="newStatus" value="Success">Approve</button>
-                    <input type="hidden" name="orderId" id="orderId" value="<?php echo $orderId; ?>">
-                    <input type="hidden" name="deliId" id="deliId" value="<?php echo $deliId; ?>">
+            <?php if ($row['PaymentStatus'] === 'Pending'): ?>
+                <p style="color: #ff3333; text-align: center;">Payment is pending</p>
+                <form id="paramsForm" method="POST" action="order_update_status.php">
+                    <div class="form-groupRow" style="color: #007bff">
+                        <button type="submit" class="newStatus" name="newStatus" value="Canceled" style="background-color: #aa0000;">Canceled</button>
+                        <input type="hidden" name="orderId" id="orderId" value="<?php echo $orderId; ?>">
+                        <input type="hidden" name="deliId" id="deliId" value="<?php echo $deliId; ?>">
+                    </div>
+                </form>
+            <?php else: ?>
+                <div class="form-group">
+                    <?php
+                        $result = mysqli_query($conn, "SELECT * FROM orderkey 
+                        INNER JOIN customer ON customer.CusID = orderkey.cusID
+                        INNER JOIN receipt ON receipt.CusID = orderkey.cusID 
+                        WHERE orderkey.orderId = '$orderId'");
+                        $row = mysqli_fetch_assoc($result);
+                        if(isset($row['slip'])){
+                            $imageDataEncoded = base64_encode($row['slip']);
+                            echo "<img src='data:image/jpg;base64,{$imageDataEncoded}' alt='imagy' style='width:100%; height:100%;'/>";
+                        }
+                        else{
+                            echo "<img src='../img/no-image.png' alt='No Image' style='width:100%; height:100%;' />";
+                        }
+                    ?>
                 </div>
-            </form>
+                <form id="paramsForm" method="POST" action="order_update_status.php">
+                    <div class="form-groupRow" style="color: #007bff">
+                        <button type="submit" class="newStatus" name="newStatus" value="Canceled" style="background-color: #aa0000;">Canceled</button>
+                        <button type="submit" class="newStatus" name="newStatus" value="Checking" style="background-color: #ff3333;">Not Approve</button>
+                        <button type="submit" class="newStatus" name="newStatus" value="Success" style="background-color: #007bff;">Approve</button>
+                        <input type="hidden" name="orderId" id="orderId" value="<?php echo $orderId; ?>">
+                        <input type="hidden" name="deliId" id="deliId" value="<?php echo $deliId; ?>">
+                    </div>
+                </form>
+            <?php endif; ?>
         </div>
     </div>
 </body>

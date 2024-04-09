@@ -1,5 +1,6 @@
 <?php
     include_once '../../dbConfig.php'; 
+    header("location: ./order_index.php");
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $orderId = mysqli_real_escape_string($conn, $_POST['orderId']);
@@ -13,11 +14,15 @@
         $msresults = mysqli_query($conn, $cur);
         $row = mysqli_fetch_array($msresults);
 
-        if($newStatus == 'Pending'){
+        if($newStatus == 'Checking'){
             $updateQuery1 = "UPDATE orderkey SET PaymentStatus = '$newStatus' WHERE orderId = '$orderId'";
             $updateQuery2 = "UPDATE orderdelivery SET statusDeli = 'Prepare', DeliDate = null WHERE DeliId = '$deliId'";
-            $deleteInvoiceQuery = "DELETE FROM invoice WHERE orderId = '$orderId'";
-            mysqli_query($conn, $deleteInvoiceQuery);
+            $existingInvoiceQuery = "SELECT * FROM invoice WHERE orderId = '$orderId'";
+            $existingInvoiceResult = mysqli_query($conn, $existingInvoiceQuery);
+            if (mysqli_num_rows($existingInvoiceResult) == 0) {
+                $invoiceInsertQuery = "UPDATE invoice SET timestamp = null, cusId = '{$row['cusId']}', orderId = '$orderId', DeliId = '$deliId'";
+                mysqli_query($conn, $invoiceInsertQuery);
+            }  
         }
         else if($newStatus == 'Success'){
             $updateQuery1 = "UPDATE orderkey SET PaymentStatus = '$newStatus' WHERE orderId = '$orderId'";
@@ -25,9 +30,19 @@
             $existingInvoiceQuery = "SELECT * FROM invoice WHERE orderId = '$orderId'";
             $existingInvoiceResult = mysqli_query($conn, $existingInvoiceQuery);
             if (mysqli_num_rows($existingInvoiceResult) == 0) {
-                $invoiceInsertQuery = "INSERT INTO invoice (timestamp, cusId, orderId, DeliId) VALUES (NOW(), '{$row['cusId']}', '$orderId', '$deliId')";
+                $invoiceInsertQuery = "UPDATE invoice SET timestamp = NOW(), cusId = '{$row['cusId']}', orderId = '$orderId', DeliId = '$deliId'";
                 mysqli_query($conn, $invoiceInsertQuery);
-            }
+            }            
+        } 
+        else if($newStatus == 'Canceled'){
+            $updateQuery1 = "UPDATE orderkey SET PaymentStatus = '$newStatus', deleteStatus = '1' WHERE orderId = '$orderId'";
+            $updateQuery2 = "UPDATE orderdelivery SET statusDeli = 'Inprogress', DeliDate = null WHERE DeliId = '$deliId'";
+            $existingInvoiceQuery = "SELECT * FROM invoice WHERE orderId = '$orderId'";
+            $existingInvoiceResult = mysqli_query($conn, $existingInvoiceQuery);
+            if (mysqli_num_rows($existingInvoiceResult) == 0) {
+                $invoiceInsertQuery = "UPDATE invoice SET timestamp = null, cusId = '{$row['cusId']}', orderId = '$orderId', DeliId = '$deliId', deleteStatus = '1'";
+                mysqli_query($conn, $invoiceInsertQuery);
+            }            
         }
         else if($newStatus == 'Inprogress' && $row['PaymentStatus'] == 'Success'){
             $updateQuery1 = "UPDATE orderkey SET PaymentStatus = 'Success' WHERE orderId = '$orderId'";

@@ -7,14 +7,23 @@
     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
         body {
-            margin-top: 20px;
+            margin: 20px;
             background: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
         }
 
         .invoice {
             padding: 30px;
             width: 380mm;
             height: 537.43mm;
+            background-color: white;
+            margin: 0px auto;
         }
 
         .invoice h2 {
@@ -49,15 +58,31 @@
             font-weight: 600;
         }
 
-        .grid {
-            position: relative;
-            width: 100%;
-            background: #fff;
-            color: #666666;
-            border-radius: 2px;
-            margin-bottom: 25px;
-            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+        .convertToPDF {
+            background-color: red;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-right: 40px;
+            cursor: pointer;
+            border-radius: 8px;
+            width: 20%;
+            height: 20%;
         }
+
+        .convertToPDF:hover {
+            background-color: #aa0000;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+        }
+
     </style>
 </head>
 <body>
@@ -73,10 +98,9 @@
         $row = mysqli_fetch_array($msresults);
     ?>
     <div class="container">
-        <button id="convertToPDF" class="convertToPDF">Convert to PDF</button>
         <div class="row">
             <div class="col-xs-12">
-                <div class="grid invoice">
+                <div class="invoice">
                     <div class="grid-body">
                         <div class="invoice-title">
                             <div class="row">
@@ -84,6 +108,7 @@
                                 <h2>Invoice<br>
                                 <span class="small">Invoice ID : <?php echo $row['invId']; ?></span></h2>
                                 </div>
+                                <button id="convertToPDF" class="convertToPDF">Convert to PDF</button>
                             </div>
                         </div>
                         <hr>
@@ -194,18 +219,19 @@
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <script>
         document.getElementById('convertToPDF').addEventListener('click', function() {
             document.getElementById("convertToPDF").style.display = "none";
-            const element = document.querySelector('.grid invoice');
+            const element = document.querySelector('.invoice');
             html2canvas(element).then(function(canvas) {
                 const imageData = canvas.toDataURL('image/png');
                 var doc = new jspdf.jsPDF();
                 doc.addImage(imageData, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
-                doc.save('Summary_Report.pdf');
+                doc.save('Invoice.pdf');
                 document.getElementById("convertToPDF").style.display = "block";
             });
         });
