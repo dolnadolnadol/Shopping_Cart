@@ -381,8 +381,6 @@ function includeOrders($query)
         }
         if ($row['PaymentStatus'] == 'Pending') {
             echo "<pl id='Pending'>PaymentStatus: {$row['PaymentStatus']}</pl>";
-        } else if ($row['PaymentStatus'] == 'Inprogress') {
-            echo "<pl id='Inprogress'>PaymentStatus: {$row['PaymentStatus']}</pl>";
         } else if ($row['PaymentStatus'] == 'Checking') {
             echo "<pl id='Checking'>PaymentStatus: {$row['PaymentStatus']}</pl>";
         } else if ($row['PaymentStatus'] == 'Success') {
@@ -434,8 +432,6 @@ function includePay($query)
         }
         if ($row['PaymentStatus'] == 'Pending') {
             echo "<pl id='Pending'>PaymentStatus: {$row['PaymentStatus']}</pl>";
-        } else if ($row['PaymentStatus'] == 'Inprogress') {
-            echo "<pl id='Inprogress'>PaymentStatus: {$row['PaymentStatus']}</pl>";
         } else if ($row['PaymentStatus'] == 'Checking') {
             echo "<pl id='Checking'>PaymentStatus: {$row['PaymentStatus']}</pl>";
         } else if ($row['PaymentStatus'] == 'Success') {

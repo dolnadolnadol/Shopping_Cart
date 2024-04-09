@@ -273,168 +273,170 @@
         include_once '../dbConfig.php';
         $uid = $_SESSION['id_username'];
 
-        echo "<div class='order-container'>";
-        if (isset($_SESSION['cart'])) {
-            $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer WHERE CusID = '$uid'");
-            $customerDetails = mysqli_fetch_array($customerDetailsQuery);
-            $customerId = $customerDetails['CusID'];
-        } else {
-            $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer WHERE CusID = '$uid'");
-            $customerDetails = mysqli_fetch_array($customerDetailsQuery);
-            $customerId = $customerDetails['CusID'];
-        }
+        // echo "<div class='order-container'>";
+    //     if (isset($_SESSION['cart'])) {
+    //         $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer WHERE CusID = '$uid'");
+    //         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
+    //         $customerId = $customerDetails['CusID'];
+    //     } else {
+    //         $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM customer WHERE CusID = '$uid'");
+    //         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
+    //         $customerId = $customerDetails['CusID'];
+    //     }
 
 
-        $orderId = $_POST['id_order'];
-        $deli = $_POST['id_deli'];
+    //     $orderId = $_POST['id_order'];
+    //     $deli = $_POST['id_deli'];
 
-        $payerQuery = mysqli_query($conn, "SELECT * FROM receipt
-    JOIN orderkey ON receipt.orderId = orderkey.orderId
-    WHERE receipt.orderId = '$orderId'");
-        if ($payerQuery) {
-            if (mysqli_num_rows($payerQuery) > 0) {
-                $rowpayerQuery = mysqli_fetch_assoc($payerQuery);
-            } else {
-                echo "No records found for payer query";
-            }
-        } else {
-            echo "Error: " . mysqli_error($conn);
-        }
+    //     $payerQuery = mysqli_query($conn, "SELECT * FROM receipt
+    // JOIN orderkey ON receipt.orderId = orderkey.orderId
+    // WHERE receipt.orderId = '$orderId'");
+    //     if ($payerQuery) {
+    //         if (mysqli_num_rows($payerQuery) > 0) {
+    //             $rowpayerQuery = mysqli_fetch_assoc($payerQuery);
+    //         } else {
+    //             echo "No records found for payer query";
+    //         }
+    //     } else {
+    //         echo "Error: " . mysqli_error($conn);
+    //     }
 
-        $receiverQuery = mysqli_query($conn, "SELECT * FROM orderdelivery
-    INNER JOIN address ON orderdelivery.addrId = address.addrId
-    WHERE orderdelivery.deliId = '$deli'");
-        if ($receiverQuery) {
-            if (mysqli_num_rows($receiverQuery) > 0) {
-                $rowreceiverQuery = mysqli_fetch_assoc($receiverQuery);
-            } else {
-                echo "No records found for receiver query";
-            }
-        } else {
-            echo "Error: " . mysqli_error($conn);
-        }
-
-
-
-        $recQuery = mysqli_query($conn, "SELECT * FROM orderkey
-                WHERE orderId = '$orderId '");
-        if ($recQuery) {
-            if (mysqli_num_rows($recQuery) > 0) {
-                $rowrecQuery = mysqli_fetch_assoc($recQuery);
-            } else {
-                echo "No records found for receiver query";
-            }
-        } else {
-            echo "Error: " . mysqli_error($conn);
-        }
+    //     $receiverQuery = mysqli_query($conn, "SELECT * FROM orderdelivery
+    // INNER JOIN address ON orderdelivery.addrId = address.addrId
+    // WHERE orderdelivery.deliId = '$deli'");
+    //     if ($receiverQuery) {
+    //         if (mysqli_num_rows($receiverQuery) > 0) {
+    //             $rowreceiverQuery = mysqli_fetch_assoc($receiverQuery);
+    //         } else {
+    //             echo "No records found for receiver query";
+    //         }
+    //     } else {
+    //         echo "Error: " . mysqli_error($conn);
+    //     }
 
 
-        echo "<div class='container_order'>";
-        echo "<div  id='row-rev' class='invoice-container'>
 
-                <div class='action-buttons'>
-                        <h1 style='display: inline;'>เลขใบเสร็จของท่านคือ :{$rowpayerQuery['orderId']} </h1>
+    //     $recQuery = mysqli_query($conn, "SELECT * FROM orderkey
+    //             WHERE orderId = '$orderId '");
+    //     if ($recQuery) {
+    //         if (mysqli_num_rows($recQuery) > 0) {
+    //             $rowrecQuery = mysqli_fetch_assoc($recQuery);
+    //         } else {
+    //             echo "No records found for receiver query";
+    //         }
+    //     } else {
+    //         echo "Error: " . mysqli_error($conn);
+    //     }
+
+
+        // <form class='action-button' action='pdf.php' method='post' target='_blank' style='display: inline-block;'>
+        //                     <input type='hidden' name='id_receive' value='" . $orderId . "'>
+        //                     <input type='hidden' name='id_customer' value='" . $customerId . "'>
+        //                     <input type='hidden' name='id_inv' value='" . $_POST['id_inv'] . "'>
+        //                     <button type='submit'>
+        //                         <img src='./image/print.png' alt='print'>
+        //                     </button>
+        //                 </form>
+
+        // echo "<div class='container_order'>";
+        // echo "<div  id='row-rev' class='invoice-container'>
+
+        //         <div class='action-buttons'>
+        //                 <h1 style='display: inline;'>เลขใบเสร็จของท่านคือ :{$rowpayerQuery['orderId']} </h1>
                         
-                        <form class='action-button' action='pdf.php' method='post' target='_blank' style='display: inline-block;'>
-                            <input type='hidden' name='id_receive' value='" . $orderId . "'>
-                            <input type='hidden' name='id_customer' value='" . $customerId . "'>
-                            <input type='hidden' name='id_inv' value='" . $_POST['id_inv'] . "'>
-                            <button type='submit'>
-                                <img src='./image/print.png' alt='print'>
-                            </button>
-                        </form>
+                        
 
-                    </div>";
+        //             </div>";
 
-        echo "<div class='item_order'>
-                            <h3>บริษัท </h3>
-                            <p>บริษัท: Fastwork ck🤔</p>
-                            <p>ที่ตั้ง: ประเทศลาดกระบัง</p>
+        // echo "<div class='item_order'>
+        //                     <h3>บริษัท </h3>
+        //                     <p>บริษัท: Fastwork ck🤔</p>
+        //                     <p>ที่ตั้ง: ประเทศลาดกระบัง</p>
                             
-                    </div>";
-        echo "<hr>";
-        echo '<div class="grid-container">
-                        <div class="grid-item">';
-        echo "<div class='item_order2'>
-                                <p>ชื่อผู้จ่าย: {$rowpayerQuery['fname']} {$rowpayerQuery['lname']}</p>
-                            </div>";
-        echo "</div>
-                                <div class='grid-item'>
-                                    <div class='item_order2'>
-                                        <p id='Status'>สถานที่จัดส่ง</p>
-                                        <p>ชื่อผู้รับ : {$rowreceiverQuery['fname']} {$rowreceiverQuery['lname']}</p>
-                                        <p>ที่อยู่จัดส่ง : {$rowreceiverQuery['Address']}  {$rowreceiverQuery['Province']}  {$rowreceiverQuery['City']}  {$rowreceiverQuery['PostalCode']}</p>
-                                        <p>เบอร์โทร : {$rowreceiverQuery['Tel']}</p>
-                                    </div>";
+        //             </div>";
+        // echo "<hr>";
+        // echo '<div class="grid-container">
+        //                 <div class="grid-item">';
+        // echo "<div class='item_order2'>
+        //                         <p>ชื่อผู้จ่าย: {$rowpayerQuery['fname']} {$rowpayerQuery['lname']}</p>
+        //                     </div>";
+        // echo "</div>
+        //                         <div class='grid-item'>
+        //                             <div class='item_order2'>
+        //                                 <p id='Status'>สถานที่จัดส่ง</p>
+        //                                 <p>ชื่อผู้รับ : {$rowreceiverQuery['fname']} {$rowreceiverQuery['lname']}</p>
+        //                                 <p>ที่อยู่จัดส่ง : {$rowreceiverQuery['Address']}  {$rowreceiverQuery['Province']}  {$rowreceiverQuery['City']}  {$rowreceiverQuery['PostalCode']}</p>
+        //                                 <p>เบอร์โทร : {$rowreceiverQuery['Tel']}</p>
+        //                             </div>";
 
-        echo "</div>
-                                <div class='grid-item'>
-                                    <div class='item_order2'>
-                                        <p id='Status'>สถานะ : {$rowreceiverQuery['statusDeli']}</p>
-                                        <p>วันที่สั่งซื้อ : {$rowrecQuery['orderCreate']}</p>
-                                    </div>
-                                </div>
-                            </div>";
-
-
-        echo "</div>";
+        // echo "</div>
+        //                         <div class='grid-item'>
+        //                             <div class='item_order2'>
+        //                                 <p id='Status'>สถานะ : {$rowreceiverQuery['statusDeli']}</p>
+        //                                 <p>วันที่สั่งซื้อ : {$rowrecQuery['orderCreate']}</p>
+        //                             </div>
+        //                         </div>
+        //                     </div>";
 
 
-        if (isset($_POST['id_order'])) {
-            // $customerId = $customerDetails['CusID'];
-            $orderQuery = mysqli_query($conn, "SELECT *, ordervalue.Qty as Qtyorder FROM orderkey
-                                INNER JOIN ordervalue ON orderkey.orderId = ordervalue.orderId
-                                INNER JOIN product ON product.proId = ordervalue.proId
-                                WHERE orderkey.orderId = '$orderId '");
+        // echo "</div>";
 
-            $totalPriceAllItems = 0;
-            $detailsDisplayed = false;
 
-            while ($row = mysqli_fetch_array($orderQuery)) {
-                $totalPrice = $row['Price'] * $row['Qtyorder'];
-                $totalPriceAllItems += $totalPrice;
+        // if (isset($_POST['id_order'])) {
+        //     // $customerId = $customerDetails['CusID'];
+        //     $orderQuery = mysqli_query($conn, "SELECT *, ordervalue.Qty as Qtyorder FROM orderkey
+        //                         INNER JOIN ordervalue ON orderkey.orderId = ordervalue.orderId
+        //                         INNER JOIN product ON product.proId = ordervalue.proId
+        //                         WHERE orderkey.orderId = '$orderId '");
 
-                if (!$detailsDisplayed) {
-                    echo "<h3>รายการสินค้าที่คุณซื้อ</h3>";
-                    echo "<table>
-                                    <thead>
-                                        <tr>
-                                            <th>รายการสินค้า</th>
-                                            <th>จำนวน</th>
-                                            <th>ราคา (บาท)</th>
-                                            <th>รวมทั้งหมด</th>
-                                        </tr>
-                                    </thead>";
+        //     $totalPriceAllItems = 0;
+        //     $detailsDisplayed = false;
 
-                    $detailsDisplayed = true;
-                }
+        //     while ($row = mysqli_fetch_array($orderQuery)) {
+        //         $totalPrice = $row['Price'] * $row['Qtyorder'];
+        //         $totalPriceAllItems += $totalPrice;
 
-                echo "<tr>
-                                <td>{$row['ProductName']}</td>
-                                <td>{$row['Qtyorder']}</td>
-                                <td>{$row['Price']} ฿</td>
-                                <td>$totalPrice</td>
-                            </tr>";
-            }
+        //         if (!$detailsDisplayed) {
+        //             echo "<h3>รายการสินค้าที่คุณซื้อ</h3>";
+        //             echo "<table>
+        //                             <thead>
+        //                                 <tr>
+        //                                     <th>รายการสินค้า</th>
+        //                                     <th>จำนวน</th>
+        //                                     <th>ราคา (บาท)</th>
+        //                                     <th>รวมทั้งหมด</th>
+        //                                 </tr>
+        //                             </thead>";
 
-            echo "</table>";
-            $tax = $totalPriceAllItems * 0.07;
-            $totalAmount = $tax + $totalPriceAllItems;
+        //             $detailsDisplayed = true;
+        //         }
 
-            echo "<div class='order-total'>
-                            <p>ราคารวม: $totalPriceAllItems ฿</p>
-                            <p>VAT: $tax ฿</p>
-                            <p>ส่วนลด: 0.00 ฿</p>
-                            <p>ยอดสุทธิ: $totalAmount ฿</p>
-                            <hr>
-                        </div>";
+        //         echo "<tr>
+        //                         <td>{$row['ProductName']}</td>
+        //                         <td>{$row['Qtyorder']}</td>
+        //                         <td>{$row['Price']} ฿</td>
+        //                         <td>$totalPrice</td>
+        //                     </tr>";
+        //     }
 
-            echo "</div>";
+        //     echo "</table>";
+        //     $tax = $totalPriceAllItems * 0.07;
+        //     $totalAmount = $tax + $totalPriceAllItems;
+
+        //     echo "<div class='order-total'>
+        //                     <p>ราคารวม: $totalPriceAllItems ฿</p>
+        //                     <p>VAT: $tax ฿</p>
+        //                     <p>ส่วนลด: 0.00 ฿</p>
+        //                     <p>ยอดสุทธิ: $totalAmount ฿</p>
+        //                     <hr>
+        //                 </div>";
+
+        //     echo "</div>";
             if (isset($_SESSION['guest'])) {
                 unset($_SESSION['guest']);
                 unset($_SESSION['id_username']);
             }
-        }
+        // }
 
         ?>
 
