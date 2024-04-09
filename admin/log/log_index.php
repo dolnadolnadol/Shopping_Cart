@@ -17,6 +17,14 @@
     $totalPages = ceil($totalRecords / $recordsPerPage);
 ?>
 
+<?php
+    session_start();
+    if($_SESSION['auth'] !== 'super-admin') {
+        header("Location: ../notHavePage.php");
+        exit;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

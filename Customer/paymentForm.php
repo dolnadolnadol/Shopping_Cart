@@ -6,7 +6,7 @@ include('./component/backButton.php');
 
 include('../logFolder/AccessLog.php');
 include('../logFolder/CallLog.php');
-include('./component/getFunction/getName.php');?>
+include('./component/getFunction/getName.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,7 +37,7 @@ include('./component/getFunction/getName.php');?>
         }
 
         .checkout-sidebar {
-            flex:0.5;
+            flex: 0.5;
             border: 1px solid #ddd;
             padding: 20px;
             position: sticky;
@@ -118,92 +118,110 @@ include('./component/getFunction/getName.php');?>
         .checkout-button:hover {
             background-color: #219653;
         }
+
         .checkout-sidebar {
-    flex: 0.5;
-    border: 1px solid #ddd;
-    padding: 20px;
-    position: sticky;
-    bottom: 0;
-    border-color: #000;
-    width: max-content;
-    height: max-content;
-    background-color: #f9f9f9; /* สีพื้นหลังของ sidebar */
-    border-radius: 8px; /* เพิ่มมุมโค้งให้กับ sidebar */
-}
+            flex: 0.5;
+            border: 1px solid #ddd;
+            padding: 20px;
+            position: sticky;
+            bottom: 0;
+            border-color: #000;
+            width: max-content;
+            height: max-content;
+            background-color: #f9f9f9;
+            /* สีพื้นหลังของ sidebar */
+            border-radius: 8px;
+            /* เพิ่มมุมโค้งให้กับ sidebar */
+        }
 
-.invoice-container {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-}
+        .invoice-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
 
-.customer-details,
-.summary-details {
-    margin-bottom: 20px;
-}
+        .customer-details,
+        .summary-details {
+            margin-bottom: 20px;
+        }
 
-.text-container {
-    margin-bottom: 10px;
-}
+        .text-container {
+            margin-bottom: 10px;
+        }
 
-.view-details-link {
-    color: #3498db;
-    text-decoration: none;
-}
+        .view-details-link {
+            color: #3498db;
+            text-decoration: none;
+        }
 
-.view-details-link:hover {
-    text-decoration: underline;
-}
-.customer-details h4,
-.summary-details h4 {
-    background-color: #3498db; /* สีพื้นหลังของ <h4> */
-    color: #fff; /* สีข้อความของ <h4> */
-    padding: 10px; /* ระยะห่างขอบของ <h4> */
-    border-radius: 8px; /* มุมโค้งของ <h4> */
-    margin-top: 0; /* ลบ margin ด้านบนของ <h4> */
-}
-input[type="submit"]{
-    background-color: #3498db;
-    font-weight:bold;
-    color:white;
-}
-input[type="submit"]:hover{
-    background-color: #2B7EB5;
-}
-input[type="submit"]:focus{
-    background-color: #194969;
-}
+        .view-details-link:hover {
+            text-decoration: underline;
+        }
+
+        .customer-details h4,
+        .summary-details h4 {
+            background-color: #3498db;
+            /* สีพื้นหลังของ <h4> */
+            color: #fff;
+            /* สีข้อความของ <h4> */
+            padding: 10px;
+            /* ระยะห่างขอบของ <h4> */
+            border-radius: 8px;
+            /* มุมโค้งของ <h4> */
+            margin-top: 0;
+            /* ลบ margin ด้านบนของ <h4> */
+        }
+
+        input[type="submit"] {
+            background-color: #3498db;
+            font-weight: bold;
+            color: white;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2B7EB5;
+        }
+
+        input[type="submit"]:focus {
+            background-color: #194969;
+        }
     </style>
 </head>
 
 <body>
-    <form id="profileForm" method="post" action="accessOrder.php">
+    <form id="profileForm" method="post" action="accessOrder.php" enctype="multipart/form-data">
         <?php
         if (isset($_SESSION['id_username'])) {
             $uid = $_SESSION['id_username'];
-            $inv = $_POST['id_invoice'];
-            $recv_id = $_POST['id_receiver'];
+            $deli = $_POST['id_deli'];
+            $lastId = $_POST['id_order'];
+            $addrId = $_POST['id_address'];
 
+            include_once '../dbConfig.php';
 
-            include_once '../dbConfig.php'; 
-            $query_address = "SELECT * FROM receiver 
-            INNER JOIN receiver_detail ON receiver.RecvID = receiver_detail.RecvID  
-            WHERE receiver_detail.CusID = '$uid'";
-            $result_address = mysqli_query($conn, $query_address);
+            $query_address = "SELECT * FROM address 
+                      INNER JOIN customer ON customer.cusId = address.cusId  
+                      WHERE address.CusID = ?";
+
+            $stmt = mysqli_prepare($conn, $query_address);
+            mysqli_stmt_bind_param($stmt, "s", $uid);
+            mysqli_stmt_execute($stmt);
+            $result_address = mysqli_stmt_get_result($stmt);
+
             if (mysqli_num_rows($result_address) > 0) {
-                // Fetch a single row from the result set
                 $row = mysqli_fetch_assoc($result_address);
             }
         }
         ?>
+
         <div class="checkout-container">
             <div class="checkout-header">
                 <h4>Checkout</h4>
             </div>
 
             <div class="checkout-steps">
-                <div class="checkout-step">Step 1: Shipping</div>
+                <div class="checkout-step"> Step 1: Shipping</div>
                 <div class="checkout-step active">Step 2: Payment</div>
                 <div class="checkout-step">Step 3: Success</div>
             </div>
@@ -211,46 +229,76 @@ input[type="submit"]:focus{
             <div class="flex-container">
                 <!-- Main content -->
                 <div class="checkout-content">
+                    โอนมาที่ KBANK - 0323802777 นางสาวชลลดา แซ่ลิ้ม <br />
+
+                    Transaction Infomation
                     <div id="paymentForm" class="checkout-form" style="display: block;">
                         <!-- Payment form content -->
                         <div class="form-group">
-                            <label for="firstname">Reciever First Name: </label>
-                            <input type="text" id="fname" name="fname" value="<?php echo $row['RecvFName'] ?? ''; ?>" required>
+                            <label for="firstname">First Name: </label>
+                            <input type="text" id="fname" name="fname" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="lasttname">Reciever Last Name: </label>
-                            <input type="text" id="lname" name="lname" value="<?php echo $row['RecvLName'] ?? ''; ?>" required>
+                            <label for="lastname">Last Name: </label>
+                            <input type="text" id="lname" name="lname" required>
                         </div>
 
                         <div class="form-group">
+                            <label for="time">transaction time: </label>
+                            <input type="datetime-local" id="time" name="time" required>
+                        </div>
+
+                        <!-- <div class="form-group">
                             <label for="tel">Tel :</label>
                             <input type="text" id="tel" name="tel" value="<?php echo $row['Tel'] ?? ''; ?>" required>
+                        </div> -->
+
+                        <div class="form-group">
+                            <label for="slip">Attach Slip</label>
+                            <input type="file" id="slip" name="slip" accept=".jpeg,.png,.jpg" required></input>
                         </div>
                         <input type='hidden' name='id_customer' value='<?php echo $uid; ?>'>
-                        <input type='hidden' name='id_receiver' value='<?php echo $row['RecvID']; ?>'>
-                        <input type='hidden' name='id_invoice' value='<?php echo $inv; ?>'>
+                        <input type='hidden' name='id_order' value='<?php echo $lastId ?>'>
+                        <input type='hidden' name='id_deli' value='<?php echo $deli ?>'>
                         <!-- <button class="checkout-button" onclick="submit()">ชำระเงิน</button> -->
+                        <div style="display:flex">
+                            <input type="checkbox" value="wantinvoice" id="wantinvoice" style="background-color:red; width:fit-content; margin-left:2px; margin-right:2px; margin-bottom:2px;" onclick="invoicefill()">
+                            <label for="invoice" style="font-weight:300">ต้องการรับinvoice</label>
+                        </div>
+
+                        <div id='invoicefill' style="display: none; margin:2rem; padding:1rem; border: 1px solid;">
+                            <div class="form-group">
+                                <label>เลขกำกับภาษี</label>
+                                <input name="invoice-taxid" id="invoice-taxid" type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ชื่อ</label>
+                                <input name="invoice-name" id="invoice-name" type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ที่อยู่</label>
+                                <input name="invoice-address" id="invoice-address" type="text" required>
+                            </div>
+                        </div>
+
                         <input type="submit">
                     </div>
                 </div>
 
                 <div class="checkout-sidebar">
-                    <!-- Sidebar content -->
                     <?php
-                    $conn = mysqli_connect("localhost", "root", "", "shopping");
                     echo "<div class='invoice-container'>";
                     echo "<div class='body-container'>";
                     echo "<div class='invoice-header'>
                     <h4></h4>
                     </div>";
 
-                    if (isset($_POST['id_invoice'])) {
-                        $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM receiver 
-                        INNER JOIN receiver_detail ON receiver.RecvID =  receiver_detail.RecvID WHERE receiver_detail.CusID = '$uid' AND receiver_detail.RecvID = '$recv_id'");
+                    if (isset($_POST['id_order'])) {
+                        $customerDetailsQuery = mysqli_query($conn, "SELECT * FROM address
+                        WHERE address.addrId = '$addrId'");
                         $customerDetails = mysqli_fetch_array($customerDetailsQuery);
                         $customerId = $uid;
-                        $invoiceId = $_POST['id_invoice'];
 
                         echo "<div class='customer-details'>
                        
@@ -258,42 +306,42 @@ input[type="submit"]:focus{
                     
                         <div class='text-container'>
                             <p><strong>Shipping Address</strong></p>
-                            <p><strong>Name:</strong> {$customerDetails['RecvFName']} {$customerDetails['RecvLName']} </p>
-                            <p><strong>Tel:</strong> {$customerDetails['Tel']}</p>
+                            <p><strong>Name:</strong> {$customerDetails['fname']} {$customerDetails['lname']} </p>
+                            <p><strong>Tel:</strong> {$customerDetails['tel']}</p>
                             <div class='address-container'>
                                 <p><strong>Address:</strong> {$customerDetails['Address']}</p>
                             </div>
                         </div>
                         
-                        <h4><strong>สรุปการคำสั่งซื้อ</strong></h4>";      
+                        <h4><strong>สรุปการคำสั่งซื้อ</strong></h4>";
                         $totalPriceAllItems = 0;
-                        $invoiceDetailsQuery = mysqli_query($conn, "SELECT * , product.ProName FROM invoice_detail
-                        INNER JOIN product ON product.ProID =  invoice_detail.ProID 
-                        INNER JOIN invoice ON invoice.InvID =  invoice_detail.InvID 
-                        WHERE invoice.InvID  = '$inv'");
-                     
-                        while ($invoiceDetails = mysqli_fetch_array($invoiceDetailsQuery)) {
-                            $totalPrice = $invoiceDetails['PricePerUnit'] * $invoiceDetails['Qty'];
+                        $Orderquery = mysqli_query($conn, "SELECT *,ordervalue.Qty AS qtyordervalue,product.ProductName AS PRONAME FROM orderkey
+                        INNER JOIN ordervalue ON ordervalue.orderId =  orderkey.orderId
+                        INNER JOIN product ON ordervalue.ProId =  product.proId
+                        WHERE orderkey.orderId  = '$lastId'");
+
+                        while ($invoiceDetails = mysqli_fetch_array($Orderquery)) {
+                            $totalPrice = $invoiceDetails['Price'] * $invoiceDetails['qtyordervalue'];
                             $totalPriceAllItems += $totalPrice;
 
                             echo "<div class='text-container'>
-                                <p><strong {$invoiceDetails['ProName']}</strong></p>
-                                <p><strong>฿{$invoiceDetails['PricePerUnit']}</strong>     จำนวน {$invoiceDetails['Qty']} ชิ้น</p>
-                            </div>";                         
+                                <p><strong> {$invoiceDetails['PRONAME']}</strong></p>
+                                <p><strong>฿{$invoiceDetails['Price']}</strong> จำนวน {$invoiceDetails['qtyordervalue']} ชิ้น</p>
+                            </div>";
                         }
-                        
+
                         $tax = $totalPriceAllItems * 0.07;
                         $totalAmount = $tax + $totalPriceAllItems;
-                       
+
                         echo "
                        <h4>สรุปยอดชำระเงิน</h4>
                             <div class='text-container'>
                                 <p><strong>VAT:</strong>{$tax}</p>
-                                <p><strong>ราคารวม:</strong>{$totalPriceAllItems}</p>                     
+                                <p><strong>ราคารวม: </strong>  {$totalPriceAllItems}</p>                     
                             </div>
                         <hr> 
                             <div class='text-container'>
-                                <p><strong>ยอดชำระสุทธิ:</strong>{$totalAmount}</p>                              
+                                <p><strong>ยอดชำระสุทธิ: </strong>  {$totalAmount}</p>                              
                             </div>
                         <hr>                        
                     </div>";
@@ -307,9 +355,25 @@ input[type="submit"]:focus{
         </div>
     </form>
     <script>
-        // function submit() {
-        //     document.querySelector('form').submit();
-        // }
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById('invoice-taxid').required = false;
+            document.getElementById('invoice-name').required = false;
+            document.getElementById('invoice-address').required = false;
+        });
+
+        function invoicefill() {
+            if (document.getElementById('invoicefill').style.display == 'none') {
+                document.getElementById('invoicefill').style.display = 'block';
+                document.getElementById('invoice-taxid').required = true;
+                document.getElementById('invoice-name').required = true;
+                document.getElementById('invoice-address').required = true;
+            } else {
+                document.getElementById('invoicefill').style.display = 'none';
+                document.getElementById('invoice-taxid').required = false;
+                document.getElementById('invoice-name').required = false;
+                document.getElementById('invoice-address').required = false;
+            }
+        }
     </script>
 </body>
 

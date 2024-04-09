@@ -22,11 +22,11 @@ function getCustomerName($cx, $uid)
 
 function getProductName($cx, $code)
 {
-    $cur = "SELECT * FROM product WHERE ProID = $code ";
+    $cur = "SELECT * FROM product WHERE proId = $code ";
     $result = mysqli_query($cx, $cur);
 
     if ($result && $row = mysqli_fetch_assoc($result)) {
-        return $row['ProName'];
+        return $row['ProductName'];
     } else {
         // Handle the case where the product is not found or an error occurs
         return "Unknown Product";

@@ -7,37 +7,51 @@ include_once '../dbConfig.php';
 if (empty($_POST["id_receive"])) {
     // $receiptCode = $_SESSION['ReceiptCode'];
     $receiptCode = $_POST['id_receive'];
-    $sql = "SELECT RecvID FROM receive WHERE RecID = '$receiptCode'";
+    $sql = "SELECT receiptId FROM receipt WHERE orderId = '$receiptCode'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
-    $RecvID = $row['RecvID'];
+    $receiptId = $row['receiptId'];
 } else {
     $receiptCode = $_POST["id_receive"];
-    $sql = "SELECT RecvID FROM receive WHERE RecID = '$receiptCode'";
+    $sql = "SELECT receiptId FROM receipt WHERE orderId = '$receiptCode'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
-    $RecvID = $row['RecvID'];
+    $receiptId = $row['receiptId'];
 }
 
-$sql = "SELECT r.RecvID, r.RecvFName, r.RecvLName, r.Sex, r.Tel, r.Address, ro.CusID
-        FROM receiver r 
-        JOIN receiver_detail ro ON r.RecvID = '$RecvID' AND r.RecvID = ro.RecvID";
+$sql = "SELECT r.receiptId, r.fname, r.lname, a.Tel,c.Email, a.Address, a.Province, a.City, a.PostalCode, r.cusId
+FROM receipt r
+JOIN orderkey o ON r.orderId = o.orderId
+JOIN customer c ON r.cusId = c.CusID
+JOIN address a ON c.CusID = a.CusId
+where r.receiptId = '$receiptId'";
 
 $result = mysqli_query($conn, $sql);
 
 $row = mysqli_fetch_assoc($result);
-$cusID = $row["CusID"];
+$cusID = $row["cusId"];
 $cusAddress = $row['Address'];
-$cusFName = $row['RecvFName'];
-$cusLName = $row['RecvLName'];
-$cusSex = $row['Sex'];
+$cusFName = $row['fname'];
+$cusLName = $row['lname'];
 $cusTel = $row['Tel'];
+$cusEmail = $row['Email'];
 
-$sql = "SELECT OrderDate FROM receive WHERE RecID = '$receiptCode'";
+$sql = "SELECT ok.orderCreate
+FROM receipt r
+JOIN orderkey ok ON r.orderId = ok.orderId
+WHERE r.receiptId ='$receiptId'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
-$payTime = $row['OrderDate'];
+$payTime = $row['orderCreate'];
 $payDate = date('Y-m-d', strtotime($payTime));
+
+$inv = $_POST['id_inv'];
+$sql = "SELECT *
+FROM invoice
+WHERE invId ='$inv'";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$invresult = $row;
 
 
 
@@ -103,7 +117,7 @@ $pdf->SetFont('sarabun', '', 9);
 
 $pdf->SetXY(30, 40);
 
-$pdf->Cell(60, 10, "" . $cusFName . " " . $cusLName . "", 0, 0, 'L');
+$pdf->Cell(60, 10, "" . $invresult['name'] . "", 0, 0, 'L');
 
 $pdf->SetFont('sarabun', '', 10);
 
@@ -115,7 +129,7 @@ $pdf->SetFont('sarabun', '', 9);
 
 $pdf->SetXY(140, 40);
 
-$pdf->Cell(60, 10, "" . $receiptCode . "", 0, 0, 'L');
+$pdf->Cell(60, 10, "" . $invresult['invId'] . "", 0, 0, 'L');
 
 $pdf->SetFont('sarabun', '', 10);
 
@@ -125,7 +139,7 @@ $pdf->Cell(60, 10, "ที่อยู่: ", 0, 0, 'L');
 
 $pdf->SetXY(30, 45);
 
-$pdf->Cell(60, 10, "" . $cusAddress . "", 0, 0, 'L');
+$pdf->Cell(60, 10, "" . $invresult['address'] . "", 0, 0, 'L');
 
 $pdf->SetFont('sarabun', '', 10);
 
@@ -147,7 +161,7 @@ $pdf->Cell(60, 10, "เลขประจำตัวผู้เสียภา
 
 $pdf->SetXY(55, 50);
 
-$pdf->Cell(60, 10, "123456789123", 0, 0, 'L');
+$pdf->Cell(60, 10, $invresult['taxId'] , 0, 0, 'L');
 
 $pdf->SetFont('sarabun', '', 10);
 
@@ -167,14 +181,16 @@ $pdf->Cell(60, 10, "อีเมล: ", 0, 0, 'L');
 
 $pdf->SetXY(65, 55);
 
-$pdf->Cell(60, 10, "testuser@test.com", 0, 1, 'L');
+$pdf->Cell(60, 10, $cusEmail, 0, 1, 'L');
 
 $pdf->Cell(170, 10, "", 'T', 1, 'L');
 
-$sql = "SELECT *
-FROM receive_detail
-JOIN product ON receive_detail.ProID = product.ProID 
-WHERE receive_detail.RecID = '$receiptCode'";
+$sql = "SELECT p.ProductName, ov.Qty, p.Price
+FROM receipt r
+JOIN orderkey ok ON r.orderId = ok.orderId
+JOIN ordervalue ov ON ok.orderId = ov.orderId
+JOIN product p ON ov.ProId = p.proId
+WHERE r.receiptId = '$receiptId'";
 $result = mysqli_query($conn, $sql);
 
 $orderProducts = array();
@@ -196,20 +212,20 @@ $html = "
 </tr>";
 
 foreach ($orderProducts as $orderProductRow) {
-    $productName = $orderProductRow['ProName'];
+    $productName = $orderProductRow['ProductName'];
     $qty = $orderProductRow['Qty'];
-    $pricePerUnit = $orderProductRow['PricePerUnit'];
-    $total = $orderProductRow['PricePerUnit'] * $orderProductRow['Qty'];
+    $Price = $orderProductRow['Price'];
+    $total = $orderProductRow['Price'] * $orderProductRow['Qty'];
 
     $html .= "<tr>
     <td style='padding-top: 50px'>" . $id . "</td>
     <td style='padding-top: 50px'>" . $productName . "</td>
     <td style='padding-top: 50px'>" . $qty . "</td>
-    <td style='padding-top: 50px'>฿" . $pricePerUnit . "</td>
+    <td style='padding-top: 50px'>฿" . $Price . "</td>
     <td style='padding-top: 50px'>" . $total . " บาท</td>
     </tr>";
 
-    $totalPrice += $orderProductRow['PricePerUnit'] * $orderProductRow['Qty'];
+    $totalPrice += $orderProductRow['Price'] * $orderProductRow['Qty'];
     $id++;
 }
 

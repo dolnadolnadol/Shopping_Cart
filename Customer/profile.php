@@ -1,16 +1,19 @@
 <?php
 include('./component/session.php');
-
+if(!isset($_SESSION['auth'])) {
+    header("Location: ./login.php");
+    exit;
+}
 include_once '../dbConfig.php'; 
 
-$query = "SELECT * FROM customer INNER JOIN customer_account ON customer_account.CusID = customer.CusID WHERE  customer.CusID = '$uid'";
+$query = "SELECT * FROM customer WHERE customer.CusID = '$uid'";
 $result = mysqli_query($conn, $query);
 $user_data = mysqli_fetch_assoc($result);
 $uid = $user_data['CusID'];
 
-$query_address = "SELECT * FROM receiver 
-    INNER JOIN receiver_detail ON receiver.RecvID = receiver_detail.RecvID  
-    WHERE receiver_detail.CusID = '$uid'";
+$query_address = "SELECT *,address.fname AS fnamea, address.lname AS lnamea, address.tel AS tela FROM address
+    INNER JOIN customer ON customer.CusID = address.CusId
+    WHERE address.CusId = '$uid'";
 $result_address = mysqli_query($conn, $query_address);
 
 if (!$result) {
@@ -26,13 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
     $update_query = "UPDATE customer SET UserName = '$new_username' ,Tel = '$new_tel' WHERE CusID = '$uid'";
     $update_result = mysqli_query($conn, $update_query);
 
-    $update_query = "UPDATE customer_account SET Username = '$new_username' WHERE CusID = '$uid'";
-    $update_result = mysqli_query($conn, $update_query);
+    // $update_query = "UPDATE account SET Username = '$new_username' WHERE CusID = '$uid'";
+    // $update_result = mysqli_query($conn, $update_query);
 
     if (!$update_result) {
         die("Error updating user data: " . mysqli_error($conn));
     }
-
 }
 
  
@@ -63,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
         }
 
         .container {
-            padding: 20px 60px 70px 60px;
+            padding: 60px 60px 70px 60px;
             text-align: left;
             width: 800px;
             background-color: #fff; /* Added background color */
@@ -205,39 +207,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
             <p id='text-1'>Change your basic account here. You may also want to edit your profile</p>
 
             <form id="profileForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-
                 <input type="hidden" name="id_customer" value="<?php echo $user_data['CusID'] ?>">
                 
                 <label for="username">Username:</label>
-                <input type="text" name="username" value="<?php echo $user_data['Username'] ?>">
+                <input type="text" name="username" id="username" value="<?php echo $user_data['Username'] ?> "readOnly>
 
-                <label for="password">Password:</label>
-                <input type="password" name="password" value="<?php echo $user_data['Password'] ?>" readonly>
+                <label for="FirstName">First Name:</label>
+                <input type="text" name="FirstName" id="FirstName" value="<?php echo $user_data['fname'] ?>" readOnly>
+                
+                <label for="LastName">Last Name:</label>
+                <input type="text" name="LastName" id="LastName" value="<?php echo $user_data['lname'] ?>" readOnly>
 
-                <label for="tel">Tel:<span>*</span></label>
-                <input type="tel" name="tel" value="<?php echo $user_data['Tel']?>" required>
+                <label for="tel">Tel:</label>
+                <input type="tel" name="tel" id="tel" value="<?php echo $user_data['Tel']?>" readOnly>
+                    <button type="button" id="savebio"
+                    onclick="saveAlready()"
+                    style="display: none; background-color:green; margin-right:1rem;">บันทึก</button>
 
-                <button type="submit" onclick="showOverlay()">บันทึกข้อมูล</button>
-            </form>
+                    <button type="button" onclick="showOverlay()">แก้ไขข้อมูล</button>
+                    <!-- </div> -->
+                </form>
 
             <div class="address-container">
-                <label for="address" >Address:<span>*</span></label>
+                <label for="address" >Address:</label>
                 <?php
                     $user_address = mysqli_fetch_array($result_address);
                     while ($user_address) {
-                        $recvID = $user_address['RecvID'];
-                        echo '<div class="user-card" onclick="submitForm(\'' . $recvID . '\')">
-                                <p>' . $user_address['RecvFName'] . '</p>
-                                <p>' . $user_address['RecvLName'] . '</p>
-                                <p>' . $user_address['Tel'] . '</p>
-                                <p>' . $user_address['Address'] . '</p>              
+                        echo '<div class="user-card">
+                            <p>' . $user_address['fnamea'] ." ". $user_address['lnamea'] . '</p>
+                            <p>' . $user_address['tela'] . '</p>
+                                    <p>' . $user_address['Address'] ." ". $user_address['Province'] . '</p>
+                                <p>' . $user_address['City'] . " ". $user_address['PostalCode'] . '</p>
                             </div>';
                         echo   '<form method="post" action="./accessAddressProfile.php">
                                     <input type="hidden" name="delete_id_customer" value="' . $uid . '">
-                                    <input type="hidden" name="delete_id_receiver" id="id_receiver" value="'.$recvID.'">
+                                    <input type="hidden" name="addrId" value="' . $user_address['AddrId'] . '">
                                     <button type="submit">ลบ</button>
-                            </form>'; 
-
+                            </form>';
                         $user_address = mysqli_fetch_array($result_address); // Update $user_address
                     }
                 ?>
@@ -264,8 +270,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
     <!-- Overlay -->
     <div class="overlay" id="overlay" >
         <div class="overlay-content">
-            <p>บันทึกข้อมูลสำเร็จ!</p>
-            <button onclick="hideOverlay()">ตกลง</button>
+            <p>แก้ไขข้อมูลของคุณ</p>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlaysave" >
+        <div class="overlay-content">
+            <p>บันทึกข้อมูลเรียบร้อย</p>
         </div>
     </div>
 
@@ -288,7 +300,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
         xhr.open('POST', this.action, true);
         xhr.onload = function () {
             if (xhr.status === 200) {
-                // Form submitted successfully
                 showOverlay();
             } else {
                 // Handle error
@@ -300,14 +311,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {;
 
     function showOverlay() {
         document.getElementById('overlay').style.display = 'flex';
-        // Delay the hideOverlay function
-        setTimeout(hideOverlay, 1000); // Adjust the time (in milliseconds) as needed
+        document.getElementById('savebio').style.display = 'flex';
+        document.getElementById('username').readOnly = false;
+        document.getElementById('FirstName').readOnly = false;
+        document.getElementById('LastName').readOnly = false;
+        document.getElementById('tel').readOnly = false;
+        setTimeout(hideOverlay, 1000);
+        // Adjust the time (in milliseconds) as needed
     }
-
     function hideOverlay() {
         document.getElementById('overlay').style.display = 'none';
-        // Redirect to profileAddress.php after hiding the overlay
-        // window.location.href = './profile.php';
+        document.getElementById('overlaysave').style.display = 'none';
+        // Adjust the time (in milliseconds) as needed
+    }
+
+    function saveAlready() {
+        document.getElementById('overlaysave').style.display = 'flex';
+        document.getElementById('savebio').style.display = 'none';
+        document.getElementById('username').readOnly = true;
+        document.getElementById('FirstName').readOnly = true;
+        document.getElementById('LastName').readOnly = true;
+        document.getElementById('tel').readOnly = true;
+        setTimeout(hideOverlay, 1000); 
     }
 </script>
 </body>

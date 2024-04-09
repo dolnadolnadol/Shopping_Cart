@@ -9,7 +9,7 @@ $a5 = $_POST['a5'];
 $a6 = $_POST['a6'];
 $a7 = $_POST['a7'];
 
-$result = mysqli_query($conn, "SELECT * FROM customer_account WHERE Username = '$a6'");
+$result = mysqli_query($conn, "SELECT * FROM account WHERE Username = '$a6'");
 $row = mysqli_fetch_assoc($result);
 
 if (mysqli_num_rows($result) > 0) {
@@ -24,8 +24,8 @@ else {
 
     $cusID = mysqli_insert_id($conn);
 
-    // Insert into customer_account table
-    $stmt_account = mysqli_query($conn, "INSERT INTO customer_account(Username, Password, CusID)
+    // Insert into account table
+    $stmt_account = mysqli_query($conn, "INSERT INTO account(Username, Password, CusID)
         VALUES('$a6', '$password', '$cusID');");
 
     // Insert into receiver table

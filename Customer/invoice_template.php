@@ -49,14 +49,14 @@
         $orderQuery = mysqli_query($conn, "SELECT Product.*, receive_detail.*  , receive.*
                     FROM receive_detail
                     INNER JOIN receive ON receive.RecID = receive_detail.RecID
-                    INNER JOIN Product ON Product.ProID = receive_detail.ProID
+                    INNER JOIN Product ON Product.proId = receive_detail.proId
                     WHERE receive_detail.RecID = '$RecId '");
                     
         $totalPriceAllItems = 0; 
         $detailsDisplayed = false; 
 
         while ($row = mysqli_fetch_array($orderQuery)) {
-            $totalPrice = $row['PricePerUnit'] * $row['Qty'];
+            $totalPrice = $row['Price'] * $row['Qty'];
             $totalPriceAllItems += $totalPrice;
 
             if (!$detailsDisplayed) {
@@ -82,9 +82,9 @@
             }
 
             echo "<tr>
-                    <td>{$row['ProName']}</td>
+                    <td>{$row['ProductName']}</td>
                     <td>{$row['Qty']}</td>
-                    <td>{$row['PricePerUnit']} ฿</td>
+                    <td>{$row['Price']} ฿</td>
                     <td>$totalPrice</td>
                   </tr>";
         }

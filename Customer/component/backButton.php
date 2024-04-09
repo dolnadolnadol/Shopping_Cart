@@ -23,6 +23,6 @@
     }
 </style>
 <body>
-    <a class="aBack" href='index.php'>กลับหน้าหลัก</a>
+    <a class="aBack" href='../Customer/'>กลับหน้าหลัก</a>
 </body>
 </html>

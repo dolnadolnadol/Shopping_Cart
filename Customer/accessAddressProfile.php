@@ -1,85 +1,66 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <?php
 include('./component/session.php');
 
 include_once '../dbConfig.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['delete_id_customer'])) {
+    if (isset($_POST['delete_id_customer']) && isset($_POST['addrId'])) {
+        // Delete address
         $uid = $_POST['delete_id_customer'];
-        $recvId = $_POST['delete_id_receiver'];
-
-        $delete_result_detail_detail = mysqli_query($conn, "DELETE FROM receiver_detail WHERE RecvID = '$recvId' AND CusID = '$uid'");
-        $delete_result_detail_head = mysqli_query($conn, "DELETE FROM receiver WHERE RecvID = '$recvId'");
-
-        header("Location: ./profile.php");
-        exit();
-    } else {
+        $addrId = $_POST['addrId'];
+        
+        $delete_query = "DELETE FROM address WHERE AddrId = ?";
+        $stmt = mysqli_prepare($conn, $delete_query);
+        mysqli_stmt_bind_param($stmt, "i", $addrId);
+        mysqli_stmt_execute($stmt);
+        
+        if (mysqli_stmt_affected_rows($stmt) > 0) {
+            echo "<script>
+                swal('Delete successful!', 'Address deleted!', 'success')
+                    .then(() => {
+                        window.location.href = './profile.php';
+                    });
+            </script>";
+        } else {
+            echo "<script>
+                swal('Failed to Delete!', 'Address is in use!', 'error')
+                    .then(() => {
+                        window.location.href = './profile.php';
+                    });
+            </script>";
+        }
+    }
+    else {
+        // Insert or update address
         $recv_id = $_POST['id_receiver'];
-        $uid = $_POST['id_customer'];
+        $fname = $_POST['fname'];
+        $lname = $_POST['lname'];
+        $tel = $_POST['tel'];
 
-        if ($recv_id !== null && $recv_id !== '' && !isset($_POST['delete_id_customer'])) {
-            $uid = $_POST['id_customer'];
-            $new_fname = $_POST['fname'];
-            $new_lname = $_POST['lname'];
-            $new_tel = $_POST['tel'];
-            $new_address = $_POST['address'];
+        if ($recv_id === null || $recv_id === '' && !isset($_POST['delete_id_customer'])) {
+            $province = $_POST['province'];
+            $city = $_POST['city'];
+            $postalCode = $_POST['postal'];
+            $new_address = $_POST['addr'];
 
-            $query_address = "SELECT * FROM receiver 
-                INNER JOIN receiver_detail ON receiver.RecvID = receiver_detail.RecvID  
-                WHERE receiver_detail.CusID = '$uid' AND receiver.RecvID = '$recv_id'";
-            $result_address = mysqli_query($conn, $query_address);
+            $insert_query = "INSERT INTO address (fname, lname, tel, Address , Province  , City , PostalCode, CusId) 
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = mysqli_prepare($conn, $insert_query);
+            mysqli_stmt_bind_param($stmt, "sssssssi", $fname, $lname, $tel, $new_address, $province, $city, $postalCode, $uid);
+            $insert_result = mysqli_stmt_execute($stmt);
 
-            if (mysqli_num_rows($result_address) > 0) {
-                $update_query = "UPDATE receiver SET RecvFName = '$new_fname', RecvLName = '$new_lname' ,Tel = '$new_tel' , Address = '$new_address' WHERE RecvID = '$recv_id'";
-                $update_result = mysqli_query($conn, $update_query);
-
-                $update_query = "UPDATE  receiver_detail SET CusID = '$uid' , RecvID = '$recv_id' WHERE CusID = '$uid'";
-                $update_result = mysqli_query($conn, $update_query);
-
+            if ($insert_result) {
+                $recv_id = mysqli_insert_id($conn);
                 header("Location: ./profile.php");
             } else {
-                // Handle the case where $recv_id is not found
-                echo "RecvID not found.";
+                echo "<script>
+                    swal('Failed to Insert!', 'Error inserting into database!', 'error')
+                        .then(() => {
+                            window.location.href = './profile.php';
+                        });
+                </script>";
             }
-        } elseif ($recv_id === null || $recv_id === '' && !isset($_POST['delete_id_customer'])) {
-            $uid = $_POST['id_customer'];
-            $new_fname = $_POST['fname'];
-            $new_lname = $_POST['lname'];
-            $new_tel = $_POST['tel'];
-            $new_address = $_POST['address'];
-
-            $insert_query_head = "INSERT INTO receiver (RecvFName , RecvLName  , Tel , Address) 
-                VALUES('$new_fname', '$new_lname', '$new_tel' , '$new_address')";
-            $insert_result_head = mysqli_query($conn, $insert_query_head);
-
-            if ($insert_result_head) {
-                $recv_id = mysqli_insert_id($conn);
-            } else {
-                die("Error inserting into receiver: " . mysqli_error($conn));
-            }
-
-            // Generate new NumID
-            $resultDetail = mysqli_query($conn, "SELECT MAX(CAST(SUBSTRING(NumID, 4) AS UNSIGNED)) AS num_id FROM receiver_detail WHERE CusID = '$uid'");
-            $latestID = mysqli_fetch_assoc($resultDetail);
-            $lastID = $latestID['num_id'];
-
-            // Increment the numeric part
-            $newNumericPart = $lastID + 1;
-
-            // Format the complete NumID
-            $NumID = 'Num' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
-
-            echo $NumID;
-            echo $recv_id;
-
-            $insert_query_detail = "INSERT INTO receiver_detail (CusID, RecvID, NumID) VALUES('$uid', '$recv_id', '$NumID')";
-            $insert_result_detail = mysqli_query($conn, $insert_query_detail);
-
-            if (!$insert_result_detail) {
-                die("Error inserting receiver_detail: " . mysqli_error($conn));
-            }
-
-            header("Location: ./profile.php");
         }
     }
 }

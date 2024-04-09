@@ -7,7 +7,7 @@
         $RecvID = $_POST['id_receiver'];
         $TaxID = $_POST['id_payer'];
         $Qty = $_POST['Qty'];
-        $ProID = $_POST['ProID'];
+        $proId = $_POST['proId'];
      
         $totalPrice = $_POST['totalProductPrice'];
         $cusID = $_POST['customerName'];
@@ -18,7 +18,7 @@
         echo $cusID;
         echo $status;
         echo $RecvID;
-        print_r($ProID);
+        print_r($proId);
         
         /* Receiver */
         $recv_fname = $_POST['recv_fname'];
@@ -55,30 +55,30 @@
 
         }
 
-        if (count($ProID) == count($Qty)) {
-                $totalItems = count($ProID);
+        if (count($proId) == count($Qty)) {
+                $totalItems = count($proId);
             
                 for ($i = 0; $i < $totalItems; $i++) {
-                    $proID = $ProID[$i];
+                    $proId = $proId[$i];
                     $qty = $Qty[$i];
 
-                    $cur = "SELECT * FROM receive_detail WHERE RecID = '$RecID' AND ProID ='$proID'";
+                    $cur = "SELECT * FROM receive_detail WHERE RecID = '$RecID' AND proId ='$proId'";
                     $msresults = mysqli_query($conn, $cur);
                     $row = mysqli_fetch_assoc($msresults);
                     $oldQty = $row['Qty'];
-                    $stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty + '$oldQty', OnHands = OnHands + '$oldQty' WHERE ProID ='$proID'");
+                    $stmt = mysqli_query($conn, "UPDATE product SET Qty = Qty + '$oldQty', OnHand = OnHand + '$oldQty' WHERE proId ='$proId'");
 
-                    // Update Stock and OnHands
-                    $stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty - '$qty', OnHands = OnHands - '$qty' WHERE ProID ='$proID'");
+                    // Update Stock and OnHand
+                    $stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty - '$qty', OnHand = OnHand - '$qty' WHERE proId ='$proId'");
 
                     $stmt = mysqli_query($conn, "UPDATE receive_detail SET Qty = '$qty'
-                    WHERE ProID ='$proID' AND RecID ='$RecID'");
+                    WHERE proId ='$proId' AND RecID ='$RecID'");
 
 
-                    echo "ProID: $proID, Qty: $qty<br>";
+                    echo "proId: $proId, Qty: $qty<br>";
                 }
         } else {
-            echo "ขนาดของอาร์เรย์ ProID และ Qty ไม่เท่ากัน";
+            echo "ขนาดของอาร์เรย์ proId และ Qty ไม่เท่ากัน";
         }             
         }
         

@@ -177,7 +177,7 @@
                             // Your PHP code to fetch products from the database
                             $result = mysqli_query($conn, "SELECT * FROM Product");
                             while ($row = mysqli_fetch_assoc($result)) {
-                                echo "<option data-product-id='{$row['ProID']}' data-price='{$row['PricePerUnit']}' value='{$row['ProID']}'>{$row['ProName']}</option>";
+                                echo "<option data-product-id='{$row['proId']}' data-price='{$row['Price']}' value='{$row['proId']}'>{$row['ProductName']}</option>";
                             }
                         ?>
                     </select>
@@ -237,7 +237,7 @@
         var productId = $('#productName option:selected').data('product-id');
         var productName = $('#productName option:selected').text();
         var quantity = $('#quantity').val();
-        var pricePerUnit = $('#productName option:selected').data('price');
+        var Price = $('#productName option:selected').data('price');
 
         // Validate quantity
         if (!quantity || isNaN(quantity) || quantity <= 0) {
@@ -246,13 +246,13 @@
         }
 
         // Calculate total price
-        var totalPrice = quantity * pricePerUnit;
+        var totalPrice = quantity * Price;
 
         // Create table row
         var row = '<tr>' +
             '<td>' + productName + '</td>' +
             '<td>' + quantity + '</td>' +
-            '<td>' + pricePerUnit + '</td>' +
+            '<td>' + Price + '</td>' +
             '<td>' + totalPrice + '</td>' +
             '</tr>';
 

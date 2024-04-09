@@ -4,50 +4,45 @@ include('../logFolder/CallLog.php');
 include('./component/getFunction/getName.php');
 include('./component/session.php');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if(!$_SESSION['uid']){
+        header('Location: ./login.php');
+    }
     /* Add product in cart */
-    if (isset($_POST['id_product']) && isset($_POST['amount'])) {
-
+    else if (isset($_POST['id_product']) && isset($_POST['amount'])) {
         $productId = $_POST['id_product'];
         $amount = $_POST['amount'];
-        include_once '../dbConfig.php'; 
+        $uid = $_SESSION['uid'];
+        include_once '../dbConfig.php';
         if (isset($_SESSION['id_username'])) {
-            $check_query = mysqli_query($conn, "SELECT * FROM cart WHERE CusID = '$uid' AND ProID = '$productId'");
+            $check_query = mysqli_query($conn, "SELECT * FROM cart WHERE cusId = '$uid' AND ProId = '$productId'");
             if (mysqli_num_rows($check_query) > 0) {
-                echo "Product already exists in the cart for the user.";
-                $stmt = mysqli_query($conn, "UPDATE cart SET Qty ='$amount'
-                WHERE CusID ='$uid' AND ProID = '$productId'");
+                // echo "Product already exists in the cart for the user.";
+                $stmt = mysqli_query($conn, "UPDATE cart SET Qty = Qty +'$amount'
+                WHERE cusId ='$uid' AND ProId = '$productId'");
 
-                // ACCESS LOG
-                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else {
-                    $ipAddress = $_SERVER['REMOTE_ADDR'];
-                }
-                $callingFile = __FILE__;
-                $action = 'UPDATE'; // Static Change Action
-                CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-                //END LOG
+                // // ACCESS LOG
+                // if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                //     $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                // } else {
+                //     $ipAddress = $_SERVER['REMOTE_ADDR'];
+                // }
+                // $callingFile = __FILE__;
+                // $action = 'UPDATE'; // Static Change Action
+                // CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
+                // //END LOG
 
                 header("Location: ./cart.php");
             } else {
                 //insert in cart
-                $stmt = "INSERT INTO cart(CusID, ProID, Qty) VALUES('$uid', '$productId', '$amount')";
-
-                // ACCESS LOG
-                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else {
-                    $ipAddress = $_SERVER['REMOTE_ADDR'];
-                }
-                $callingFile = __FILE__;
-                $action = 'INSERT'; // Static Change Action
-                CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-                //END LOG
+                // echo $uid . " ";
+                // echo $productId . " ";
+                // echo $amount . " ";
+                $stmt = "INSERT INTO cart(cusId, ProId, Qty) VALUES('$uid', '$productId', '$amount')";
 
                 $msresults = mysqli_query($conn, $stmt);
-                $stmt2 = mysqli_query($conn, "UPDATE product SET OnHands = OnHands + '$amount' WHERE ProID = '$productId'");
+                $stmt2 = mysqli_query($conn, "UPDATE product SET onHand = onHand + '$amount' WHERE proId = '$productId'");
 
-                header("Location: ./index.php");
+                header("Location: ./");
                 exit();
             }
             /* Guest */
@@ -55,74 +50,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_SESSION['cart'][$productId])) {
                 $_SESSION['cart'][$productId]['quantity'] = $amount;
 
-                // ACCESS LOG
-                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else {
-                    $ipAddress = $_SERVER['REMOTE_ADDR'];
-                }
-                $callingFile = __FILE__;
-                $action = 'UPDATE'; // Static Change Action
-                CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-                //END LOG
-
             } else {
                 $_SESSION['cart'][$productId] = [
                     'quantity' => $amount
                 ];
-                // ACCESS LOG
-                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else {
-                    $ipAddress = $_SERVER['REMOTE_ADDR'];
-                }
-                $callingFile = __FILE__;
-                $action = 'INSERT'; // Static Change Action
-                CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-                //END LOG
-
             }
-            header("Location: ./index.php");
+            // header("Location: ./index.php");
         }
     }
     /* Delete product in cart */ 
     else if (isset($_POST['deleteID'])) {
-        $conn =  mysqli_connect("localhost", "root", "", "shopping");
         $productId = $_POST['deleteID'];
         if (isset($_POST['CusID'])) {
+            include_once '../dbConfig.php'; 
             $cusID = $_POST['CusID'];
-            $cart_query = mysqli_query($conn, "SELECT * FROM cart WHERE CusID = '$cusID' AND ProID = '$productId'");
+            $cart_query = mysqli_query($conn, "SELECT * FROM cart WHERE cusID = '$cusID' AND ProId = '$productId'");
             $cart_row = mysqli_fetch_assoc($cart_query);
             $cart_qty = (int)$cart_row['Qty'];
             if (mysqli_num_rows($cart_query) > 0) {
-                $OnHands_update = mysqli_query($conn, "UPDATE product SET OnHands = OnHands - '$cart_qty' WHERE ProID = '$productId'");
+                $OnHand_update = mysqli_query($conn, "UPDATE product SET OnHand = OnHand - '$cart_qty' WHERE proId = '$productId'");
 
-                $check_query = mysqli_query($conn, "DELETE FROM cart WHERE CusID = '$cusID' AND ProID = '$productId'");
-
-                // ACCESS LOG
-                if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else {
-                    $ipAddress = $_SERVER['REMOTE_ADDR'];
-                }
-                $callingFile = __FILE__;
-                $action = 'DELETE'; // Static Change Action
-                CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-                //END LOG
-
+                $check_query = mysqli_query($conn, "DELETE FROM cart WHERE cusID = '$cusID' AND ProId = '$productId'");
             }
         } else if (isset($_SESSION['cart'][$productId])) {
-
-            // ACCESS LOG
-            if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            } else {
-                $ipAddress = $_SERVER['REMOTE_ADDR'];
-            }
-            $callingFile = __FILE__;
-            $action = 'DELETE'; // Static Change Action
-            CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-            //END LOG
 
             unset($_SESSION['cart'][$productId]);
         }

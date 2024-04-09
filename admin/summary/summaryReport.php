@@ -1,3 +1,10 @@
+<?php
+    session_start();
+    if($_SESSION['auth'] !== 'super-admin') {
+        header("Location: ../notHavePage.php");
+        exit;
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,52 +13,52 @@
     <title>Report</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: black;
-            color:white;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .container {
             margin-top: 100px;
+            width: 75%;
+            background-color: white;
         }
 
         .dashboard-heading {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 32px;
-            font-weight: bold;
+            color: black;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-top: 20px;
+            margin-left: 40px;
+            margin-right: 40px;
         }
 
         .data-container {
-            width: 60%;
+            width: 97%;
             margin: auto;
+            background-color: white;
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: row;
             justify-content: space-between;
-            padding: 20px;
         }
-
+        
         .data-card {
-            flex-grow: 1;
-            flex-basis: calc(50% - 20px);
-            margin: 0 10px 20px;
-            background-color: #4c4c4c;
+            width: 60%;
+            background-color: #fff;
+            color: #000;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out;
+            margin-right: 10px;
         }
-
-        .data-card:hover {
-            transform: scale(1.0);
-        }
-
-        .data-card h2,
-        .data-card h3,
-        .data-card p {
-            margin: 0;
-            color: white;
+        .data-card2 {
+            width: 40%;
+            background-color: #fff;
+            color: #000;
+            padding: 20px;
+            margin-left: 10px;
         }
 
         table {
@@ -67,7 +74,7 @@
         }
 
         th {
-            background-color: #666666;
+            background-color: #c0c0c0;
         }
 
         #card-4 h1 {
@@ -79,59 +86,172 @@
     </style>
 </head>
 <body> 
-    <?php include('../navbar/navbarAdmin.php') ?>
+    <?php   include('../navbar/navbarAdmin.php');
+            include_once '../../dbConfig.php';        
+    ?>
     <div class="container">
-        <h1 class="dashboard-heading">Summary Report</h1>
-        <?php
-            date_default_timezone_set('Asia/Bangkok');
-            $currentDateTime = date("d-m-Y");
-        ?>
-
-        <center><h2>วันที่: <?php echo $currentDateTime; ?></h2></center>
+        <div class="dashboard-heading">
+            <h1 style="margin-bottom: 0px">Summary Report</h1>
+            <h2 style="margin-bottom: 0px">E-Commerce Co., Ltd.</h2>
+            <h2 style="margin-bottom: 0px; font-weight: normal;"><?php echo date("F Y"); ?></h2>
+        </div>
         <div class="data-container">
             <div class="data-card" id='card-1'>
                 <h2 id='PQ'>Product Summary</h2>
-                <?php 
-                    include_once '../../dbConfig.php'; 
-                ?>
+                <table>                     
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity sold</th>
+                        <th>Sales</th>
+                        <th>Profit</th>
+                    </tr>               
+                    <?php
+                    $cur = "SELECT product.proId, product.ProductName, product.Price, product.cost, SUM(ordervalue.Qty) AS TotalQty
+                    FROM product
+                    INNER JOIN ordervalue ON ordervalue.ProId = product.proId
+                    INNER JOIN orderkey ON orderkey.orderId = ordervalue.orderId
+                    INNER JOIN invoice ON invoice.orderId = ordervalue.orderId
+                    WHERE orderkey.PaymentStatus = 'Success' 
+                    AND DATE_FORMAT(invoice.timestamp, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+                    GROUP BY product.proId";
+                    $msresults = mysqli_query($conn, $cur);
+                    $TotalSales = 0;
+                    $TotalProfit = 0;
+                    if (mysqli_num_rows($msresults) > 0) {
+                        while ($row = mysqli_fetch_array($msresults)) {
+                            $Sales = (double)$row['Price'] * (double)$row['TotalQty'];
+                            $Cost = (double)$row['cost'] * (double)$row['TotalQty'];
+                            $Profit = $Sales - $Cost;
+                            $TotalSales += $Sales;
+                            $TotalProfit += $Profit;
+                            echo "<tr>";
+                            echo "<td>{$row['proId']}</td>";
+                            echo "<td>{$row['ProductName']}</td>";
+                            echo "<td>฿" . $row['Price'] . "</td>";
+                            echo "<td>{$row['TotalQty']}</td>";
+                            echo "<td>฿" . $Sales . "</td>";
+                            echo "<td>฿" . $Profit . "</td>";
+                            echo "</tr>";
+                        }
+                    }
+                    ?>
+                    <tr>
+                        <td colspan="3"></td>
+                        <td class="text-right"><strong>Total</strong></td>
+                        <td class="text-right">฿<?php echo number_format($TotalSales, 2); ?></td>
+                        <td class="text-right">฿<?php echo number_format($TotalProfit, 2); ?></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="data-card2" id='card-2'>
+                <h2 id='PQ'>Summary of product types</h2>
+                <table>
+                    <tr>
+                        <th>Type ID</th>
+                        <th>Sales</th>
+                        <th>Profit</th>
+                    </tr>
+                    <?php
+                    $cur = "SELECT product.proId, product.typeId, product.Price, product.cost, SUM(ordervalue.Qty) AS TotalQty
+                            FROM product
+                            INNER JOIN ordervalue ON ordervalue.ProId = product.proId
+                            INNER JOIN orderkey ON orderkey.orderId = ordervalue.orderId
+                            INNER JOIN invoice ON invoice.orderId = ordervalue.orderId
+                            WHERE orderkey.PaymentStatus = 'Success' 
+                            AND DATE_FORMAT(invoice.timestamp, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+                            GROUP BY product.proId, product.typeId
+                            ORDER BY product.typeId ASC";
+                    $msresults = mysqli_query($conn, $cur);
+                    $TotalSales = 0;
+                    $TotalProfit = 0;
+                    $Sales = 0;
+                    $Profit = 0;
+                    $previousTypeId = null;
+                    if (mysqli_num_rows($msresults) > 0) {
+                        while ($row = mysqli_fetch_array($msresults)) {
+                            if ($previousTypeId == null) {
+                                $previousTypeId = $row['typeId'];
+                            }
+                            if ($row['typeId'] !== $previousTypeId) {
+                                echo "<tr>";
+                                echo "<td>{$previousTypeId}</td>";
+                                echo "<td>฿" . $Sales . "</td>";
+                                echo "<td>฿" . $Profit . "</td>";
+                                echo "</tr>";
+                                $Sales = 0;
+                                $Profit = 0;
+                                $Sales += (double)$row['Price'] * (double)$row['TotalQty'];
+                                $Cost = (double)$row['cost'] * (double)$row['TotalQty'];
+                                $Profit += $Sales - $Cost;
+                                $TotalSales += $Sales;
+                                $TotalProfit += $Profit;
+                                $previousTypeId = $row['typeId'];
+                            } else {
+                                $Sales += (double)$row['Price'] * (double)$row['TotalQty'];
+                                $Cost = (double)$row['cost'] * (double)$row['TotalQty'];
+                                $Profit += $Sales - $Cost;
+                                $TotalSales = $Sales;
+                                $TotalProfit = $Profit;
+                                $previousTypeId = $row['typeId'];
+                            }
+                        } if ($Sales != 0 && $Profit != 0 && $previousTypeId !== null) {
+                            echo "<tr>";
+                            echo "<td>{$previousTypeId}</td>";
+                            echo "<td>฿" . $Sales . "</td>";
+                            echo "<td>฿" . $Profit . "</td>";
+                            echo "</tr>";
+                        }
+                    }
+                    ?>
+                    <tr>
+                        <td class="text-right"><strong>Total</strong></td>
+                        <td class="text-right">฿<?php echo number_format($TotalSales, 2); ?></td>
+                        <td class="text-right">฿<?php echo number_format($TotalProfit, 2); ?></td>
+                    </tr>
+                </table>
+                <h2 id='PQ'>Customer Summary</h2>
                 <table>
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Price Per Unit</th>
-                        <th>Total Unit Sold</th>
-                        <th>Total Price</th>
+                        <th>Sex</th>
+                        <th>Price Paid</th>
                     </tr>
                     <?php
-                        $bestSell_Query = mysqli_query($conn, "SELECT product.ProID, product.ProName, product.Description, product.PricePerUnit, SUM(receive_detail.Qty) AS TotalQty
-                        FROM product
-                        INNER JOIN receive_detail ON product.ProID = receive_detail.ProID
-                        INNER JOIN receive ON receive_detail.RecID = receive.RecID
-                        WHERE DATE(receive.OrderDate) = CURDATE()
-                        GROUP BY product.ProID");
-                        while($row = mysqli_fetch_assoc($bestSell_Query)) {
-                            $totalSum = $row['PricePerUnit'] * $row['TotalQty'];
+                    $cur = "SELECT customer.CusID,
+                            customer.fname, customer.lname,
+                            customer.Sex,
+                            SUM(product.Price * ordervalue.Qty) AS TotalPricePaid
+                            FROM customer
+                            INNER JOIN orderkey ON customer.CusID = orderkey.cusId
+                            INNER JOIN ordervalue ON orderkey.orderId = ordervalue.orderId
+                            INNER JOIN product ON ordervalue.ProId = product.proId
+                            INNER JOIN invoice ON invoice.orderId = ordervalue.orderId
+                            WHERE customer.deleteStatus = '0' AND orderkey.PaymentStatus = 'Success'
+                            AND DATE_FORMAT(invoice.timestamp, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+                            GROUP BY customer.CusID, customer.fname, customer.lname, customer.Sex";
+                    $msresults = mysqli_query($conn, $cur);
+                    $TotalPricePaid = 0;
+                    if (mysqli_num_rows($msresults) > 0) {
+                        while ($row = mysqli_fetch_array($msresults)) {
                             echo "<tr>";
-                            echo "<td>" . $row['ProID'] . "</td>";
-                            echo "<td>" . $row['ProName'] . "</td>";
-                            echo "<td>" . $row['PricePerUnit'] . "</td>";
-                            echo "<td>" . $row['TotalQty'] . "</td>";
-                            echo "<td>" . $totalSum . "</td>";
+                            echo "<td>{$row['CusID']}</td>";
+                            echo "<td>{$row['fname']} {$row['lname']}</td>";
+                            echo "<td>{$row['Sex']}</td>";
+                            echo "<td>฿{$row['TotalPricePaid']}</td>";
                             echo "</tr>";
+                            $TotalPricePaid += $row['TotalPricePaid'];
                         }
+                    }
                     ?>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td class="text-right"><strong>Total</strong></td>
+                        <td class="text-right">฿<?php echo number_format($TotalPricePaid, 2); ?></td>
+                    </tr>
                 </table>
-                <h1 id='Re'>Revenue</h1>
-                    <?php 
-                        $income_Query = mysqli_query($conn, "SELECT SUM(product.PricePerUnit * receive_detail.Qty) AS TotalIncome
-                        FROM product 
-                        INNER JOIN receive_detail ON product.ProID = receive_detail.ProID
-                        INNER JOIN receive ON receive_detail.RecID = receive.RecID
-                        WHERE DATE(receive.OrderDate) = CURDATE()");
-                        $total_income_row = mysqli_fetch_assoc($income_Query);
-                        $total_income = $total_income_row['TotalIncome'];
-                        echo "<h2>Total Income: ฿" . number_format($total_income, 2) . "</h2>";
-                    ?>
             </div>
         </div>
     </div>

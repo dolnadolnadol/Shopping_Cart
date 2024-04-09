@@ -33,8 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //Manage user for receive
         $new_fname = $_POST['fname'];
         $new_lname = $_POST['lname'];
-        $new_tel = $_POST['tel'];
+        $new_tel = $_POST['Tel'];
         $new_address = $_POST['address'];
+
         $select_query_head = "SELECT * FROM receiver 
         INNER JOIN receiver_detail ON receiver_detail.RecvID = receiver.RecvID 
         WHERE receiver_detail.CusID = '$uid' 
@@ -44,68 +45,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         AND receiver.Address = '$new_address'";
         $result = mysqli_query($conn ,$select_query_head);
 
-        if(mysqli_num_rows($result) < 1){
-            $insert_query_head = "INSERT INTO receiver (RecvFName , RecvLName  , Tel , Address) 
-            VALUES('$new_fname', '$new_lname', '$new_tel' , '$new_address')";
-            $insert_result_head = mysqli_query($conn, $insert_query_head);
-            if ($insert_result_head) {
-                $recv_id = mysqli_insert_id($conn);
-                // $insert_query = "SELECT * FROM receiver WHERE  RecvID = '$recv_id'";
-                // $insert_result= mysqli_query($conn, $insert_query_head);
-                // $row = mysqli_fetch_assoc($insert_result);
-                // echo $row['RecvID'] ;
-            } else {
-                die("Error inserting into receiver: " . mysqli_error($conn));
-            }
+        // if(mysqli_num_rows($result) < 1){
+        //     $insert_query_head = "INSERT INTO receiver (RecvFName , RecvLName  , Tel , Address) 
+        //     VALUES('$new_fname', '$new_lname', '$new_tel' , '$new_address')";
+        //     $insert_result_head = mysqli_query($conn, $insert_query_head);
+        //     if ($insert_result_head) {
+        //         $recv_id = mysqli_insert_id($conn);
+        //         // $insert_query = "SELECT * FROM receiver WHERE  RecvID = '$recv_id'";
+        //         // $insert_result= mysqli_query($conn, $insert_query_head);
+        //         // $row = mysqli_fetch_assoc($insert_result);
+        //         // echo $row['RecvID'] ;
+        //     } else {
+        //         die("Error inserting into receiver: " . mysqli_error($conn));
+        //     }
 
-            // Generate new NumID
-            $resultDetail = mysqli_query($conn, "SELECT MAX(CAST(SUBSTRING(NumID, 4) AS UNSIGNED)) AS num_id FROM receiver_detail WHERE CusID = '$uid'");
-            $latestID = mysqli_fetch_assoc($resultDetail);
-            $lastID = $latestID['num_id'];
+        //     // Generate new NumID
+        //     $resultDetail = mysqli_query($conn, "SELECT MAX(CAST(SUBSTRING(NumID, 4) AS UNSIGNED)) AS num_id FROM receiver_detail WHERE CusID = '$uid'");
+        //     $latestID = mysqli_fetch_assoc($resultDetail);
+        //     $lastID = $latestID['num_id'];
 
-            // Increment the numeric part
-            $newNumericPart = $lastID + 1;
+        //     // Increment the numeric part
+        //     $newNumericPart = $lastID + 1;
 
-            // Format the complete NumID
-            $NumID = 'Num' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
+        //     // Format the complete NumID
+        //     $NumID = 'Num' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
 
-            echo $NumID;
-            echo $recv_id;
+        //     echo $NumID;
+        //     echo $recv_id;
 
-            $insert_query_detail = "INSERT INTO receiver_detail (CusID, RecvID, NumID) VALUES('$uid', '$recv_id', '$NumID')";
-            $insert_result_detail = mysqli_query($conn, $insert_query_detail);
+        //     $insert_query_detail = "INSERT INTO receiver_detail (CusID, RecvID, NumID) VALUES('$uid', '$recv_id', '$NumID')";
+        //     $insert_result_detail = mysqli_query($conn, $insert_query_detail);
 
-            if (!$insert_result_detail) {
-                die("Error inserting receiver_detail: " . mysqli_error($conn));
-            }
-        }
-        else {
-            $result = mysqli_fetch_assoc($result);
-            $recv_id =  $result['RecvID'];
-            echo $recv_id;
-        }
+        //     if (!$insert_result_detail) {
+        //         die("Error inserting receiver_detail: " . mysqli_error($conn));
+        //     }
+        // }
+        // else {
+        //     $result = mysqli_fetch_assoc($result);
+        //     $recv_id =  $result['RecvID'];
+        //     echo $recv_id;
+        // }
 
         /* ------------------------------------------------------------------------- */
         /* ------------------------------------------------------------------------- */
 
         // Retrieve cart items for the specified customer
-        $check_query = mysqli_query($conn, "SELECT Product.ProID, Qty, Product.PricePerUnit FROM cart 
-            INNER JOIN Product ON Cart.ProID = Product.ProID WHERE CusID = '$cusID'");
+        $check_query = mysqli_query($conn, "SELECT product.proId, cart.Qty, product.price FROM cart 
+            INNER JOIN product ON cart.proId = product.proId WHERE CusID = '$cusID'");
 
         // Check if there are items in the cart
         if (mysqli_num_rows($check_query) > 0) {
 
             // Generate a new InvoiceID
-            $result = mysqli_query($conn, "SELECT MAX(InvID) AS inv_id FROM invoice");
-            $row = mysqli_fetch_assoc($result);
-            $lastID = $row['inv_id'];
-            $numericPart = intval(substr($lastID, 3));
-            $newNumericPart = $numericPart + 1;
-            $InvID = 'INV' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
+            $result = mysqli_query($conn, "SELECT * FROM orderkey");
+            $lastID = mysqli_insert_id($conn);
+            // $row = mysqli_fetch_assoc($result);
+            // $lastID = $row['inv_id'];
+            // $numericPart = intval(substr($lastID, 3));
+            // $newNumericPart = $numericPart + 1;
+            // $InvID = 'OD' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
 
             // Insert a new invoice record
-            $stmt = mysqli_query($conn, "INSERT INTO invoice (InvID, Period, CusID, Status, RecvID)
-                VALUES ('$InvID', NOW(), '$cusID', 'Unpaid', '$recv_id');");
+            $stmt = mysqli_query($conn, "INSERT INTO orderkey (PaymentStatus, CusID)
+                VALUES ('Unpaid', '$cusID')");
 
             // ACCESS LOG
             $productId = "";
@@ -123,25 +125,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             while ($row = mysqli_fetch_array($check_query)) {
 
                 // Generate a new NumID for invoice_detail
-                $resultDetail = mysqli_query($conn, "SELECT MAX(NumID) AS num_id FROM invoice_detail WHERE InvID = '$InvID'");
-                $row2 = mysqli_fetch_assoc($resultDetail);
-                $lastID = $row2['num_id'];
-                $numericPart = intval(substr($lastID, 3));
-                $newNumericPart = $numericPart + 1;
-                $NumID = 'Num' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
+                // $resultDetail = mysqli_query($conn, "SELECT MAX(NumID) AS num_id FROM invoice_detail WHERE InvID = '$InvID'");
+                // $row2 = mysqli_fetch_assoc($resultDetail);
+                // $lastID = $row2['num_id'];
+                // $numericPart = intval(substr($lastID, 3));
+                // $newNumericPart = $numericPart + 1;
+                // $NumID = 'Num' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
 
-                $proID = $row['ProID'];
+                $proId = $row['proId'];
                 $Qty = $row['Qty'];
 
                 // Calculate subtotal, tax, and total
-                $subTotal = $row['PricePerUnit'] * $Qty;
+                $subTotal = $row['price'] * $Qty;
                 $totalPriceAllItems += $subTotal;
                 $Tax = $totalPriceAllItems * 0.07;
                 $Total = $Tax + $totalPriceAllItems;
 
                 // Insert invoice_detail record
-                $stmt = mysqli_query($conn, "INSERT INTO invoice_detail (NumID, InvID, ProID, Qty)
-                    VALUES ('$NumID', '$InvID', '$proID', '$Qty');");
+                // $stmt = mysqli_query($conn, "INSERT INTO invoice_detail (NumID, InvID, proId, Qty)
+                //     VALUES ('$NumID', '$InvID', '$proId', '$Qty');");
             }
 
             // Update the total price in the invoice
@@ -190,9 +192,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             //Manage new Guest for receive
      
             // Insert a customer record for guests
-            $stmt_customer = mysqli_query($conn, "INSERT INTO customer(CusFName , CusLName , Tel )
-                VALUES('$fname', '$lname' , '$tel' );");
-            $cusID = mysqli_insert_id($conn);
+            // $stmt_customer = mysqli_query($conn, "INSERT INTO customer(CusFName , CusLName , Tel )
+            //     VALUES('$fname', '$lname' , '$tel' );");
+            // $cusID = mysqli_insert_id($conn);
 
             /* ------------------------------------------------------------------------- */
             /* ------------------------------------------------------------------------- */
@@ -284,18 +286,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $Qty = $product['quantity'];
 
                 // Fetch product details from the database
-                $cur = "SELECT ProID, ProName, PricePerUnit FROM product WHERE ProID = '$product_id'";
+                $cur = "SELECT proId, ProductName, Price FROM product WHERE proId = '$product_id'";
                 $msresults = mysqli_query($conn, $cur);
                 $row = mysqli_fetch_array($msresults);
 
                 // Calculate subtotal, tax, and total
-                $subTotal = $row['PricePerUnit'] * $Qty;
+                $subTotal = $row['Price'] * $Qty;
                 $totalPriceAllItems += $subTotal;
                 $Tax = $totalPriceAllItems * 0.07;
                 $Total = $Tax + $totalPriceAllItems;
 
                 // Insert invoice_detail record
-                $stmt = mysqli_query($conn, "INSERT INTO invoice_detail (NumID, InvID, ProID, Qty)
+                $stmt = mysqli_query($conn, "INSERT INTO invoice_detail (NumID, InvID, proId, Qty)
                     VALUES ('$NumID', '$InvID', '$product_id', '$Qty');");
             }
 

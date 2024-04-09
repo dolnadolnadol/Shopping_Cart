@@ -102,17 +102,17 @@
         $invoiceStatus = "";
         $invoiceItems = array();
 
-        $invoiceQuery = mysqli_query($conn, "SELECT invoice.* , invoice_detail.*, product.* , (product.PricePerUnit * invoice_detail.Qty ) AS SubTotal
+        $invoiceQuery = mysqli_query($conn, "SELECT invoice.* , invoice_detail.*, product.* , (product.Price * invoice_detail.Qty ) AS SubTotal
         FROM invoice
         INNER JOIN invoice_detail ON invoice.InvID = invoice_detail.InvID
-        INNER JOIN Product ON invoice_detail.ProID = Product.ProID
+        INNER JOIN Product ON invoice_detail.proId = Product.proId
         WHERE invoice.CusID = '$customerId' AND invoice_detail.InvID = '$invoiceId'");
 
         while ($row = mysqli_fetch_array($invoiceQuery)) {            
             $invoiceItems[] = array(
-                'product' => $row['ProName'],
+                'product' => $row['ProductName'],
                 'quantity' => $row['Qty'],
-                'unitPrice' => $row['PricePerUnit'],
+                'unitPrice' => $row['Price'],
                 'total' => $row['SubTotal'],
             );
             $invoiceSubTotal += $row['SubTotal'];

@@ -119,10 +119,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $NumID_receive = 'Num' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
 
         // Insert into receive_detail table
-        $stmt = mysqli_query($conn, "INSERT INTO receive_detail (RecID, NumID, ProID, Qty) VALUES ('$RecID', '$NumID_receive', '{$product['productId']}', '{$product['quantity']}')");
+        $stmt = mysqli_query($conn, "INSERT INTO receive_detail (RecID, NumID, proId, Qty) VALUES ('$RecID', '$NumID_receive', '{$product['productId']}', '{$product['quantity']}')");
 
-        // Update Stock and OnHands
-        $stmt = mysqli_query($conn, "UPDATE product SET StockQty = StockQty - '{$product['quantity']}', OnHands = OnHands - '{$product['quantity']}' WHERE ProID = '{$product['productId']}'");
+        // Update Stock and OnHand
+        $stmt = mysqli_query($conn, "UPDATE product SET Qty = Qty - '{$product['quantity']}', OnHand = OnHand - '{$product['quantity']}' WHERE proId = '{$product['productId']}'");
     }
 
     // Calculate total with tax

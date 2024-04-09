@@ -111,15 +111,16 @@
                 <?php     
 
                     include_once '../../dbConfig.php'; 
-                    $RecID = $_POST['id_order'];
-                    echo "<input type='text' id='RecID' name='RecID' value='$RecID' readonly>
+                    $orderId = $_POST['id_order'];
+                    echo "<input type='text' id='orderId' name='orderId' value='$orderId' readonly>
                     </div>";
-                    $cur = "SELECT * FROM receive 
-                    INNER JOIN Customer ON Customer.CusID = receive.CusID
-                    WHERE RecID = '$RecID'";
+                    $cur = "SELECT * FROM orderkey 
+                    INNER JOIN customer ON customer.CusID = orderkey.cusId 
+                    INNER JOIN orderdelivery ON orderdelivery.DeliId = orderkey.DeliId 
+                    WHERE orderId = '$orderId'";
                     $msresults = mysqli_query($conn, $cur);
                     $row = mysqli_fetch_array($msresults);
-                    $status = $row['Status'];
+                    $status = $row['PaymentStatus'];
 
 
                 ?>
@@ -198,10 +199,10 @@
                         // Your PHP code to fetch products from the database
                         $result = mysqli_query($conn, "SELECT *
                                                     FROM Product
-                                                    WHERE ProID NOT IN (SELECT DISTINCT ProID FROM receive_detail WHERE RecID = '$RecID')");
+                                                    WHERE proId NOT IN (SELECT DISTINCT proId FROM receive_detail WHERE RecID = '$RecID')");
                         if ($result) {
                             while ($row = mysqli_fetch_assoc($result)) {
-                                echo "<option data-product-id='{$row['ProID']}' data-price='{$row['PricePerUnit']}' value='{$row['ProID']}'>{$row['ProName']}</option>";
+                                echo "<option data-product-id='{$row['proId']}' data-price='{$row['Price']}' value='{$row['proId']}'>{$row['ProductName']}</option>";
                             }
                         } else {
                             echo "Error: " . mysqli_error($conn);
@@ -233,15 +234,15 @@
                         $showTotal = 0.0;
                         $showVat = 0.0;
                         $result = mysqli_query($conn, " SELECT receive_detail.* , Product.*,
-                            receive_detail.Qty * Product.PricePerUnit AS TotalPrice
+                            receive_detail.Qty * Product.Price AS TotalPrice
                             FROM receive_detail 
-                            INNER JOIN Product ON receive_detail.ProID = Product.ProID WHERE receive_detail.RecID = '$RecID'");
+                            INNER JOIN Product ON receive_detail.proId = Product.proId WHERE receive_detail.RecID = '$RecID'");
                         while ($row = mysqli_fetch_assoc($result)) {
-                            echo "<input type='hidden' name='ProID[]' value={$row['ProID']}";
+                            echo "<input type='hidden' name='proId[]' value={$row['proId']}";
                             echo "<tr>
-                                    <td>{$row['ProName']}</td>
+                                    <td>{$row['ProductName']}</td>
                                     <td><input type='text' name='Qty[]' value='{$row['Qty']}' class='quantity-input'></td>
-                                    <td>{$row['PricePerUnit']}</td>
+                                    <td>{$row['Price']}</td>
                                     <td class='total-price'>{$row['TotalPrice']}</td>
                                   </tr>
                                   ";
@@ -285,8 +286,8 @@
             // Function to update total price based on quantity
             function updateTotalPrice(row) {
                 var quantity = parseInt(row.find('.quantity-input').val());
-                var pricePerUnit = parseFloat(row.find('td:eq(2)').text());
-                var totalPrice = quantity * pricePerUnit;
+                var Price = parseFloat(row.find('td:eq(2)').text());
+                var totalPrice = quantity * Price;
 
                 // Update the total price cell in the same row
                 row.find('.total-price').text(totalPrice.toFixed(2));
