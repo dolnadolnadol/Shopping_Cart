@@ -13,6 +13,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $orderId = $_POST['id_order'];
         $deli = $_POST['id_deli'];
 
+        $stmt = $conn->prepare("UPDATE product
+        JOIN ordervalue ON ordervalue.proId = product.proId
+        SET product.qty = product.qty - 1
+        WHERE ordervalue.orderId = ?");
+        $stmt->bind_param("i", $orderId);
+        $success = $stmt->execute();
+
+
         $payer_fname = $_POST['fname'];
         $payer_lname = $_POST['lname'];
         $payer_time = $_POST['time'];

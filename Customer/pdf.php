@@ -87,8 +87,8 @@
 </head>
 <body>
     <?php 
-        include_once '../../dbConfig.php';
-        $invid = $_POST['id_order'];
+        include_once '../dbConfig.php';
+        $invid = $_POST['id_inv'];
         $cur = "SELECT * FROM invoice 
         INNER JOIN orderdelivery ON orderdelivery.DeliId = invoice.DeliId
         INNER JOIN address ON address.AddrId = orderdelivery.addrId
@@ -209,7 +209,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12 text-right identity">
-                                <h4>ผู้รับรอง<br><br>__________________</h4>
+                                <h4>ผู้รับรอง<br><br>________signed__________</h4>
                             </div>
                         </div>
                     </div>

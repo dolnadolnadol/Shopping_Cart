@@ -337,7 +337,7 @@ function includeRealInvoice($query)
     $msresults = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_array($msresults)) {
         echo '<div class="order">';
-        echo "<div class='icon-container' style='" . ($row['approveStatus'] == 'Approve' ? 'display:flex;' : '') . "'>
+        echo "<div class='icon-container' style='" . ($row['approveStatus'] == 'Approve' ? 'display:flex;' : 'display:none;') . "'>
                 <form method='post' action='pdf.php'>
                     <input type='hidden' name='id_receive' value='{$row['orderId']}'>
                     <input type='hidden' name='id_customer' value='{$row['cusId']}'>
