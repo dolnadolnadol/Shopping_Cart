@@ -38,8 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             $statusde = "inprogress";
-            $stmt = $conn->prepare("update orderdelivery set statusDeli = ? , trackid = ? where DeliId = ?");
-            $stmt->bind_param("ssi", $statusde, $track, $deli);
+            $stmt = $conn->prepare("update orderdelivery set statusDeli = ? where DeliId = ?");
+            $stmt->bind_param("si", $statusde, $deli);
             $success = $stmt->execute();
 
             $statusde = "Checking";

@@ -107,6 +107,7 @@
                                 <div class="col-xs-12">
                                 <h2>Invoice<br>
                                 <span class="small">Invoice ID : <?php echo $row['invId']; ?></span></h2>
+                                <h4>Tax ID : <?php echo $row['taxId']; ?></h4>
                                 </div>
                                 <button id="convertToPDF" class="convertToPDF">Convert to PDF</button>
                             </div>
