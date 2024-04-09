@@ -89,9 +89,10 @@
         /* Product Styles */
         .product-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            overflow-x: auto;
+            /* Enable horizontal scrolling */
             gap: 30px;
+            height: 400px;
         }
 
         .product-card {
@@ -101,7 +102,11 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             transition: transform 0.3s;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
+        }
+
+        .product-container .product-card {
+            flex: 0 0 auto;
         }
 
         .product-card:hover {
@@ -152,14 +157,16 @@
             <p>This is our New Product</p>
         </div>
         <div class="product-container">
-            <?php include './product/getAllProduct.php' ?>
+            <!-- <div style="display:flex; width:80%; overflow-x:scroll"> -->
+                <?php include './product/getAllProduct.php' ?>
+            <!-- </div> -->
         </div>
         <?php
         include_once('./typeproduct/getmaxtypeId.php');
         include_once('./product/getProductBytypeId.php');
         for ($typeid = 1; $typeid <= $max_id; $typeid++) {
             getProductByTypeId($typeid);
-        }        
+        }
         ?>
     </div>
 </body>

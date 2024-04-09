@@ -55,41 +55,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $addrId = mysqli_insert_id($conn);
             } else {
                 $addrId = $_POST['addrId'];
-                // echo $addrId . "wtfman2gg ";
             }
-            // if ($success) {
-            //     echo "Insert kry successful.";
-            //     echo $lname;
-            // } else {
-            //     echo "Error: kry " . $stmt->error;
-            // }
 
-
-            // ACCESS LOG
-            // $productId = "";
-            // if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            //     $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            // } else {
-            //     $ipAddress = $_SERVER['REMOTE_ADDR'];
-            // }
-            // $callingFile = __FILE__;
-            // $action = 'INSERT'; // Static Change Action
-            // CallLog::callLog($ipAddress, $conn, $uid, $productId, $callingFile, $action);
-            //END LOG
-
-            // Iterate through each item in the cart
             while ($row = mysqli_fetch_array($check_query)) {
 
                 $proId = $row['proId'];
                 $Qty = $row['Qty'];
 
-                // Calculate subtotal, tax, and total
                 $subTotal = $row['price'] * $Qty;
                 $totalPriceAllItems += $subTotal;
                 $Tax = $totalPriceAllItems * 0.07;
                 $Total = $Tax + $totalPriceAllItems;
 
-                // Insert invoice_detail record
                 $stmt = $conn->prepare("INSERT INTO ordervalue (orderId, ProId, Qty) VALUES (?,?,?)");
                 $stmt->bind_param("iii", $lastId, $proId, $Qty);
                 $stmt->execute();
@@ -110,7 +87,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $result = mysqli_query($conn, $deleteQuery);
 
             if ($result) {
-                // echo "Deletion successful!";
             } else {
                 echo "Deletion failed: " . mysqli_error($conn);
             }
@@ -126,11 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     document.getElementById('auto_submit_form').submit();
                 });
             </script>";
-
-            // header("Location: ./paymentForm.php");
         } else {
-            // echo "alert('No Item In Cart!')";
-            // Redirect to cart page if the cart is empty
             echo header("Location: ./cart.php");;
             exit();
         }

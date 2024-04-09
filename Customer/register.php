@@ -1,3 +1,4 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -100,7 +101,7 @@
     <?php include('./component/backLogin.php') ?>
     <div class="container">
         <h2>Register</h2>
-        <form method="post" action="registerProcess.php">
+        <form id="form" method="post">
             <label for="email">Email</label>
             <input type="text" id="email" name="email" required>
 
@@ -132,6 +133,57 @@
         </form>
     </div>
     <script>
+        document.querySelector('form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            // console.log(form); // Check if the form is correctly selected
+            // console.log([...formData.entries()]); // Log FormData entries to see if any data is captured
+            // console.log(formData); 
+            const password = formData.get('password');
+
+            const encoder = new TextEncoder();
+            const passwordBuffer = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', passwordBuffer);
+            const hashedPassword = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+            // Hash the password
+            // const hashedPassword = await bcrypt.hash(password, 10); // Adjust the salt rounds as needed
+
+            // // Set the hashed password back to the FormData object
+            formData.set('password', hashedPassword);
+
+
+            try {
+                const jsonObject = {};
+                for (const [key, value] of formData.entries()) {
+                    jsonObject[key] = value;
+                }
+                const jsonString = JSON.stringify(jsonObject);
+                const response = await fetch('http://localhost:3001/api/users/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: jsonString
+                });
+
+                if (response.ok) {
+                    swal('Registration Successful!', 'Registration is successful!', 'success')
+                        .then(() => {
+                            window.location.href = './login.php';
+                        });
+                } else {
+                    swal('Failed to Register!', 'Registration failed!', 'error')
+                        .then(() => {
+                            // window.location.href = './login.php';
+                        });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
         const passwordInput = document.getElementById('password');
         const passwordWarning = document.getElementById('passwordWarning');
         const submitButton = document.querySelector('input[type="submit"]');

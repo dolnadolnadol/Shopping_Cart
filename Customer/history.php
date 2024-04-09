@@ -1,6 +1,5 @@
 <?php
 include('./component/session.php');
-session_start();
 if (!isset($_SESSION['auth'])) {
     header("Location: ./");
     exit;
@@ -8,6 +7,7 @@ if (!isset($_SESSION['auth'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -108,7 +108,7 @@ if (!isset($_SESSION['auth'])) {
 
 
         .icon-container {
-            display: flex;
+            display:flex;
             position: absolute;
             top: 10px;
             right: 10px;
@@ -153,9 +153,9 @@ if (!isset($_SESSION['auth'])) {
         }
     </style>
 </head>
+
 <body>
-<script>
-    document.getElementById("invoiceTab").click();
+    <script>
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tabcontent");
@@ -169,12 +169,13 @@ if (!isset($_SESSION['auth'])) {
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
         }
+        document.getElementById("invoiceTab").click();
     </script>
     <?php include('./component/accessNavbar.php') ?>
     <div class="container">
         <h1>History</h1>
         <div class="tab">
-        <!-- id="invoiceTab" -->
+            <!-- id="invoiceTab" -->
             <button class="tablinks" id="invoiceTab" onclick="openTab(event, 'pay')">รอชำระ</button>
             <button class="tablinks" onclick="openTab(event, 'wait')">รอตรวจสอบชำระ</button>
             <button class="tablinks" onclick="openTab(event, 'delivery')">รอจัดส่ง</button>
@@ -187,6 +188,7 @@ if (!isset($_SESSION['auth'])) {
         ?>
         <!-- Tab content -->
         <div id="invoice" class="tabcontent">
+            <?php includeRealInvoice("select * from invoice join orderdelivery on invoice.DeliId = orderdelivery.DeliId where cusId = '$uid'") ?>
         </div>
         <div id="pay" class="tabcontent">
             <?php includePay("SELECT
@@ -324,11 +326,40 @@ GROUP BY
     orderkey.orderId;"); ?>
         </div>
     </div>
-    
+
 </body>
 </html>
 
 <?php
+function includeRealInvoice($query)
+{
+    include '../dbConfig.php';
+    $msresults = mysqli_query($conn, $query);
+    while ($row = mysqli_fetch_array($msresults)) {
+        echo '<div class="order">';
+        echo "<div class='icon-container' style='" . ($row['approveStatus'] == 'Approve' ? 'display:flex;' : '') . "'>
+                <form method='post' action='pdf.php'>
+                    <input type='hidden' name='id_receive' value='{$row['orderId']}'>
+                    <input type='hidden' name='id_customer' value='{$row['cusId']}'>
+                    <input type='hidden' name='id_inv' value='{$row['invId']}'>
+                    <button type='submit'>
+                        <img src='./image/search-alt.png' alt='Order Icon' width='20'>
+                    </button>
+                </form>
+            </div>";
+        echo "<pf>Invoice ID: {$row['invId']}</pf>";
+        echo "<p>Order ID: {$row['orderId']}</p>";
+        echo "<p>Total Amount: {$row['TotalPrice']} ฿</p>";
+        if ($row['approveStatus'] == 'Not Approve') {
+            echo "<pl id='Pending'>approveStatus: {$row['approveStatus']}</pl>";
+        } else if ($row['approveStatus'] == 'Approve') {
+            echo "<pl id='Checking'>approveStatus: {$row['approveStatus']}</pl>";
+        } else if ($row['approveStatus'] == 'Canceled') {
+            echo "<pl id='Canceled'>approveStatus: {$row['approveStatus']}</pl>";
+        }
+        echo '</div>';
+    }
+}
 function includeInvoice($query)
 {
     include '../dbConfig.php';
