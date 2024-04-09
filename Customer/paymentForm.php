@@ -199,15 +199,22 @@ include('./component/getFunction/getName.php'); ?>
             $addrId = $_POST['id_address'];
 
             include_once '../dbConfig.php';
+
             $query_address = "SELECT * FROM address 
-            INNER JOIN customer ON customer.cusId = address.cusId  
-            WHERE address.CusID = '$uid'";
-            $result_address = mysqli_query($conn, $query_address);
+                      INNER JOIN customer ON customer.cusId = address.cusId  
+                      WHERE address.CusID = ?";
+
+            $stmt = mysqli_prepare($conn, $query_address);
+            mysqli_stmt_bind_param($stmt, "s", $uid);
+            mysqli_stmt_execute($stmt);
+            $result_address = mysqli_stmt_get_result($stmt);
+
             if (mysqli_num_rows($result_address) > 0) {
                 $row = mysqli_fetch_assoc($result_address);
             }
         }
         ?>
+
         <div class="checkout-container">
             <div class="checkout-header">
                 <h4>Checkout</h4>
@@ -236,7 +243,7 @@ include('./component/getFunction/getName.php'); ?>
                             <label for="lastname">Last Name: </label>
                             <input type="text" id="lname" name="lname" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="time">transaction time: </label>
                             <input type="datetime-local" id="time" name="time" required>
@@ -349,10 +356,11 @@ include('./component/getFunction/getName.php'); ?>
     </form>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-                document.getElementById('invoice-taxid').required = false;
-                document.getElementById('invoice-name').required = false;
-                document.getElementById('invoice-address').required = false;
+            document.getElementById('invoice-taxid').required = false;
+            document.getElementById('invoice-name').required = false;
+            document.getElementById('invoice-address').required = false;
         });
+
         function invoicefill() {
             if (document.getElementById('invoicefill').style.display == 'none') {
                 document.getElementById('invoicefill').style.display = 'block';

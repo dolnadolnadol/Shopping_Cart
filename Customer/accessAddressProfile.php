@@ -6,33 +6,33 @@ include_once '../dbConfig.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['delete_id_customer']) && isset($_POST['addrId'])) {
+        // Delete address
         $uid = $_POST['delete_id_customer'];
         $addrId = $_POST['addrId'];
-    
-        $delete_result_detail_head = mysqli_query($conn, "DELETE FROM address WHERE AddrId = '$addrId'");
         
-        if ($delete_result_detail_head) {
+        $delete_query = "DELETE FROM address WHERE AddrId = ?";
+        $stmt = mysqli_prepare($conn, $delete_query);
+        mysqli_stmt_bind_param($stmt, "i", $addrId);
+        mysqli_stmt_execute($stmt);
+        
+        if (mysqli_stmt_affected_rows($stmt) > 0) {
             echo "<script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    swal('Delete successful!', 'Address deleted!', 'success')
-                        .then(() => {
-                            window.location.href = './profile.php';
-                        });
-                });
+                swal('Delete successful!', 'Address deleted!', 'success')
+                    .then(() => {
+                        window.location.href = './profile.php';
+                    });
             </script>";
         } else {
             echo "<script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    swal('Failed to Delete!', 'Address is in use!', 'error')
-                        .then(() => {
-                            window.location.href = './profile.php';
-                        });
-                });
+                swal('Failed to Delete!', 'Address is in use!', 'error')
+                    .then(() => {
+                        window.location.href = './profile.php';
+                    });
             </script>";
         }
     }
-    
     else {
+        // Insert or update address
         $recv_id = $_POST['id_receiver'];
         $fname = $_POST['fname'];
         $lname = $_POST['lname'];
@@ -44,17 +44,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $postalCode = $_POST['postal'];
             $new_address = $_POST['addr'];
 
-            $insert_query_head = "INSERT INTO address (fname, lname, tel, Address , Province  , City , PostalCode, CusId) 
-                VALUES('$fname','$lname','$tel','$new_address', '$province', '$city' , '$postalCode' , '$uid')";
-            $insert_result_head = mysqli_query($conn, $insert_query_head);
+            $insert_query = "INSERT INTO address (fname, lname, tel, Address , Province  , City , PostalCode, CusId) 
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = mysqli_prepare($conn, $insert_query);
+            mysqli_stmt_bind_param($stmt, "sssssssi", $fname, $lname, $tel, $new_address, $province, $city, $postalCode, $uid);
+            $insert_result = mysqli_stmt_execute($stmt);
 
-            if ($insert_result_head) {
+            if ($insert_result) {
                 $recv_id = mysqli_insert_id($conn);
+                header("Location: ./profile.php");
             } else {
-                die("Error inserting into receiver: " . mysqli_error($conn));
+                echo "<script>
+                    swal('Failed to Insert!', 'Error inserting into database!', 'error')
+                        .then(() => {
+                            window.location.href = './profile.php';
+                        });
+                </script>";
             }
-
-            header("Location: ./profile.php");
         }
     }
 }
