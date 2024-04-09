@@ -41,6 +41,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = $conn->prepare("update orderdelivery set statusDeli = ? , trackid = ? where DeliId = ?");
             $stmt->bind_param("ssi", $statusde, $track, $deli);
             $success = $stmt->execute();
+
+            $statusde = "Checking";
+            $stmt = $conn->prepare("update orderkey set PaymentStatus = ? where orderid = ?");
+            $stmt->bind_param("si", $statusde,  $orderId);
+            $success = $stmt->execute();
             if ($success) {
                 echo "<form id='auto_submit_form' method='post' action='bill.php'>
                 <input type='hidden' name='id_order' value='$orderId'>

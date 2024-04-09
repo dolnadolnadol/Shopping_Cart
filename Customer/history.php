@@ -154,12 +154,28 @@ if (!isset($_SESSION['auth'])) {
     </style>
 </head>
 <body>
+<script>
+    document.getElementById("invoiceTab").click();
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
     <?php include('./component/accessNavbar.php') ?>
     <div class="container">
         <h1>History</h1>
         <div class="tab">
         <!-- id="invoiceTab" -->
-            <button class="tablinks" onclick="openTab(event, 'pay')">รอชำระ</button>
+            <button class="tablinks" id="invoiceTab" onclick="openTab(event, 'pay')">รอชำระ</button>
             <button class="tablinks" onclick="openTab(event, 'wait')">รอตรวจสอบชำระ</button>
             <button class="tablinks" onclick="openTab(event, 'delivery')">รอจัดส่ง</button>
             <button class="tablinks" onclick="openTab(event, 'success')">สำเร็จ</button>
@@ -195,7 +211,7 @@ LEFT JOIN
 JOIN 
     orderdelivery ON orderkey.DeliId = orderdelivery.DeliId 
 WHERE 
-    CusID = '$uid' and PaymentStatus = 'Pending' and deleteStatus = 0
+    CusID = '$uid' and PaymentStatus = 'Pending' and orderkey.deleteStatus = 0
 GROUP BY 
     orderkey.orderId;"); ?>
         </div>
@@ -222,7 +238,7 @@ LEFT JOIN
 JOIN 
     orderdelivery ON orderkey.DeliId = orderdelivery.DeliId 
 WHERE 
-    CusID = '$uid' and PaymentStatus = 'Checking' and deleteStatus = 0
+    CusID = '$uid' and PaymentStatus = 'Checking' and orderkey.deleteStatus = 0
 GROUP BY 
     orderkey.orderId;"); ?>
         </div>
@@ -249,7 +265,7 @@ LEFT JOIN
 JOIN 
     orderdelivery ON orderkey.DeliId = orderdelivery.DeliId 
 WHERE 
-    CusID = '$uid' and PaymentStatus != 'Pending' and statusDeli = 'Inprogress' and PaymentStatus != 'Checking' and deleteStatus = 0
+    CusID = '$uid' and PaymentStatus != 'Pending' and statusDeli = 'Inprogress' and PaymentStatus != 'Checking' and orderkey.deleteStatus = 0
 GROUP BY 
     orderkey.orderId;"); ?>
         </div>
@@ -276,7 +292,7 @@ LEFT JOIN
 JOIN 
     orderdelivery ON orderkey.DeliId = orderdelivery.DeliId 
 WHERE 
-    CusID = '$uid' and deleteStatus = 0
+    CusID = '$uid' and orderkey.deleteStatus = 0
 GROUP BY 
     orderkey.orderId;"); ?>
         </div>
@@ -303,27 +319,12 @@ LEFT JOIN
 JOIN 
     orderdelivery ON orderkey.DeliId = orderdelivery.DeliId 
 WHERE 
-    CusID = '$uid' and PaymentStatus != 'Pending'and PaymentStatus != 'Checking' and statusDeli = 'Delivered' and deleteStatus = 0
+    CusID = '$uid' and PaymentStatus != 'Pending'and PaymentStatus != 'Checking' and statusDeli = 'Delivered' and orderkey.deleteStatus = 0
 GROUP BY 
     orderkey.orderId;"); ?>
         </div>
     </div>
-    <script>
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
-        document.getElementById("invoiceTab").click();
-    </script>
+    
 </body>
 </html>
 
@@ -428,7 +429,7 @@ function includePay($query)
         echo "<pf>Order ID: {$row['orderId']}</pf>";
         echo "<p>Total Amount: {$row['TotalPrice']} ฿</p>";
         echo "<p>Order Date: {$row['orderCreate']}</p>";
-        if ($row['statusDeli'] != null) {
+        if ($row['statusDeli'] == 'Delivered') {
             echo "<p>Delivery Date: {$row['DeliDate']}</p>";
         }
         if ($row['PaymentStatus'] == 'Pending') {
