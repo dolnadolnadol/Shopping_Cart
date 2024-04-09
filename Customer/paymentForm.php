@@ -229,10 +229,13 @@ include('./component/getFunction/getName.php'); ?>
             <div class="flex-container">
                 <!-- Main content -->
                 <div class="checkout-content">
-                    โอนมาที่ KBANK - 0323802777 นางสาวชลลดา แซ่ลิ้ม <br />
-
-                    Transaction Infomation
+                    <div style="margin-left:1.5rem; padding:1rem; border:2px solid; font-weight:bold;">
+                        โอนมาที่ KBANK - 0323802777 นางสาวชลลดา แซ่ลิ้ม <br />
+                    </div>
                     <div id="paymentForm" class="checkout-form" style="display: block;">
+                    <p style=" font-weight:bold; font-size:20px;">
+                        Transaction Infomation
+                    </p>
                         <!-- Payment form content -->
                         <div class="form-group">
                             <label for="firstname">First Name: </label>

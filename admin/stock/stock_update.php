@@ -1,13 +1,14 @@
 <?php
-    session_start();
-    if($_SESSION['auth'] !== 'product-admin') {
-        header("Location: ../notHavePage.php");
-        exit;
-    }
+session_start();
+if ($_SESSION['auth'] !== 'product-admin') {
+    header("Location: ../notHavePage.php");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,8 +51,9 @@
         input[type="number"],
         input[type="tel"],
         input[type="file"],
-        textarea, select {
-            resize:none;
+        textarea,
+        select {
+            resize: none;
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -77,16 +79,16 @@
         #back:hover {
             background-color: #2980b9;
         }
-        
     </style>
 </head>
+
 <body>
     <?php
-        include_once '../../dbConfig.php';
-        $stockId = $_POST['id_stock'];
-        $cur = "SELECT * FROM product WHERE proId = '$stockId'";
-        $msresults = mysqli_query($conn, $cur);
-        $row = mysqli_fetch_array($msresults);
+    include_once '../../dbConfig.php';
+    $stockId = $_POST['id_stock'];
+    $cur = "SELECT * FROM product WHERE proId = '$stockId'";
+    $msresults = mysqli_query($conn, $cur);
+    $row = mysqli_fetch_array($msresults);
     ?>
     <form method="post" action="stock_save_update.php" enctype="multipart/form-data">
         <h1>ใส่ข้อมูลสินค้าที่ต้องการเปลี่ยนแปลง</h1>
@@ -95,9 +97,9 @@
 
         <label for="a2">ชื่อสินค้า:</label>
         <input type="text" id="a2" name="a2" value="<?php echo $row['ProductName']; ?>" maxlength="20" required>
-        
+
         <label for="a5">รายละเอียดสินค้า:</label>
-        <textarea id="a5" name="a5" rows="4" cols="50" maxlength="300" required><?php echo $row['Description']; ?></textarea>  
+        <textarea id="a5" name="a5" rows="4" cols="50" maxlength="300" required><?php echo $row['Description']; ?></textarea>
 
         <label for="a7">ประเภทสินค้า:</label>
         <select id="a7" name="a7" value="$row['typeId']" maxlength="6" required>
@@ -107,7 +109,8 @@
             $result2 = mysqli_query($conn, $query2);
             if (mysqli_num_rows($result2) > 0) {
                 while ($row2 = mysqli_fetch_assoc($result2)) {
-                    echo "<option value='" . $row2['typeId'] . "'>" . $row2['typeName'] . "</option>";
+                    $selected = ($row['typeId'] == $row2['typeId']) ? "selected" : "";
+                    echo "<option value='" . $row2['typeId'] . "' $selected>" . $row2['typeName'] . "</option>";
                 }
             }
             ?>
@@ -124,11 +127,11 @@
 
         <label>จำนวนสินค้า On Hand:</label>
         <input type="text" id="on" name="on" value="<?php echo $row['onHand']; ?>" size="1" maxlength="6" readonly>
-        
-        <label for="photo">อัพโหลดรูปภาพสินค้า:</label>
-        <input type="file" name="photo" id="photo" required>
-        
-        <div >
+
+        <label for="photo">อัพโหลดรูปภาพสินค้า (หากต้องการเปลี่ยน):</label>
+        <input type="file" name="photo" id="photo">
+
+        <div>
             <center>
                 <input type='button' value='ยกเลิก' onclick='window.history.back();' style='background-color: gray; color: #fff; padding: 10px 20px; border: none; cursor: pointer; margin-right:2rem; border-radius: 4px;'>
                 <input type='submit' value='ยืนยัน' style='background-color: blue; color: #fff; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; margin-right:1rem;'>
@@ -137,10 +140,10 @@
     </form>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const form = document.querySelector('form');
 
-            form.addEventListener('submit', function (event) {
+            form.addEventListener('submit', function(event) {
                 event.preventDefault();
 
                 const productName = document.getElementById('a2').value;
@@ -201,4 +204,5 @@
         });
     </script>
 </body>
+
 </html>

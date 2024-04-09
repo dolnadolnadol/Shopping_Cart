@@ -1,248 +1,241 @@
-<?php
-require_once('./vendor/autoload.php');
-
-session_start();
-include_once '../dbConfig.php'; 
-
-if (empty($_POST["id_receive"])) {
-    // $receiptCode = $_SESSION['ReceiptCode'];
-    $receiptCode = $_POST['id_receive'];
-    $sql = "SELECT receiptId FROM receipt WHERE orderId = '$receiptCode'";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-    $receiptId = $row['receiptId'];
-} else {
-    $receiptCode = $_POST["id_receive"];
-    $sql = "SELECT receiptId FROM receipt WHERE orderId = '$receiptCode'";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-    $receiptId = $row['receiptId'];
-}
-
-$sql = "SELECT r.receiptId, r.fname, r.lname, a.Tel,c.Email, a.Address, a.Province, a.City, a.PostalCode, r.cusId
-FROM receipt r
-JOIN orderkey o ON r.orderId = o.orderId
-JOIN customer c ON r.cusId = c.CusID
-JOIN address a ON c.CusID = a.CusId
-where r.receiptId = '$receiptId'";
-
-$result = mysqli_query($conn, $sql);
-
-$row = mysqli_fetch_assoc($result);
-$cusID = $row["cusId"];
-$cusAddress = $row['Address'];
-$cusFName = $row['fname'];
-$cusLName = $row['lname'];
-$cusTel = $row['Tel'];
-$cusEmail = $row['Email'];
-
-$sql = "SELECT ok.orderCreate
-FROM receipt r
-JOIN orderkey ok ON r.orderId = ok.orderId
-WHERE r.receiptId ='$receiptId'";
-$result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result);
-$payTime = $row['orderCreate'];
-$payDate = date('Y-m-d', strtotime($payTime));
-
-$inv = $_POST['id_inv'];
-$sql = "SELECT *
-FROM invoice
-WHERE invId ='$inv'";
-$result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result);
-$invresult = $row;
-
-
-
-// Create a new TCPDF object
-$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
-// Disable automatic header and footer
-$pdf->setPrintHeader(false);
-$pdf->setPrintFooter(false);
-
-// Set the font to 'sarabun'
-$pdf->SetFont('sarabun', '', 12);
-
-// Add a page
-$pdf->AddPage();
-
-$pdf->SetMargins(20, 20, 20);
-$pdf->SetAutoPageBreak(true, 20);
-
-$pdf->SetXY(20, 10);
-
-$pdf->Cell(60, 10, 'บริษัท พูม่า ฟาสท์เวิร์ค จำกัด(สำนักงานใหญ่)', 0, 0, 'L');
-
-$pdf->SetXY(130, 10);
-
-$pdf->SetFont('sarabun', '', 15);
-
-$pdf->Cell(60, 10, 'ใบเสร็จรับเงิน/ใบกำกับภาษี', 0, 1, 'R');
-
-$pdf->SetFont('sarabun', '', 9);
-
-$pdf->SetXY(20, 15);
-
-$pdf->Cell(60, 10, '999 หมู่ 999 ถ.ฉลองกรุง 5214 แขวงลาดกระบัง', 0, 0, 'L');
-
-$pdf->SetXY(130, 15);
-
-$pdf->Cell(60, 10, 'Receipt/Tax Invoice', 0, 0, 'C');
-
-$pdf->SetXY(20, 20);
-
-$pdf->Cell(60, 10, 'เขตลาดกระบัง กรุงเทพมหานคร 10500', 0, 0, 'L');
-
-$pdf->SetXY(130, 20);
-
-$pdf->Cell(60, 10, 'ต้นฉบับ', 0, 0, 'C');
-
-$pdf->SetXY(20, 25);
-
-$pdf->Cell(60, 10, 'เลขประจำตัวผู้เสียภาษี 2222222222222', 0, 1, 'L');
-
-$pdf->SetXY(20, 30);
-
-$pdf->Cell(60, 10, 'โทร. 0123456789 อีเมล PUMA@FASTWORK.com', 0, 0, 'L');
-
-$pdf->SetFont('sarabun', '', 10);
-
-$pdf->SetXY(20, 40);
-
-$pdf->Cell(60, 10, "ลูกค้า: ", 0, 0, 'L');
-
-$pdf->SetFont('sarabun', '', 9);
-
-$pdf->SetXY(30, 40);
-
-$pdf->Cell(60, 10, "" . $invresult['name'] . "", 0, 0, 'L');
-
-$pdf->SetFont('sarabun', '', 10);
-
-$pdf->SetXY(130, 40);
-
-$pdf->Cell(60, 10, "เลขที่: ", 0, 0, 'L');
-
-$pdf->SetFont('sarabun', '', 9);
-
-$pdf->SetXY(140, 40);
-
-$pdf->Cell(60, 10, "" . $invresult['invId'] . "", 0, 0, 'L');
-
-$pdf->SetFont('sarabun', '', 10);
-
-$pdf->SetXY(20, 45);
-
-$pdf->Cell(60, 10, "ที่อยู่: ", 0, 0, 'L');
-
-$pdf->SetXY(30, 45);
-
-$pdf->Cell(60, 10, "" . $invresult['address'] . "", 0, 0, 'L');
-
-$pdf->SetFont('sarabun', '', 10);
-
-$pdf->SetXY(130, 45);
-
-$pdf->Cell(60, 10, "วันที่: ", 0, 0, 'L');
-
-$pdf->SetFont('sarabun', '', 9);
-
-$pdf->SetXY(140, 45);
-
-$pdf->Cell(60, 10, "" . $payDate . "", 0, 0, 'L');
-
-$pdf->SetFont('sarabun', '', 10);
-
-$pdf->SetXY(20, 50);
-
-$pdf->Cell(60, 10, "เลขประจำตัวผู้เสียภาษี: ", 0, 0, 'L');
-
-$pdf->SetXY(55, 50);
-
-$pdf->Cell(60, 10, $invresult['taxId'] , 0, 0, 'L');
-
-$pdf->SetFont('sarabun', '', 10);
-
-$pdf->SetXY(20, 55);
-
-$pdf->Cell(60, 10, "โทร: ", 0, 0, 'L');
-
-$pdf->SetXY(30, 55);
-
-$pdf->Cell(60, 10, "" . $cusTel  . "", 0, 0, 'L');
-
-$pdf->SetFont('sarabun', '', 10);
-
-$pdf->SetXY(55, 55);
-
-$pdf->Cell(60, 10, "อีเมล: ", 0, 0, 'L');
-
-$pdf->SetXY(65, 55);
-
-$pdf->Cell(60, 10, $cusEmail, 0, 1, 'L');
-
-$pdf->Cell(170, 10, "", 'T', 1, 'L');
-
-$sql = "SELECT p.ProductName, ov.Qty, p.Price
-FROM receipt r
-JOIN orderkey ok ON r.orderId = ok.orderId
-JOIN ordervalue ov ON ok.orderId = ov.orderId
-JOIN product p ON ov.ProId = p.proId
-WHERE r.receiptId = '$receiptId'";
-$result = mysqli_query($conn, $sql);
-
-$orderProducts = array();
-while ($orderProductRow = mysqli_fetch_array($result)) {
-    $orderProducts[] = $orderProductRow;
-}
-
-$totalPrice = 0;
-$id = 1;
-
-$html = "
-<table style='width: 100%;'>
-<tr>
-    <th style='width: 5%'>ลำดับ</th>
-    <th style='width: 40%'>รายการสินค้า</th>
-    <th style='width: 10%'>จำนวน</th>
-    <th style='width: 15%'>ราคาต่อหน่วย</th>
-    <th style='width: 15%'>จำนวนเงิน</th>
-</tr>";
-
-foreach ($orderProducts as $orderProductRow) {
-    $productName = $orderProductRow['ProductName'];
-    $qty = $orderProductRow['Qty'];
-    $Price = $orderProductRow['Price'];
-    $total = $orderProductRow['Price'] * $orderProductRow['Qty'];
-
-    $html .= "<tr>
-    <td style='padding-top: 50px'>" . $id . "</td>
-    <td style='padding-top: 50px'>" . $productName . "</td>
-    <td style='padding-top: 50px'>" . $qty . "</td>
-    <td style='padding-top: 50px'>฿" . $Price . "</td>
-    <td style='padding-top: 50px'>" . $total . " บาท</td>
-    </tr>";
-
-    $totalPrice += $orderProductRow['Price'] * $orderProductRow['Qty'];
-    $id++;
-}
-
-$html .= "</table>";
-
-$vat = $totalPrice * 0.07;
-$pdf->writeHTML($html, true, false, true, false, '');
-
-$pdf->Cell(170, 10, "", 'T', 1, 'L');
-
-// $pdf->Cell(0, 10, 'หมายเหตุ', 0, 0, 'L');
-// $pdf->Cell(0, 10, 'ส่วนลด 0 บาท', 0, 1, 'R');
-$pdf->Cell(0, 10, 'รวมเป็นเงิน ' . $totalPrice . ' บาท', 0, 1, 'R');
-$pdf->Cell(0, 10, 'ภาษีมูลค่าเพิ่ม 7% : ' . $vat . ' บาท', 0, 1, 'R');
-$pdf->Cell(0, 10, 'ผู้รับเงิน บริษัท พูม่า ฟาสท์เวิร์ค จำกัด(สำนักงานใหญ่)', 0, 0, 'L');
-$pdf->Cell(0, 10, 'จำนวนเงินทั้งสิ้น : ' . ($totalPrice + $vat) . ' บาท', 0, 1, 'R');
-
-
-// Output the PDF
-$pdf->Output('receipt.pdf', 'I');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Invoice</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            margin: 20px;
+            background: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .invoice {
+            padding: 30px;
+            width: 200mm;
+            height: 282.86mm;
+            background-color: white;
+            margin: 0px auto;
+        }
+
+        .invoice h2 {
+            margin-top: 0px;
+            line-height: 0.8em;
+        }
+
+        .invoice .small {
+            font-weight: 300;
+        }
+
+        .invoice hr {
+            margin-top: 10px;
+            border-color: #ddd;
+        }
+
+        .invoice .table tr.line {
+            border-bottom: 1px solid #ccc;
+        }
+
+        .invoice .table td {
+            border: none;
+        }
+
+        .invoice .identity {
+            margin-top: 10px;
+            font-size: 1.1em;
+            font-weight: 300;
+        }
+
+        .invoice .identity strong {
+            font-weight: 600;
+        }
+
+        .convertToPDF {
+            background-color: red;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-right: 40px;
+            cursor: pointer;
+            border-radius: 8px;
+            width: 20%;
+            height: 20%;
+        }
+
+        .convertToPDF:hover {
+            background-color: #aa0000;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+        }
+
+    </style>
+</head>
+<body>
+    <?php 
+        include_once '../../dbConfig.php';
+        $invid = $_POST['id_order'];
+        $cur = "SELECT * FROM invoice 
+        INNER JOIN orderdelivery ON orderdelivery.DeliId = invoice.DeliId
+        INNER JOIN address ON address.AddrId = orderdelivery.addrId
+        INNER JOIN customer ON customer.CusID = address.CusId 
+        WHERE invId = '$invid'";
+        $msresults = mysqli_query($conn, $cur);
+        $row = mysqli_fetch_array($msresults);
+    ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="invoice">
+                    <div class="grid-body">
+                        <div class="invoice-title">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                <h2>Invoice<br>
+                                <span class="small">Invoice ID : <?php echo $row['invId']; ?></span></h2>
+                                <h4>Tax ID : <?php echo $row['taxId']; ?></h4>
+                                </div>
+                                <button id="convertToPDF" class="convertToPDF">Convert to PDF</button>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <address>
+                                    <strong>Billed To:</strong><br>
+                                    <?php 
+                                        echo $row['fname']." ". $row['lname'] . "<br>";
+                                        echo $row['Address'] . "<br>";
+                                        echo $row['City'] . "<br>";
+                                        echo $row['Province'] ." ".$row['PostalCode']. "<br>";
+                                        echo "Tel: " . $row['Tel'] . "<br>";
+                                    ?>
+                                </address>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <address>
+                                    <strong>Shipped To:</strong><br>
+                                    <?php 
+                                        echo $row['fname']." ".$row['lname']."<br>";
+                                        echo $row['Address']."<br>";
+                                        echo $row['City']."<br>";
+                                        echo $row['Province']." ".$row['PostalCode']."<br>";
+                                        echo "Tel: ".$row['Tel']."<br>";
+                                    ?>
+                                </address>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <!-- <address>
+                                    <strong>Payment Method:</strong><br>
+                                    Visa ending **** 1234<br>
+                                    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4f27612a232e26212a0f28222e2623612c2022">[email&#160;protected]</a><br>
+                                </address> -->
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <address>
+                                    <strong>Order Date:</strong><br>
+                                    <?php 
+                                        echo $row['timestamp']."<br>";
+                                    ?>
+                                </address>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3>ORDER SUMMARY</h3>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr class="line">
+                                            <td><strong>ID</strong></td>
+                                            <td><strong>Product</strong></td>
+                                            <td class="text-right"><strong>Quantity</strong></td>
+                                            <td class="text-right"><strong>Price</strong></td>
+                                            <td class="text-right"><strong>Total Price</strong></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                            $cur = "SELECT *, ordervalue.Qty AS QtyO
+                                                    FROM invoice
+                                                    INNER JOIN ordervalue ON ordervalue.orderId = invoice.orderId
+                                                    INNER JOIN product ON product.proId = ordervalue.ProId
+                                                    WHERE invId = '$invid'";
+                                            $msresults = mysqli_query($conn, $cur);
+                                            $total_amount = 0;
+                                            $tax_percentage = 7;
+                                            while ($row = mysqli_fetch_assoc($msresults)) {
+                                                $total_amount += (double)$row['Price'] * (double)$row['QtyO'];
+                                                $total = (double)$row['Price'] * (double)$row['QtyO'];
+                                                echo "<tr>";
+                                                echo "<td>" . $row['proId'] . "</td>";
+                                                echo "<td>" . $row['ProductName'] . "</td>";
+                                                echo "<td class='text-right'>" . $row['QtyO']. "</td>";
+                                                echo "<td class='text-right'>" .'฿ ' . $row['Price']. "</td>";
+                                                echo "<td class='text-right'>" .'฿ ' . $total ."</td>";
+                                                echo "</tr>";
+                                            }
+                                            $tax_amount = ($total_amount * $tax_percentage) / 100;
+                                            $total_amount_with_tax = $total_amount + $tax_amount;
+                                        ?>
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td class="text-right"><strong>Taxes (<?php echo $tax_percentage; ?>%)</strong></td>
+                                            <td class="text-right"><strong><?php echo '฿ '.number_format($tax_amount, 2); ?></strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td class="text-right"><strong>Total</strong></td>
+                                            <td class="text-right"><strong><?php echo '฿ '.number_format($total_amount_with_tax, 2); ?></strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-right identity">
+                                <h4>ผู้รับรอง<br><br>__________________</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        document.getElementById('convertToPDF').addEventListener('click', function() {
+            document.getElementById("convertToPDF").style.display = "none";
+            const element = document.querySelector('.invoice');
+            html2canvas(element).then(function(canvas) {
+                const imageData = canvas.toDataURL('image/png');
+                var doc = new jspdf.jsPDF();
+                doc.addImage(imageData, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
+                doc.save('Invoice.pdf');
+                document.getElementById("convertToPDF").style.display = "block";
+            });
+        });
+    </script>
+</body>
+</html>

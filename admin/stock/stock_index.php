@@ -136,7 +136,7 @@
 
     <?php
     include_once '../../dbConfig.php'; 
-    $cur = "SELECT * FROM product WHERE deleteStatus = '0'";
+    $cur = "SELECT * FROM product join product_type on product.typeId = product_type.typeId WHERE product.deleteStatus = '0'";
     $msresults = mysqli_query($conn, $cur);
 
     echo "<center>";
@@ -160,7 +160,7 @@
             echo "<tr class='user-row'>
                     <td><input type='checkbox' name='checkbox[]' value='{$row['proId']}'></td>
                     <td>{$row['proId']}</td>
-                    <td>{$row['typeId']}</td>
+                    <td>{$row['typeName']}</td>
                     <td>{$row['ProductName']}</td>
                     <td>{$row['cost']}</td>
                     <td>{$row['Price']}</td>

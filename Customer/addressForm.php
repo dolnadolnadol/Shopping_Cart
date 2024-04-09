@@ -59,7 +59,8 @@ include('./component/getFunction/getName.php'); ?>
 
         .checkout-form {
             display: none;
-            padding: 20px;
+            padding-left: 20px;
+            padding-right: 20px;
         }
 
         .form-group {
@@ -200,6 +201,9 @@ include('./component/getFunction/getName.php'); ?>
                 <div id="shippingForm" class="checkout-form" style="display: block;">
                     <!-- Shipping form content -->
                     <div class="form-group">
+                        <p style="font-size:1.5rem;">
+                            Information
+                        </p>
                         <!-- <div style="display:none"> -->
                         <label for="fullname">First Name</label>
                         <input type="text" id="fname" name="fname" value="<?php echo isset($row['fname']) ? $row['fname'] : ''; ?>" readonly required>
@@ -213,25 +217,9 @@ include('./component/getFunction/getName.php'); ?>
                         <button type="button" onclick="editInfo()">edit info</button>
                         <button type="button" id="saveInfo" onclick="saveInfobutton()" style="display:none;">save</button>
                         <!-- </div> -->
-                        <p>
-                            Address For Song Kong AHHH
+                        <p style="font-size:1.5rem;">
+                            Address
                         </p>
-
-                        <!-- <select>
-                            <?php
-                            // $query_address = "select * from address where address.CusID = '$uid'";
-                            // $result_address = mysqli_query($conn, $query_address);
-                            // if (mysqli_num_rows($result_address) > 0) {
-                            //     // Fetch a single row from the result set
-                            //     $row = mysqli_fetch_array($result_address);
-                            //     while($row){
-                            //         echo "<option value='$row'> "  . $row['fname'] ." ". $row['lname'] ." ". $row['tel'] ." ". $row['Address'] ." ". $row['City'] ." ". $row['Province'] ." ". $row['PostalCode'] ." ".  "</option>";
-                            //         $row = mysqli_fetch_array($result_address);
-                            //     }
-                            // }
-                            ?>
-                        </select>
-                        <button> edit </button> -->
 
                         <!-- <div style="display:none"> -->
                         <label for="address">Address</label>

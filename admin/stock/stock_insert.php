@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // $allowTypes = array('jpg','png','jpeg','gif'); 
         // $fileNames = array_filter($_FILES['files']['name']); 
         // $uploadedFiles = array();
-        $image_data = file_get_contents($_FILES["files"]["tmp_name"]);
+        $image_data = file_get_contents($_FILES["photo"]["tmp_name"]);
 
         $insertQuery = "INSERT INTO product(ProductName, Description, Price, Qty, cost, typeId, Photo) 
                         VALUES (?, ?, ?, ?, ?, ?, ?)";
