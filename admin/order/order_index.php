@@ -191,13 +191,13 @@
 
                     echo "<td>";
                     echo "<div style='border-radius:10px; padding: 3.920px 7.280px; width:90px; margin: 0 auto; background-color:";
-                    if ($row['statusDeli'] == 'Inprogress' || $row['statusDeli'] == 'inprogress') {
+                    if ($row['statusDeli'] == 'Prepare') {
+                        echo '#FF0000;';
+                    } elseif ($row['statusDeli'] == 'Inprogress') {
                         echo '#FFA500;';
                     } elseif ($row['statusDeli'] == 'Delivered') {
                         echo '#06D6B1;';
-                    } elseif ($row['statusDeli'] == 'Prepare') {
-                        echo '#FF0000;';
-                    } else {
+                    }  else {
                     }
                     echo "'>";
                     echo "<select id='select_$index' data-orderId='{$row['orderId']}' data-deliId='{$row['DeliId']}' style='background-color: inherit; border:0; width:100%; cursor: pointer;
